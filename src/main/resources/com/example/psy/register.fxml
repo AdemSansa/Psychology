@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.psy.application.RegisterController"
+            stylesheets="@style.css"
+            prefWidth="900" prefHeight="550">
+
+    <Pane prefWidth="900" prefHeight="550" styleClass="background"/>
+
+    <VBox alignment="CENTER"
+          spacing="16"
+          layoutX="300"
+          layoutY="90"
+          prefWidth="340"
+          styleClass="login-card">
+
+        <Label text="Create Account" styleClass="app-title"/>
+        <Label text="Mental Health Portal" styleClass="subtitle"/>
+
+        <TextField fx:id="fullNameField" promptText="Full Name" styleClass="input"/>
+        <TextField fx:id="usernameField" promptText="Username" styleClass="input"/>
+        <TextField fx:id="emailField" promptText="Email" styleClass="input"/>
+        <PasswordField fx:id="passwordField" promptText="Password" styleClass="input"/>
+
+        <Button text="Register"
+                onAction="#handleRegister"
+                styleClass="login-button"/>
+
+        <Label fx:id="messageLabel" styleClass="message"/>
+
+    </VBox>
+</AnchorPane>

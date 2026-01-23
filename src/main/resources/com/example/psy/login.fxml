@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.psy.application.LoginController"
+            stylesheets="@style.css"
+            prefWidth="900" prefHeight="550">
+
+    <!-- Background -->
+    <Pane prefWidth="900" prefHeight="550" styleClass="background"/>
+
+    <!-- Login Card -->
+    <VBox alignment="CENTER"
+          spacing="18"
+          layoutX="300"
+          layoutY="120"
+          prefWidth="320"
+          styleClass="login-card">
+
+        <Label text="MindCare"
+               styleClass="app-title"/>
+
+        <Label text="Mental Health Portal"
+               styleClass="subtitle"/>
+
+        <TextField fx:id="usernameField"
+                   promptText="Email or Username"
+                   styleClass="input"/>
+
+        <PasswordField fx:id="passwordField"
+                       promptText="Password"
+                       styleClass="input"/>
+
+        <Button text="Sign In"
+                onAction="#handleLogin"
+                styleClass="login-button"/>
+
+        <Label fx:id="messageLabel"
+               styleClass="message"/>
+
+        <Label text="Your privacy and well-being matter."
+               styleClass="footer-text"/>
+    </VBox>
+    <Button text="Create an account"
+            onAction="#goToRegister"
+            styleClass="link-button"/>
+
+</AnchorPane>
