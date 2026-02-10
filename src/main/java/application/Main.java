@@ -1,5 +1,5 @@
 // java
-package com.example.psy.application;
+package application;
 
 import Database.dbconnect;
 import javafx.application.Application;
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        URL fxmlUrl = getClass().getResource("/com/example/psy/login.fxml");
+        URL fxmlUrl = getClass().getResource("/com/example/psy/auth/login.fxml");
         if (fxmlUrl == null) {
             throw new IllegalStateException("FXML introuvable: /com/example/psy/login.fxml");
         }
@@ -25,22 +25,14 @@ public class Main extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
 
-        stage.setTitle("Futuristic Login");
+        stage.setTitle("Slimenify");
         stage.setScene(scene);
         stage.show();
 
         SceneManager.setStage(stage);
-        try (Connection conn = dbconnect.getConnection()) {
-            if (conn != null && !conn.isClosed()) {
-                System.out.println("Connexion DB OK");
-            } else {
-                System.err.println("Connexion DB null ou fermée");
-            }
-        } catch (SQLException e) {
-            System.err.println("Échec de la connexion : " + e.getMessage());
-            e.printStackTrace();
-            System.exit(1);
-        }
+        Connection conn = dbconnect.getInstance().getConnection();
+
+
     }
 
     public static void main(String[] args) {

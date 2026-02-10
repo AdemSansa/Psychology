@@ -1,75 +1,198 @@
-/* Background */
+/* ===============================
+   COLOR PALETTE
+   =============================== */
+/*
+Primary:   #7b9e7f  (calm green)
+Accent:    #ac9885  (warm beige)
+Surface:   #ffffff  (clean white)
+Text dark: #3f4f4f
+Text soft: #7a8a8a
+*/
+
+/* ===============================
+   BACKGROUND
+   =============================== */
 .background {
     -fx-background-color: linear-gradient(
             to bottom right,
-            #d9f2ef,
-            #eef7f6
+            #ac9885,
+            #ffffff
     );
 }
 
-/* Login card */
+/* ===============================
+   CARD CONTAINER
+   =============================== */
 .login-card {
-    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-background-color: #ffffff;
     -fx-background-radius: 18;
     -fx-padding: 30;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 18, 0, 0, 6);
 }
 
-/* App title */
+/* ===============================
+   TITLES
+   =============================== */
 .app-title {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2b7a78;
+    -fx-text-fill: #7b9e7f;
 }
 
-/* Subtitle */
 .subtitle {
     -fx-font-size: 14px;
-    -fx-text-fill: #5f7f7f;
+    -fx-text-fill: #7a8a8a;
 }
 
-/* Inputs */
+/* ===============================
+   INPUT FIELDS
+   =============================== */
 .input {
     -fx-pref-width: 260;
     -fx-pref-height: 40;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-border-color: #b2dfdb;
+    -fx-border-color: #ac9885;
     -fx-background-color: #ffffff;
     -fx-padding: 0 12 0 12;
     -fx-font-size: 13px;
+    -fx-text-fill: #3f4f4f;
 }
 
-/* Button */
+.input:focused {
+    -fx-border-color: #7b9e7f;
+    -fx-border-width: 1.5;
+}
+
+/* ===============================
+   PRIMARY BUTTON
+   =============================== */
 .login-button {
     -fx-pref-width: 260;
     -fx-pref-height: 42;
     -fx-background-radius: 12;
-    -fx-background-color: #3aa6a0;
-    -fx-text-fill: white;
+    -fx-background-color: #7b9e7f;
+    -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
 }
 
 .login-button:hover {
-    -fx-background-color: #2f8f8b;
+    -fx-background-color: #6a8e6f;
 }
 
-/* Messages */
+/* ===============================
+   LINK BUTTONS
+   =============================== */
+.link-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7b9e7f;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.link-button:hover {
+    -fx-text-fill: #6a8e6f;
+    -fx-underline: true;
+}
+
+/* ===============================
+   MESSAGES (ERROR / INFO)
+   =============================== */
 .message {
-    -fx-text-fill: #d32f2f;
+    -fx-text-fill: #ac9885;
     -fx-font-size: 12px;
 }
 
-/* Footer */
+/* ===============================
+   FOOTER TEXT
+   =============================== */
 .footer-text {
-    -fx-text-fill: #7a9a9a;
+    -fx-text-fill: #7a8a8a;
     -fx-font-size: 11px;
 }
-.link-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #3aa6a0;
-    -fx-underline: true;
+/* style.css - styles pour userAdd.fxml */
+
+/* racine */
+.root {
+    -fx-font-family: "Segoe UI", Roboto, Arial;
+    -fx-font-size: 13px;
+    -fx-background-color: #f4f6f8;
+}
+
+/* conteneur du formulaire */
+.user-add-root .form-grid {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0.0, 0, 2);
+}
+
+/* labels */
+.form-label {
+    -fx-font-weight: 600;
+    -fx-text-fill: #2b2b2b;
+    -fx-padding: 4 0 4 0;
+}
+
+/* champs texte et password */
+.text-field.form-control,
+.password-field.form-control {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6 8 6 8;
+    -fx-prompt-text-fill: derive(#6b6f76, -20%);
+}
+
+/* combo box */
+.combo-box.form-control,
+.combo-box.form-combo {
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 0 0 0 6;
+}
+
+/* focus */
+.text-field:focused,
+.password-field:focused,
+.combo-box:focused {
+    -fx-border-color: #4a90e2;
+    -fx-focus-color: #4a90e2;
+    -fx-faint-focus-color: rgba(74,144,226,0.16);
+}
+
+/* bouton général */
+.button.btn {
     -fx-cursor: hand;
+    -fx-padding: 6 14 6 14;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-font-weight: 600;
+}
+
+/* bouton primaire */
+.button.btn-primary {
+    -fx-background-color: linear-gradient(#4a90e2, #357ABD);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(53,122,189,0.25), 6, 0.0, 0, 2);
+}
+
+/* hover / pressed */
+.button.btn-primary:hover {
+    -fx-background-color: linear-gradient(#5aa0f0, #3b7fd0);
+}
+.button.btn-primary:pressed {
+    -fx-background-color: linear-gradient(#3273c2, #2b61a8);
+    -fx-translate-y: 1;
+}
+
+/* petites corrections de layout */
+.grid-pane .column-constraints {
+    -fx-hgap: 10;
 }

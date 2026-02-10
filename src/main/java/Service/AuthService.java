@@ -1,12 +1,11 @@
 package Service;
 
-import DAO.UserDAO;
 import Entities.User;
 import util.PasswordUtil;
 
 public class AuthService {
 
-    private final UserDAO userDAO = new UserDAO();
+    private final UserService userDAO = new UserService();
 
     public void register(User user) throws Exception {
 
@@ -16,7 +15,13 @@ public class AuthService {
             throw new Exception("All fields are required.");
         }
 
-        if (userDAO.usernameExists(user.getUsername())) {
+        if (user.getUsername().length() < 3) {
+            throw new Exception("Username must be at least 3 characters long.");
+        }
+        if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new Exception("Invalid email format.");
+        }
+        if (userDAO.UserNameExists(user.getUsername())) {
             throw new Exception("Username already exists.");
         }
         if(user.getPassword().length() < 6){
@@ -32,7 +37,8 @@ public class AuthService {
 
         // Later: hash password here
 
-        userDAO.save(user);
+        userDAO.create(user);
+
     }
 
 }

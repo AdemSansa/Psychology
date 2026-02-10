@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@../style.css"
+
+            fx:controller="Controllers.Welcome.WellbeingPromptController"
+            prefHeight="400.0" prefWidth="600.0">
+    <VBox alignment="CENTER" spacing="20"
+          styleClass="login-card">
+
+        <Label text="Would you like to check your mental well-being?"
+               styleClass="app-title"
+               style="-fx-font-size: 20px;"/>
+
+        <!-- Background -->
+        <Pane prefWidth="900" prefHeight="550" styleClass="background"/>
+
+        <!-- Content Card -->
+        <VBox alignment="CENTER"
+              spacing="22"
+              layoutX="250"
+              layoutY="120"
+              prefWidth="400"
+              styleClass="login-card">
+
+            <Label text="What you can do with MindCare"
+                   styleClass="app-title"
+                   style="-fx-font-size: 24px;"/>
+
+            <VBox spacing="12" prefWidth="320">
+
+                <Label text="🧠 Connect with professional therapists"
+                       styleClass="subtitle"/>
+
+                <Label text="📅 Book and manage appointments easily"
+                       styleClass="subtitle"/>
+
+                <Label text="📊 Track your mental well-being over time"
+                       styleClass="subtitle"/>
+
+                <Label text="🤝 Join a safe and supportive community"
+                       styleClass="subtitle"/>
+            </VBox>
+
+            <HBox spacing="15" alignment="CENTER">
+
+                <Button text="Back"
+                        styleClass="link-button"
+                        />
+
+                <Button text="Next"
+                        styleClass="login-button"
+                        />
+            </HBox>
+
+        </VBox>
+        <Label text="This short questionnaire can help you
+understand how you’re feeling today.
+It is not a medical diagnosis."
+               wrapText="true"
+               styleClass="subtitle"/>
+
+        <Button text="Start Well-Being Check"
+                styleClass="login-button"
+               />
+
+        <Button text="Skip for now"
+                styleClass="link-button"
+                />
+    </VBox>
+
+</AnchorPane>

@@ -1,4 +1,4 @@
-package com.example.psy.application;
+package Controllers.auth;
 
 import Entities.User;
 import Service.AuthService;
@@ -35,7 +35,7 @@ public class RegisterController {
             messageLabel.setStyle("-fx-text-fill: green;");
             messageLabel.setText("Account created successfully ✔");
 
-            SceneManager.switchScene("/com/example/psy/login.fxml");
+            SceneManager.switchScene("/com/example/psy/auth/login.fxml");
 
         } catch (Exception e) {
             //empty all fealds
@@ -50,7 +50,7 @@ public class RegisterController {
     }
     @FXML
     private void goToLogin() {
-        SceneManager.switchScene("/com/example/psy/login.fxml");
+        SceneManager.switchScene("/com/example/psy/auth/login.fxml");
     }
 
 }
