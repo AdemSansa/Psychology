@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Welcome.HomeController"
+            stylesheets="@../style.css"
+            prefWidth="900" prefHeight="550">
+
+    <Pane prefWidth="900" prefHeight="550" styleClass="background"/>
+
+    <VBox alignment="CENTER" spacing="20"
+          layoutX="250" layoutY="140"
+          prefWidth="400"
+          styleClass="login-card">
+
+        <Label text="Welcome to Slimenify "
+               styleClass="app-title"/>
+
+        <Label text="A safe and supportive space
+for your mental well-being."
+               wrapText="true"
+               styleClass="subtitle"/>
+
+        <Button text="Next"
+                styleClass="login-button"
+                onAction="#gotoFeatures"
+
+                />
+        <Button text="users list"
+                styleClass="login-button"
+                onAction="#gotoUsers"
+
+        />
+    </VBox>
+</AnchorPane>
+

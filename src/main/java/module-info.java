@@ -6,6 +6,16 @@ module com.example.psy {
 
 
     opens com.example.psy to javafx.fxml;
-    exports com.example.psy.application;
-    opens com.example.psy.application to javafx.fxml;
+    exports application;
+    opens application to javafx.fxml;
+    exports Controllers.auth;
+    opens Controllers.auth to javafx.fxml;
+    exports Controllers.Welcome;
+    opens Controllers.Welcome to javafx.fxml;
+
+    // open controller and entities packages used by FXML
+    exports Controllers.User;
+    opens Controllers.User to javafx.fxml;
+    exports Entities;
+    opens Entities to javafx.fxml;
 }

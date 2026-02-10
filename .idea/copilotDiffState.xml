@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/main/java/Entities/User.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/Entities/User.java" />
+              <option name="originalContent" value="package Entities;&#10;&#10;public class User {&#10;    private int id;&#10;    private String fullName;&#10;    private String username;&#10;    private String email;&#10;    private String password;&#10;    private String role;&#10;&#10;    public User() {}&#10;&#10;    public User(String fullName, String username, String email, String password) {&#10;        this.fullName = fullName;&#10;        this.username = username;&#10;        this.email = email;&#10;        this.password = password;&#10;        this.role = &quot;patient&quot;;&#10;    }&#10;&#10;    // Getters &amp; Setters&#10;    public int getId() { return id; }&#10;    public void setId(int id) { this.id = id; }&#10;&#10;    public String getFullName() { return fullName; }&#10;    public void setFullName(String fullName) { this.fullName = fullName; }&#10;&#10;    public String getUsername() { return username; }&#10;    public void setUsername(String username) { this.username = username; }&#10;&#10;    public String getEmail() { return email; }&#10;    public void setEmail(String email) { this.email = email; }&#10;&#10;    public String getPassword() { return password; }&#10;    public void setPassword(String password) { this.password = password; }&#10;&#10;    public String getRole() { return role; }&#10;    public void setRole(String role) { this.role = role; }&#10;}&#10;" />
+              <option name="updatedContent" value="package Entities;&#10;&#10;public class User {&#10;    private int id;&#10;    private String fullName;&#10;    private String username;&#10;    private String email;&#10;    private String password;&#10;    private String role;&#10;&#10;    public User() {}&#10;&#10;    public User(String fullName, String username, String email, String password) {&#10;        this.fullName = fullName;&#10;        this.username = username;&#10;        this.email = email;&#10;        this.password = password;&#10;        this.role = &quot;patient&quot;;&#10;    }&#10;&#10;    // Getters &amp; Setters&#10;    public int getId() { return id; }&#10;    public void setId(int id) { this.id = id; }&#10;&#10;    public String getFullName() { return fullName; }&#10;    public void setFullName(String fullName) { this.fullName = fullName; }&#10;&#10;    public String getUsername() { return username; }&#10;    public void setUsername(String username) { this.username = username; }&#10;&#10;    public String getEmail() { return email; }&#10;    public void setEmail(String email) { this.email = email; }&#10;&#10;    public String getPassword() { return password; }&#10;    public void setPassword(String password) { this.password = password; }&#10;&#10;    public String getRole() { return role; }&#10;    public void setRole(String role) { this.role = role; }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

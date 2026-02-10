@@ -4,8 +4,8 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.psy.application.RegisterController"
-            stylesheets="@style.css"
+            fx:controller="Controllers.auth.RegisterController"
+            stylesheets="@../style.css"
             prefWidth="900" prefHeight="550">
 
     <Pane prefWidth="900" prefHeight="550" styleClass="background"/>
@@ -30,6 +30,14 @@
                 styleClass="login-button"/>
 
         <Label fx:id="messageLabel" styleClass="message"/>
+
+        <!-- Back to login -->
+        <HBox alignment="CENTER" spacing="5">
+            <Label text="Already have an account?"/>
+            <Button text="Sign in"
+                    onAction="#goToLogin"
+                    styleClass="link-button"/>
+        </HBox>
 
     </VBox>
 </AnchorPane>
