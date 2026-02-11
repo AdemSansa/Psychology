@@ -24,7 +24,6 @@ public class Appointment {
         this.patientId = patientId;
     }
 
-    // Getters & Setters
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
