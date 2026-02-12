@@ -104,4 +104,29 @@ public class TherapistService implements Iservice<Therapistis> {
         ps.executeUpdate();
         System.out.println("Therapist deleted successfully!");
     }
+
+    // --- Added for Therapist Management CRUD ---
+    public Therapistis findByUserId(int userId) throws SQLException {
+        String query = "SELECT * FROM therapists WHERE user_id=?";
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        Therapistis t = null;
+        if (rs.next()) {
+            t = new Therapistis();
+            t.setId(rs.getInt("id"));
+            t.setFirstName(rs.getString("first_name"));
+            t.setLastName(rs.getString("last_name"));
+            t.setEmail(rs.getString("email"));
+            t.setPhoneNumber(rs.getString("phone_number"));
+            t.setSpecialization(rs.getString("specialization"));
+            t.setDescription(rs.getString("description"));
+            t.setConsultationType(rs.getString("consultation_type"));
+            t.setStatus(rs.getString("status"));
+            t.setUserId(rs.getInt("user_id"));
+            t.setCreatedAt(rs.getTimestamp("created_at"));
+            t.setUpdatedAt(rs.getTimestamp("updated_at"));
+        }
+        return t;
+    }
 }

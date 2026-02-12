@@ -14,17 +14,17 @@ import java.util.List;
 public class QuestionService implements Iservice<Question> {
     @Override
     public void create(Question question) throws SQLException {
-        String sql = "INSERT INTO question (quiz_id, question_text, order_index, min_value,max_value,label_min,label_max,required) VALUES (?, ?, ?, ?,?, ?, ?, ?)";
+        String sql = "INSERT INTO question (quiz_id, question_text, order_index,required,created_at,image_path) VALUES (?, ?, ?, ?,?, ?)";
 
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
         ps.setInt(1, question.getQuizId());
         ps.setString(2, question.getQuestionText());
         ps.setInt(3, question.getOrderIndex());
-        ps.setInt(4, question.getMinValue());
-        ps.setInt(5, question.getMaxValue());
-        ps.setString(6, question.getLabelMin());
-        ps.setString(7, question.getLabelMax());
-        ps.setBoolean(8, question.isRequired());
+
+        ps.setBoolean(4, question.isRequired());
+        ps.setTime(5, new java.sql.Time(System.currentTimeMillis()));
+        ps.setString(6, question.getImagePath());
+
 
         ps.executeUpdate();
         System.out.println("Question added successfully!");
@@ -43,11 +43,12 @@ public class QuestionService implements Iservice<Question> {
             q.setQuiz(rs.getInt("quiz_id"));
             q.setQuestionText(rs.getString("question_text"));
             q.setOrderIndex(rs.getInt("order_index"));
-            q.setMinValue(rs.getInt("min_value"));
-            q.setMaxValue(rs.getInt("max_value"));
-            q.setLabelMin(rs.getString("label_min"));
-            q.setLabelMax(rs.getString("label_max"));
+            q.setImagePath(rs.getString("image_path"));
             q.setRequired(rs.getBoolean("required"));
+            q.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+
+
 
             questions.add(q);
         }
@@ -69,10 +70,9 @@ public class QuestionService implements Iservice<Question> {
             q.setQuiz(rs.getInt("quiz_id"));
             q.setQuestionText(rs.getString("question_text"));
             q.setOrderIndex(rs.getInt("order_index"));
-            q.setMinValue(rs.getInt("min_value"));
-            q.setMaxValue(rs.getInt("max_value"));
-            q.setLabelMin(rs.getString("label_min"));
-            q.setLabelMax(rs.getString("label_max"));
+            q.setImagePath(rs.getString("image_path"));
+            q.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
             q.setRequired(rs.getBoolean("required"));
         }
         return q;
@@ -81,17 +81,14 @@ public class QuestionService implements Iservice<Question> {
 
     @Override
     public void update(Question question) throws SQLException {
-        String sql = "UPDATE question SET quiz_id = ?, question_text = ?, order_index = ?, min_value = ?, max_value = ?, label_min = ?, label_max = ?, required = ? WHERE id = ?";
+        String sql = "UPDATE question SET quiz_id = ?, question_text = ?, order_index = ?, required = ? WHERE id = ?";
 
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
         ps.setInt(1, question.getQuizId());
         ps.setString(2, question.getQuestionText());
         ps.setInt(3, question.getOrderIndex());
-        ps.setInt(4, question.getMinValue());
-        ps.setInt(5, question.getMaxValue());
-        ps.setString(6, question.getLabelMin());
-        ps.setString(7, question.getLabelMax());
-        ps.setBoolean(8, question.isRequired());
+        ps.setBoolean(4, question.isRequired());
+
 
 
         ps.executeUpdate();

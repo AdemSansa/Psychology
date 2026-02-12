@@ -16,6 +16,9 @@ public class Event {
     private LocalDateTime createdAt;
     private Integer organizerId;
 
+    // Image URL
+    private String imageUrl;
+
     // ===== Constructors =====
 
     public Event() {}
@@ -24,7 +27,7 @@ public class Event {
     public Event(String title, String description, String type,
                  LocalDateTime dateStart, LocalDateTime dateEnd,
                  String location, Integer maxParticipants,
-                 String status, Integer organizerId) {
+                 String status, Integer organizerId, String imageUrl) {
 
         this.title = title;
         this.description = description;
@@ -35,13 +38,15 @@ public class Event {
         this.maxParticipants = maxParticipants;
         this.status = status;
         this.organizerId = organizerId;
+        this.imageUrl = imageUrl;
     }
 
     // Full constructor (for SELECT)
     public Event(int idEvent, String title, String description, String type,
                  LocalDateTime dateStart, LocalDateTime dateEnd,
                  String location, Integer maxParticipants,
-                 String status, LocalDateTime createdAt, Integer organizerId) {
+                 String status, LocalDateTime createdAt,
+                 Integer organizerId, String imageUrl) {
 
         this.idEvent = idEvent;
         this.title = title;
@@ -54,6 +59,7 @@ public class Event {
         this.status = status;
         this.createdAt = createdAt;
         this.organizerId = organizerId;
+        this.imageUrl = imageUrl;
     }
 
     // ===== Getters & Setters =====
@@ -146,4 +152,13 @@ public class Event {
         this.organizerId = organizerId;
     }
 
+    // ===== Image URL =====
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

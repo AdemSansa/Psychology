@@ -85,4 +85,24 @@ public class AvailabilityService implements Iservice<Availabilities> {
         ps.executeUpdate();
         System.out.println("Availability deleted successfully!");
     }
+
+    // --- Added for Therapist Management CRUD ---
+    public List<Availabilities> listByTherapistId(int therapistId) throws SQLException {
+        String query = "SELECT * FROM availabilities WHERE therapist_id=?";
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
+        ps.setInt(1, therapistId);
+        ResultSet rs = ps.executeQuery();
+        List<Availabilities> list = new ArrayList<>();
+        while (rs.next()) {
+            Availabilities a = new Availabilities();
+            a.setId(rs.getInt("id"));
+            a.setDay(Day.valueOf(rs.getString("day")));
+            a.setStartTime(rs.getTime("start_time"));
+            a.setEndTime(rs.getTime("end_time"));
+            a.setAvailable(rs.getBoolean("is_available"));
+            a.setTherapistId(rs.getInt("therapist_id"));
+            list.add(a);
+        }
+        return list;
+    }
 }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import java.lang.String?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.Event.EventEditController"
+            prefHeight="500.0" prefWidth="600.0">
+
+    <children>
+        <ScrollPane fitToWidth="true"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0">
+
+            <content>
+                <VBox spacing="15">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <Label text="Edit Event"
+                           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+                    <!-- Title -->
+                    <VBox spacing="5">
+                        <Label text="Title" />
+                        <TextField fx:id="titleField" promptText="Event title" />
+                    </VBox>
+
+                    <!-- Description -->
+                    <VBox spacing="5">
+                        <Label text="Description" />
+                        <TextArea fx:id="descriptionField"
+                                  promptText="Event description"
+                                  prefRowCount="3" />
+                    </VBox>
+
+                    <!-- Type -->
+                    <VBox spacing="5">
+                        <Label text="Type" />
+                        <ComboBox fx:id="typeComboBox" promptText="Select event type">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="online"/>
+                                    <String fx:value="physique"/>
+                                    <String fx:value="hybride"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Start -->
+                    <VBox spacing="5">
+                        <Label text="Start Date Time" />
+                        <DatePicker fx:id="dateStartPicker"/>
+                        <TextField fx:id="timeStartField" promptText="HH:mm" />
+                    </VBox>
+
+                    <!-- End -->
+                    <VBox spacing="5">
+                        <Label text="End Date Time" />
+                        <DatePicker fx:id="dateEndPicker"/>
+                        <TextField fx:id="timeEndField" promptText="HH:mm" />
+                    </VBox>
+
+                    <!-- Location -->
+                    <VBox spacing="5">
+                        <Label text="Location" />
+                        <TextField fx:id="locationField" promptText="Event location" />
+                    </VBox>
+
+                    <!-- Max -->
+                    <VBox spacing="5">
+                        <Label text="Max Participants" />
+                        <TextField fx:id="maxParticipantsField" promptText="Number of participants" />
+                    </VBox>
+
+                    <!-- Status -->
+                    <VBox spacing="5">
+                        <Label text="Status" />
+                        <ComboBox fx:id="statusComboBox" promptText="Select status">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="draft"/>
+                                    <String fx:value="published"/>
+                                    <String fx:value="cancelled"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Image URL -->
+                    <VBox spacing="5">
+                        <Label text="Image URL" />
+                        <TextField fx:id="imageUrlField"
+                                   promptText="https://example.com/image.jpg" />
+
+                        <ImageView fx:id="eventImageView"
+                                   fitHeight="160"
+                                   fitWidth="260"
+                                   preserveRatio="true"
+                                   style="-fx-border-color: #ccc; -fx-border-width: 1;" />
+
+                        <Button text="Preview Image"
+                                onAction="#handlePreviewImage"/>
+                    </VBox>
+
+                    <!-- Buttons -->
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Cancel"
+                                onAction="#handleCancel"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+
+                        <Button text="Update Event"
+                                onAction="#handleUpdateEvent"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+                    </HBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

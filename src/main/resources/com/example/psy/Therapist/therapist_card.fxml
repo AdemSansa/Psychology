@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<VBox fx:id="cardContainer" prefWidth="350.0" prefHeight="220.0" styleClass="therapist-card" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <children>
+                <StackPane prefHeight="50.0" prefWidth="50.0" styleClass="therapist-initials">
+                    <children>
+                        <Label fx:id="initialsLabel" text="SD" styleClass="therapist-initials-label" />
+                    </children>
+                </StackPane>
+                <VBox>
+                    <children>
+                        <Label fx:id="nameLabel" text="Sophie Dubois" styleClass="therapist-name" />
+                        <Label fx:id="roleLabel" text="Psychologue clinicien" styleClass="therapist-role" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <VBox spacing="8.0">
+            <children>
+                <Label fx:id="emailLabel" text="sophie.dubois@email.com" styleClass="therapist-detail" graphicTextGap="10" />
+                <Label fx:id="phoneLabel" text="+33 6 12 34 56 78" styleClass="therapist-detail" graphicTextGap="10" />
+                <Label fx:id="addressLabel" text="12 Rue de la Paix, 75002 Paris" styleClass="therapist-detail" graphicTextGap="10" />
+            </children>
+        </VBox>
+        <Label fx:id="specializationLabel" text="Spécialisée en thérapie cognitivo-comportementale" styleClass="therapist-detail" wrapText="true" />
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Button fx:id="editButton" mnemonicParsing="false" text="Modifier" styleClass="btn-action" prefWidth="100" />
+                <Button fx:id="deleteButton" mnemonicParsing="false" text="Supprimer" styleClass="btn-action, btn-delete" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

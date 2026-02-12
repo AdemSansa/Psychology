@@ -15,4 +15,12 @@ public class HomeController {
     public void gotoUsers() {
         SceneManager.switchScene("/com/example/psy/User/users.fxml");
     }
+
+    @FXML
+    public void gotoEvents() {
+        SceneManager.switchScene("/com/example/psy/Event/events.fxml");
+    }
+
+    @FXML
+    public void gotoTherapists() { SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml"); }
 }

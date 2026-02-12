@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<HBox fx:id="cellContainer" alignment="CENTER_LEFT" spacing="10.0" styleClass="therapist-list-cell" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <StackPane prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #eee; -fx-background-radius: 20;">
+            <children>
+                <Label fx:id="initialsLabel" text="SD" style="-fx-font-weight: bold; -fx-text-fill: #555;" />
+            </children>
+        </StackPane>
+        <VBox alignment="CENTER_LEFT">
+            <children>
+                <Label fx:id="nameLabel" text="Sophie Dubois" styleClass="therapist-list-name" />
+                <Label fx:id="roleLabel" text="Psychologue" styleClass="therapist-list-role" />
+            </children>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+</HBox>

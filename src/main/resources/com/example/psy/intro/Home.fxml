@@ -35,6 +35,12 @@ for your mental well-being."
                 onAction="#gotoUsers"
 
         />
+        <Button text="events list"
+                styleClass="login-button"
+                onAction="#gotoEvents"
+/>
+        <Button text="therapists list" styleClass="login-button" onAction="#gotoTherapists" />
+
     </VBox>
 </AnchorPane>
 

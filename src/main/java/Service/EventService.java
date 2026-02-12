@@ -20,8 +20,8 @@ public class EventService implements Iservice<Event> {
     @Override
     public void create(Event event) throws SQLException {
 
-        String sql = "INSERT INTO event (title, description, type, date_start, date_end, location, max_participants, status, organizer_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO event (title, description, type, date_start, date_end, location, max_participants, status,image_url) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
 
         PreparedStatement ps = cnx.prepareStatement(sql);
 
@@ -29,6 +29,8 @@ public class EventService implements Iservice<Event> {
         ps.setString(2, event.getDescription());
         ps.setString(3, event.getType());
         ps.setTimestamp(4, Timestamp.valueOf(event.getDateStart()));
+
+
 
         if (event.getDateEnd() != null)
             ps.setTimestamp(5, Timestamp.valueOf(event.getDateEnd()));
@@ -43,8 +45,8 @@ public class EventService implements Iservice<Event> {
             ps.setNull(7, Types.INTEGER);
 
         ps.setString(8, event.getStatus());
-        ps.setObject(9, event.getOrganizerId());
 
+        ps.setString(9, event.getImageUrl());
         ps.executeUpdate();
         System.out.println("Event added successfully!");
     }
@@ -69,8 +71,10 @@ public class EventService implements Iservice<Event> {
                     rs.getString("location"),
                     rs.getObject("max_participants") != null ? rs.getInt("max_participants") : null,
                     rs.getString("status"),
+
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getObject("organizer_id") != null ? rs.getInt("organizer_id") : null
+                    rs.getObject("organizer_id") != null ? rs.getInt("organizer_id") : null,
+                    rs.getString("image_url")
             );
 
             events.add(e);
@@ -100,7 +104,8 @@ public class EventService implements Iservice<Event> {
                     rs.getObject("max_participants") != null ? rs.getInt("max_participants") : null,
                     rs.getString("status"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getObject("organizer_id") != null ? rs.getInt("organizer_id") : null
+                    rs.getObject("organizer_id") != null ? rs.getInt("organizer_id") : null,
+                    rs.getString("image_url")
             );
         }
 
@@ -111,7 +116,7 @@ public class EventService implements Iservice<Event> {
     @Override
     public void update(Event event) throws SQLException {
 
-        String sql = "UPDATE event SET title=?, description=?, type=?, date_start=?, date_end=?, location=?, max_participants=?, status=?, organizer_id=? "
+        String sql = "UPDATE event SET title=?, description=?, type=?, date_start=?, date_end=?, location=?, max_participants=?, status=?, organizer_id=?, image_url=? "
                 + "WHERE id_event=?";
 
         PreparedStatement ps = cnx.prepareStatement(sql);
@@ -120,6 +125,8 @@ public class EventService implements Iservice<Event> {
         ps.setString(2, event.getDescription());
         ps.setString(3, event.getType());
         ps.setTimestamp(4, Timestamp.valueOf(event.getDateStart()));
+
+
 
         if (event.getDateEnd() != null)
             ps.setTimestamp(5, Timestamp.valueOf(event.getDateEnd()));
@@ -135,8 +142,8 @@ public class EventService implements Iservice<Event> {
 
         ps.setString(8, event.getStatus());
         ps.setObject(9, event.getOrganizerId());
-        ps.setInt(10, event.getIdEvent());
-
+        ps.setString(10, event.getImageUrl());
+        ps.setInt(11,event.getIdEvent() );
         ps.executeUpdate();
         System.out.println("Event updated successfully!");
     }
