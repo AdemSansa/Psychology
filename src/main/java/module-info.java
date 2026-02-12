@@ -18,4 +18,12 @@ module com.example.psy {
     opens Controllers.User to javafx.fxml;
     exports Entities;
     opens Entities to javafx.fxml;
+    opens Controllers.Therapists to javafx.fxml;
+
+
+
+
+    opens Controllers.Event to javafx.fxml;
+
+    // optional but recommended
 }

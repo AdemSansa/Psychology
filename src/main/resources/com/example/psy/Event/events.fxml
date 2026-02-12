@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Event.EventListController"
+            stylesheets="@../style.css"
+            styleClass="background">
+
+    <!-- ========== TOP (unchanged, but subtitle added) ========== -->
+    <top>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="25" right="30" bottom="15" left="30"/>
+            </padding>
+            <Label text="Events Management" styleClass="app-title"/>
+            <Label text="Upcoming and past therapy events"
+                   styleClass="subtitle"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField"
+                           promptText="Search by title..."
+                           HBox.hgrow="ALWAYS"
+                           styleClass="input"/>
+                <Button text="Search"
+                        styleClass="link-button"/>
+                <Button text="+ Add Event"
+                        styleClass="login-button"
+                        onAction="#handleAddEvent"
+                        style="-fx-pref-width: auto; -fx-pref-height: auto; -fx-padding: 8 20;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ========== CENTER : scrollable card grid ========== -->
+    <center>
+        <ScrollPane fx:id="scrollPane"
+                    fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;">
+
+            <FlowPane fx:id="cardContainer"
+                      hgap="20"
+                      vgap="20"
+                      prefWrapLength="1000"
+                      style="-fx-padding: 20 30 20 30;"/>
+
+        </ScrollPane>
+    </center>
+
+
+    <!-- ========== BOTTOM (unchanged) ========== -->
+    <bottom>
+        <HBox alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="15" right="30" bottom="20" left="30"/>
+            </padding>
+            <Label fx:id="totalEventsLabel" text="Total events: 0"
+                   styleClass="footer-text"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

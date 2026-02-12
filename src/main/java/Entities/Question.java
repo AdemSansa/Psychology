@@ -12,14 +12,7 @@ public class Question {
 
         private int orderIndex;
 
-        private int minValue = 1;
-
-        private int maxValue = 5;
-
-        private String labelMin = "Strongly disagree";
-
-        private String labelMax = "Strongly agree";
-
+        private String imagePath;
 
         private boolean required = true;
 
@@ -42,22 +35,19 @@ public class Question {
         }
 
         public Question(
+                String imagePath,
                 int quiz,
                 String questionText,
                 int orderIndex,
-                int minValue,
-                int maxValue,
-                String labelMin,
-                String labelMax,
+
                 boolean required
         ) {
             this.quizId = quiz;
+            this.imagePath = imagePath;
             this.questionText = questionText;
             this.orderIndex = orderIndex;
-            this.minValue = minValue;
-            this.maxValue = maxValue;
-            this.labelMin = labelMin;
-            this.labelMax = labelMax;
+
+
             this.required = required;
         }
 
@@ -93,37 +83,6 @@ public class Question {
             this.orderIndex = orderIndex;
         }
 
-        public int getMinValue() {
-            return minValue;
-        }
-
-        public void setMinValue(int minValue) {
-            this.minValue = minValue;
-        }
-
-        public int getMaxValue() {
-            return maxValue;
-        }
-
-        public void setMaxValue(int maxValue) {
-            this.maxValue = maxValue;
-        }
-
-        public String getLabelMin() {
-            return labelMin;
-        }
-
-        public void setLabelMin(String labelMin) {
-            this.labelMin = labelMin;
-        }
-
-        public String getLabelMax() {
-            return labelMax;
-        }
-
-        public void setLabelMax(String labelMax) {
-            this.labelMax = labelMax;
-        }
 
         public boolean isRequired() {
             return required;
@@ -136,4 +95,14 @@ public class Question {
         public LocalDateTime getCreatedAt() {
             return createdAt;
         }
+        public void setCreatedAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+        }
+        public String getImagePath() {
+            return imagePath;
+        }
+        public void setImagePath(String imagePath) {
+            this.imagePath = imagePath;
+        }
+        
 }
