@@ -16,127 +16,106 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 
-<StackPane prefHeight="600.0" prefWidth="1024.0" style="-fx-background-color: #f4f6f8;" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Therapists.TherapistCRUDController">
+<StackPane prefHeight="650.0" prefWidth="1100.0" styleClass="background-gradient" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Therapists.TherapistCRUDController">
     <children>
         <!-- MAIN CONTENT -->
-        <VBox spacing="20.0">
+        <VBox spacing="25.0">
             <padding>
                 <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
             </padding>
             <children>
-                <!-- HEADER -->
-                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <!-- HEADER CARD -->
+                <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
                     <children>
                         <VBox>
                             <children>
-                                <Label styleClass="app-title" text="Gestion des Médecins" />
-                                <Label fx:id="totalTherapistsLabel" styleClass="subtitle" text="0 médecin enregistré" />
+                                <Label styleClass="section-title" text="Gestion des Médecins" />
+                                <Label fx:id="totalTherapistsLabel" styleClass="subtitle" style="-fx-font-size: 14px;" text="0 médecin enregistré" />
                             </children>
                         </VBox>
-                        <AnchorPane HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#handleSwitch" styleClass="btn-action" text="Disponibilités ➜" />
-                        <Button mnemonicParsing="false" onAction="#openAddModal" styleClass="btn-add" text="+ Ajouter un médecin" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#handleSwitch" styleClass="btn-secondary" text="Gérer les Disponibilités ➜" />
+                        <Button mnemonicParsing="false" onAction="#openAddModal" styleClass="btn-primary" text="+ Ajouter un médecin" />
                     </children>
                 </HBox>
 
                 <!-- CARDS CONTAINER -->
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
                     <content>
-                        <FlowPane fx:id="cardsContainer" hgap="20.0" vgap="20.0" prefWrapLength="960.0" />
+                        <FlowPane fx:id="cardsContainer" hgap="25.0" vgap="25.0" prefWrapLength="1000.0" style="-fx-padding: 5;" />
                     </content>
                 </ScrollPane>
             </children>
         </VBox>
 
-        <!-- MODAL OVERLAY (Hidden by default) -->
-        <StackPane fx:id="modalOverlay" alignment="CENTER" styleClass="modal-overlay" visible="false">
+        <!-- MODAL OVERLAY -->
+        <StackPane fx:id="modalOverlay" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.4);" visible="false">
             <children>
-                <VBox maxWidth="600.0" spacing="15.0" styleClass="modal-content">
+                <VBox maxWidth="600.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 20, 0, 0, 0);">
                     <children>
                         <!-- Modal Header -->
                         <HBox alignment="CENTER_LEFT">
                             <children>
-                                <Label fx:id="modalTitle" styleClass="modal-header" text="Ajouter un médecin" />
-                                <AnchorPane HBox.hgrow="ALWAYS" />
-                                <Button mnemonicParsing="false" onAction="#closeModal" style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-font-size: 16px; -fx-cursor: hand;" text="✕" textFill="#999999" />
+                                <Label fx:id="modalTitle" styleClass="section-title" style="-fx-font-size: 20px;" text="Ajouter un médecin" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button mnemonicParsing="false" onAction="#closeModal" style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-font-size: 18px; -fx-cursor: hand; -fx-text-fill: #999;" text="✕" />
                             </children>
                         </HBox>
 
                         <!-- Modal Form -->
                         <GridPane hgap="15.0" vgap="15.0">
                             <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
                             </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-                                <VBox spacing="5.0">
-                                    <children>
-                                        <Label styleClass="form-label" text="Nom *" />
-                                        <TextField fx:id="lastNameField" styleClass="form-input" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.columnIndex="1">
-                                    <children>
-                                        <Label styleClass="form-label" text="Prénom *" />
-                                        <TextField fx:id="firstNameField" styleClass="form-input" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.rowIndex="1">
-                                    <children>
-                                        <Label styleClass="form-label" text="Spécialité *" />
-                                        <TextField fx:id="specializationField" styleClass="form-input" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                    <children>
-                                        <Label styleClass="form-label" text="Type Consultation" />
-                                        <ComboBox fx:id="consultationTypeBox" maxWidth="1.7976931348623157E308" styleClass="form-input" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.rowIndex="2">
-                                    <children>
-                                        <Label styleClass="form-label" text="Email *" />
-                                        <TextField fx:id="emailField" styleClass="form-input" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                    <children>
-                                        <Label styleClass="form-label" text="Téléphone *" />
-                                        <TextField fx:id="phoneField" styleClass="form-input" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                    <children>
-                                        <Label styleClass="form-label" text="User ID *" />
-                                        <TextField fx:id="userIdField" styleClass="form-input" promptText="ID utilisateur associé à ce compte" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
-                                    <children>
-                                        <Label styleClass="form-label" text="Description" />
-                                        <TextArea fx:id="descriptionArea" prefHeight="80.0" styleClass="form-input" wrapText="true" />
-                                    </children>
-                                </VBox>
-                            </children>
+                            
+                            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <Label style="-fx-font-weight: bold;" text="Nom *" />
+                                <TextField fx:id="lastNameField" styleClass="form-control" promptText="Nom" />
+                            </VBox>
+                            
+                            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <Label style="-fx-font-weight: bold;" text="Prénom *" />
+                                <TextField fx:id="firstNameField" styleClass="form-control" promptText="Prénom" />
+                            </VBox>
+                            
+                            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                <Label style="-fx-font-weight: bold;" text="Spécialité *" />
+                                <TextField fx:id="specializationField" styleClass="form-control" promptText="Ex: Psychologue" />
+                            </VBox>
+                            
+                            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <Label style="-fx-font-weight: bold;" text="Type Consultation" />
+                                <ComboBox fx:id="consultationTypeBox" maxWidth="Infinity" styleClass="form-control" promptText="Sélectionner" />
+                            </VBox>
+                            
+                            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                <Label style="-fx-font-weight: bold;" text="Email *" />
+                                <TextField fx:id="emailField" styleClass="form-control" promptText="email@example.com" />
+                            </VBox>
+                            
+                            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                <Label style="-fx-font-weight: bold;" text="Téléphone *" />
+                                <TextField fx:id="phoneField" styleClass="form-control" promptText="+33 6..." />
+                            </VBox>
+
+                            <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                <Label style="-fx-font-weight: bold;" text="User ID *" />
+                                <TextField fx:id="userIdField" styleClass="form-control" promptText="ID utilisateur associé" />
+                            </VBox>
+
+                            <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                <Label style="-fx-font-weight: bold;" text="Description" />
+                                <TextArea fx:id="descriptionArea" prefHeight="80.0" styleClass="form-control" wrapText="true" promptText="Brève description..." />
+                            </VBox>
                         </GridPane>
 
                         <!-- Modal Footer -->
                         <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#closeModal" styleClass="btn-action" text="Annuler" />
-                                <Button mnemonicParsing="false" onAction="#handleSave" styleClass="btn-add" text="Enregistrer" />
-                            </children>
-                            <padding>
-                                <Insets top="10.0" />
-                            </padding>
+                            <Button mnemonicParsing="false" onAction="#closeModal" styleClass="btn-secondary" text="Annuler" />
+                            <Button mnemonicParsing="false" onAction="#handleSave" styleClass="btn-primary" text="Enregistrer" />
                         </HBox>
                     </children>
                 </VBox>
