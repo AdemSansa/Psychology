@@ -1,46 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.Welcome.HomeController"
-            stylesheets="@../style.css"
-            prefWidth="900" prefHeight="550">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-    <Pane prefWidth="900" prefHeight="550" styleClass="background"/>
+<AnchorPane prefHeight="550" prefWidth="900" stylesheets="@../style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="Controllers.Welcome.HomeController">
 
-    <VBox alignment="CENTER" spacing="20"
-          layoutX="250" layoutY="140"
-          prefWidth="400"
-          styleClass="login-card">
+    <Pane prefHeight="550" prefWidth="900" styleClass="background" />
 
-        <Label text="Welcome to Slimenify "
-               styleClass="app-title"/>
+                <VBox alignment="CENTER" layoutX="250" layoutY="53.0" prefHeight="482.0" prefWidth="400" spacing="20" styleClass="login-card">
 
-        <Label text="A safe and supportive space
-for your mental well-being."
-               wrapText="true"
-               styleClass="subtitle"/>
+                    <Label styleClass="app-title" text="Welcome to Slimenify " />
 
-        <Button text="Next"
-                styleClass="login-button"
-                onAction="#gotoFeatures"
+                    <Label styleClass="subtitle" text="A safe and supportive space for your mental well-being." wrapText="true" />
 
-                />
-        <Button text="users list"
-                styleClass="login-button"
-                onAction="#gotoUsers"
+                    <Button onAction="#gotoFeatures" styleClass="login-button" text="Next" />
+        <Button onAction="#gotoUsers" styleClass="login-button" text="users list" />
+        <Button onAction="#gotoEvents" styleClass="login-button" text="events list" />
+        <Button onAction="#gotoTherapists" styleClass="login-button" text="therapists list" />
+       <Button onAction="#gotoReview" styleClass="login-button" text="forum" />
 
-        />
-        <Button text="events list"
-                styleClass="login-button"
-                onAction="#gotoEvents"
-/>
-        <Button text="therapists list" styleClass="login-button" onAction="#gotoTherapists" />
-
-    </VBox>
+                </VBox>
 </AnchorPane>
-

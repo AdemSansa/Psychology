@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.forum.AjouterReviewController"
+            prefWidth="900"
+            prefHeight="500"
+            style="-fx-background-color: white;">
+
+    <!-- Partie gauche -->
+    <VBox layoutX="0" layoutY="0" spacing="20" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0" prefWidth="400">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+
+        <Label text="Expliquez votre situation à nos psy" wrapText="true">
+            <font>
+                <Font size="28"/>
+            </font>
+        </Label>
+
+        <Label text="Faites votre demande de manière anonyme et recevez une aide psychologique en 48h."
+               wrapText="true"
+               style="-fx-text-fill: #4A6FA5;"/>
+
+        <VBox spacing="10" style="-fx-background-color: #F5F7FA; -fx-background-radius: 10;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Quelle est votre demande ?" style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="demandeTextArea" promptText="Rédigez votre demande" prefHeight="100"/>
+            <Button text="Envoyer question"
+                    fx:id="envoyerBtn"
+                    onAction="#envoyerReview"
+                    prefWidth="200"
+                    style="-fx-background-color: #1BB6A8; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </VBox>
+    </VBox>
+
+    <!-- Partie droite : vide pour l’instant -->
+    <VBox layoutX="450" layoutY="0" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" prefWidth="450" spacing="20" alignment="CENTER">
+        <!-- Tu peux ajouter d’autres éléments ici si nécessaire -->
+    </VBox>
+
+</AnchorPane>

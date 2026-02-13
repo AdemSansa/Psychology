@@ -5,6 +5,7 @@ module com.example.psy {
     requires jbcrypt;
 
 
+
     opens com.example.psy to javafx.fxml;
     exports application;
     opens application to javafx.fxml;
@@ -19,6 +20,7 @@ module com.example.psy {
     exports Entities;
     opens Entities to javafx.fxml;
     opens Controllers.Therapists to javafx.fxml;
+    opens Controllers.forum to javafx.fxml;
 
 
 
