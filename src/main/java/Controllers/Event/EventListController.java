@@ -1,28 +1,20 @@
 package Controllers.Event;
 
-
 import Entities.Event;
 import Service.EventService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import util.SceneManager;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -33,83 +25,78 @@ import java.util.stream.Collectors;
 
 public class EventListController implements Initializable {
 
-    // ===== FXML injected components =====
     @FXML private TextField searchField;
     @FXML private FlowPane cardContainer;
     @FXML private Label totalEventsLabel;
+
     private final EventService eventService = new EventService();
 
-    // ===== Data =====
     private ObservableList<Event> events = FXCollections.observableArrayList();
     private ObservableList<Event> filteredEvents = FXCollections.observableArrayList();
 
-    // ===== Date formatter =====
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd MMM yyyy · HH:mm");
-    private void refreshEvents() {
-        loadEventsFromDB();
-    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loadEventsFromDB();
-        // 2. Initially filtered = all events
-        filteredEvents.setAll(events);
 
-        // 3. Render cards
-        renderCards();
-
-        // 4. Update total label
-        updateTotalLabel();
-
-        // 5. Add live search listener
         searchField.textProperty().addListener((obs, oldVal, newVal) -> handleSearch());
+
+        // ===== FIX SCROLL =====
+        cardContainer.heightProperty().addListener((obs, oldVal, newVal) -> {
+            cardContainer.setPrefHeight(newVal.doubleValue());
+        });
     }
+
+    // ================= LOAD =================
     private void loadEventsFromDB() {
         try {
-            events.setAll(eventService.list());  // fetch from DB
+            events.setAll(eventService.list());
             filteredEvents.setAll(events);
             renderCards();
             updateTotalLabel();
-            System.out.println("Loaded " + events.size() + " events from DB.");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load events.");
         }
     }
-    // ===== CARD CREATION =====
-    private StackPane createImagePlaceholder() {
-        Rectangle bg = new Rectangle(260, 140);
-        bg.setFill(Color.web("#ac9885"));
-        bg.setArcWidth(16);
-        bg.setArcHeight(16);
 
-        Label icon = new Label("No Image");
-        icon.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
-
-        return new StackPane(bg, icon);
-    }
+    // ================= CARD =================
     private VBox createEventCard(Event event) {
-        // ----- Image placeholder (accent beige) -----
+        // ===== COUNTDOWN =====
+        Label countdownLabel = new Label(getCountdown(event));
+
+// 🔥 COLOR AUTO
+        LocalDateTime now = LocalDateTime.now();
+
+        if (event.getDateEnd() != null && now.isAfter(event.getDateEnd())) {
+            countdownLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+        }
+        else if (event.getDateStart() != null && now.isAfter(event.getDateStart())) {
+            countdownLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+        }
+        else {
+            countdownLabel.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+        }
+
+
+        // ===== IMAGE =====
         StackPane imageContainer = new StackPane();
-        imageContainer.setPrefSize(260, 140);
-        imageContainer.setMaxSize(260, 140);
-        imageContainer.setStyle("-fx-background-radius: 12; -fx-overflow: hidden;");
+        imageContainer.setPrefSize(300, 170);
 
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(260);
-        imageView.setFitHeight(140);
+        imageView.setFitWidth(300);
+        imageView.setFitHeight(170);
         imageView.setPreserveRatio(false);
 
-// Rounded clip
-        Rectangle clip = new Rectangle(260, 140);
-        clip.setArcWidth(16);
-        clip.setArcHeight(16);
+        Rectangle clip = new Rectangle(300, 170);
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
         imageView.setClip(clip);
 
         if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
             try {
-                Image img = new Image(event.getImageUrl(), true);
-                imageView.setImage(img);
+                imageView.setImage(new Image(event.getImageUrl(), true));
                 imageContainer.getChildren().add(imageView);
             } catch (Exception e) {
                 imageContainer.getChildren().add(createImagePlaceholder());
@@ -118,203 +105,179 @@ public class EventListController implements Initializable {
             imageContainer.getChildren().add(createImagePlaceholder());
         }
 
-
-
-        // ----- Title -----
+        // ===== TITLE =====
         Label titleLabel = new Label(event.getTitle());
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3f4f4f;");
+        titleLabel.setWrapText(true);
+        titleLabel.setMaxWidth(260);
+        titleLabel.setStyle("""
+            -fx-font-size: 18px;
+            -fx-font-weight: bold;
+            -fx-text-fill: #3e2c23;
+        """);
 
-        // ----- Date & location (metadata) -----
-        Label dateLabel = new Label(formatDate(event.getDateStart()));
-        dateLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7a8a8a;");
+        // ===== META INFO =====
+        Label startLabel = new Label("📅 Start: " + formatDate(event.getDateStart()));
+        Label endLabel = new Label("⏱ End: " + formatDate(event.getDateEnd()));
+        Label participantsLabel = new Label("👥 Max participants: " + event.getMaxParticipants());
 
-        Label locationLabel = new Label(event.getLocation());
-        locationLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7a8a8a;");
+        startLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
+        endLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
+        participantsLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
 
-        HBox metaRow = new HBox(8, dateLabel, new Label("•"), locationLabel);
-        metaRow.setAlignment(Pos.CENTER_LEFT);
-        metaRow.setStyle("-fx-font-size: 13px; -fx-text-fill: #7a8a8a;");
+        VBox metaBox = new VBox(4, startLabel, endLabel, participantsLabel);
 
-        // ----- Type badge (soft green chip) -----
+        // ===== TYPE BADGE =====
         Label typeBadge = new Label(event.getType());
-        typeBadge.setStyle(
-                "-fx-background-color: derive(#7b9e7f, 80%);" +
-                        "-fx-text-fill: #3f4f4f;" +
-                        "-fx-background-radius: 14;" +
-                        "-fx-padding: 4 12 4 12;" +
-                        "-fx-font-size: 12px;"
-        );
+        typeBadge.setStyle("""
+            -fx-background-color: #e3f2fd;
+            -fx-text-fill: #1565c0;
+            -fx-background-radius: 14;
+            -fx-padding: 3 10;
+        """);
 
-        // ----- Description (truncated) -----
+        // ===== DESCRIPTION =====
         Label descLabel = new Label(event.getDescription());
         descLabel.setWrapText(true);
-        descLabel.setMaxWidth(240);
-        descLabel.setMaxHeight(60);
-        descLabel.setStyle(
-                "-fx-font-size: 13px;" +
-                        "-fx-text-fill: #3f4f4f;" +
-                        "-fx-line-spacing: 2;"
-        );
+        descLabel.setMaxWidth(260);
+        descLabel.setMaxHeight(80);
+        descLabel.setStyle("""
+            -fx-font-size: 13px;
+            -fx-text-fill: #5c4a3f;
+        """);
 
-        // ----- Status badge (uses existing CSS classes) -----
+        // ===== STATUS =====
         Label statusBadge = new Label(event.getStatus());
-        statusBadge.getStyleClass().addAll("status-badge");
-        switch (event.getStatus().toLowerCase()) {
-            case "published":
-                statusBadge.getStyleClass().add("status-scheduled"); // green
-                break;
-            case "cancelled":
-                statusBadge.getStyleClass().add("status-cancelled"); // soft red
-                break;
-            case "draft":
-            default:
-                statusBadge.getStyleClass().add("status-full");      // beige
-                break;
-        }
+        statusBadge.setStyle("""
+            -fx-background-color: #ede7f6;
+            -fx-text-fill: #5e35b1;
+            -fx-background-radius: 14;
+            -fx-padding: 3 10;
+        """);
 
-        // ----- Action buttons (link-button style) -----
+        // ===== BUTTONS =====
         Button editBtn = new Button("Edit");
-        editBtn.getStyleClass().add("link-button");
+        editBtn.getStyleClass().add("btn-primary");
         editBtn.setOnAction(e -> handleEdit(event));
 
         Button deleteBtn = new Button("Delete");
-        deleteBtn.getStyleClass().add("link-button");
+        deleteBtn.getStyleClass().add("btn-primary");
         deleteBtn.setOnAction(e -> {
             try {
                 handleDelete(event);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
 
-        HBox actions = new HBox(15, editBtn, deleteBtn);
-        actions.setAlignment(Pos.CENTER_RIGHT);
+        HBox btnRow = new HBox(10, editBtn, deleteBtn);
+        btnRow.setAlignment(Pos.CENTER_RIGHT);
 
-        // ----- Row: status badge (left) + actions (right) -----
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox statusActionRow = new HBox(10, statusBadge, spacer, actions);
-        statusActionRow.setAlignment(Pos.CENTER_LEFT);
+        HBox bottomRow = new HBox(10, statusBadge, spacer, btnRow);
 
-        // ----- Assemble card -----
+        // ===== CARD =====
         VBox card = new VBox(12);
-        card.getStyleClass().add("login-card");   // white background, shadow
-        card.setStyle(
-                "-fx-padding: 16;" +
-                        "-fx-background-radius: 18;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);"
-        );
-        card.setPrefWidth(280);
-        card.setMaxWidth(280);
+        card.setPrefWidth(300);
+        card.getStyleClass().add("event-card");
 
         card.getChildren().addAll(
                 imageContainer,
                 titleLabel,
-                metaRow,
+                metaBox,
+                countdownLabel,
                 typeBadge,
                 descLabel,
-                statusActionRow
+                bottomRow
         );
+
 
         return card;
     }
 
-    // ===== RENDER CARDS =====
+    private StackPane createImagePlaceholder() {
+        Rectangle bg = new Rectangle(300, 170);
+        bg.setFill(Color.LIGHTGRAY);
+        return new StackPane(bg, new Label("No Image"));
+    }
+
     private void renderCards() {
         cardContainer.getChildren().clear();
-        for (Event event : filteredEvents) {
-            cardContainer.getChildren().add(createEventCard(event));
+        for (Event e : filteredEvents) {
+            cardContainer.getChildren().add(createEventCard(e));
         }
     }
 
-    // ===== SEARCH =====
-    @FXML
     private void handleSearch() {
         String query = searchField.getText().toLowerCase().trim();
-        if (query.isEmpty()) {
-            filteredEvents.setAll(events);
-        } else {
-            filteredEvents.setAll(
-                    events.stream()
-                            .filter(e -> e.getTitle().toLowerCase().contains(query) ||
-                                    e.getDescription().toLowerCase().contains(query))
-                            .collect(Collectors.toList())
-            );
-        }
+        if (query.isEmpty()) filteredEvents.setAll(events);
+        else filteredEvents.setAll(
+                events.stream()
+                        .filter(e -> e.getTitle().toLowerCase().contains(query)
+                                || e.getDescription().toLowerCase().contains(query))
+                        .collect(Collectors.toList())
+        );
         renderCards();
         updateTotalLabel();
     }
 
-    // ===== ADD EVENT =====
+    // ================= NAVIGATION =================
+    @FXML
+    private void handleBack() {
+        SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
+    }
+
     @FXML
     private void handleAddEvent() {
-
-
-            SceneManager.switchScene("/com/example/psy/Event/eventAdd.fxml");
-        refreshEvents();
-
+        SceneManager.switchScene("/com/example/psy/Event/eventAdd.fxml");
     }
 
-    // ===== EDIT EVENT =====
     private void handleEdit(Event event) {
-
-
-             EventEditController controller = SceneManager.switchSceneWithController("/com/example/psy/Event/eventEdit.fxml");
-             controller.setEvent(event);
-
-
-            // 🔄 Refresh after editing
-            refreshEvents();
-
-    }
-
-    // ===== DELETE EVENT =====
-    private void handleDelete(Event event) throws SQLException {
-
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirm Deletion");
-        confirmation.setHeaderText("Delete Event");
-        confirmation.setContentText("Are you sure you want to delete this event?");
-
-        Optional<ButtonType> result = confirmation.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-
-            // Remove from UI lists
-            events.remove(event);
-            filteredEvents.remove(event);
-
-            // Remove from database
-            eventService.delete(event.getIdEvent());
-
-            // Refresh UI
-            renderCards();
-            updateTotalLabel();
-
-            showAlert(Alert.AlertType.INFORMATION,
-                    "Deleted",
-                    "Event deleted successfully.");
+        EventEditController controller =
+                (EventEditController) SceneManager.switchSceneWithController("/com/example/psy/Event/eventEdit.fxml");
+        if (controller != null) {
+            controller.setEvent(event);
         }
     }
 
-    // ===== HELPER: format date =====
-    private String formatDate(LocalDateTime dateTime) {
-        return dateTime != null ? dateTime.format(DATE_FORMATTER) : "TBA";
+    private void handleDelete(Event event) throws SQLException {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setContentText("Delete this event?");
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            eventService.delete(event.getIdEvent());
+            loadEventsFromDB();
+        }
     }
 
-    // ===== UPDATE TOTAL LABEL =====
     private void updateTotalLabel() {
         totalEventsLabel.setText("Total events: " + filteredEvents.size());
     }
 
-    // ===== SAMPLE DATA =====
-
-
-    private void showAlert(Alert.AlertType type, String title, String msg) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+    private String formatDate(LocalDateTime date) {
+        return date != null ? date.format(DATE_FORMATTER) : "TBA";
     }
+    //-------getcountdown---------
+    private String getCountdown(Event event) {
+
+        if (event.getDateStart() == null) return "";
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (event.getDateEnd() != null && now.isAfter(event.getDateEnd()))
+            return "Finished";
+
+        if (now.isAfter(event.getDateStart()))
+            return "Started";
+
+        long minutes = java.time.Duration.between(now, event.getDateStart()).toMinutes();
+
+        long days = minutes / (60 * 24);
+        long hours = (minutes % (60 * 24)) / 60;
+        long mins = minutes % 60;
+
+        return "⏳ " + days + "d " + hours + "h " + mins + "m";
+    }
+
+
 }
