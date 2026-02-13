@@ -5,9 +5,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class SceneManager {
+
     private static Stage stage;
 
     public static void setStage(Stage primaryStage) {
@@ -16,16 +15,17 @@ public class SceneManager {
 
     public static void switchScene(String fxmlPath) {
         try {
-            Parent root = FXMLLoader.load(
-                    SceneManager.class.getResource(fxmlPath)
-            );
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
+            Parent root = loader.load();
+
             stage.setScene(new Scene(root));
             stage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    // Scene switch WITH controller access
+
     public static <T> T switchSceneWithController(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
@@ -36,11 +36,12 @@ public class SceneManager {
 
             return loader.getController();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-
+    public static void goBack() {
+    }
 }
