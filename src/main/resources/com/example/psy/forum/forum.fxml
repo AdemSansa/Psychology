@@ -1,48 +1,45 @@
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <HBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="Controllers.forum.ForumController"
       spacing="40"
-      style="-fx-padding: 40; -fx-background-color: #f4f6f9;">
+      style="-fx-padding: 40; -fx-background-color: #F0F8F5;">
 
     <!-- LEFT SIDE -->
-    <VBox spacing="20" prefWidth="400">
+    <VBox spacing="20" prefWidth="400"
+          style="-fx-background-color:#F5F5DC;
+                 -fx-padding:20;
+                 -fx-background-radius:20;">
 
-        <Label text="Explain your situation to our therapist"
-               style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+        <Label text="✨ Share Your Experience"
+               style="-fx-font-size:22px;
+                      -fx-font-weight:bold;
+                      -fx-text-fill:#2E7D32;" />
 
-        <Label text="Submit your request anonymously and receive help within 48h."
-               style="-fx-text-fill: #5a6a85;" />
+        <Label text="Your words may inspire and help someone today."
+               style="-fx-text-fill:#4E6E58;" />
 
-        <VBox spacing="10"
-              style="-fx-background-color: #e9eef3;
-                     -fx-padding: 20;
-                     -fx-background-radius: 15;">
+        <TextArea fx:id="contentField"
+                  prefHeight="150"
+                  wrapText="true"
+                  promptText="Write something meaningful..."
+                  style="-fx-background-radius:15;" />
 
-            <Label text="What is your concern?"
-                   style="-fx-font-weight: bold;" />
-
-            <TextArea fx:id="contentField"
-                      prefHeight="150"
-                      wrapText="true"
-                      style="-fx-background-radius: 10;" />
-
-            <Button text="Submit question"
-                    onAction="#addReview"
-                    style="-fx-background-color: #2cb5a0;
-                           -fx-text-fill: white;
-                           -fx-font-weight: bold;
-                           -fx-background-radius: 8;" />
-        </VBox>
-
+        <Button text="🌿 Submit Message"
+                onAction="#addReview"
+                style="-fx-background-color:#A5D6A7;
+                       -fx-text-fill:#1B5E20;
+                       -fx-font-weight:bold;
+                       -fx-background-radius:20;
+                       -fx-padding:8 20;" />
     </VBox>
 
     <!-- RIGHT SIDE -->
-    <ScrollPane fitToWidth="true" prefWidth="500">
+    <ScrollPane fitToWidth="true" prefWidth="600">
         <content>
             <VBox fx:id="reviewContainer" spacing="15"/>
         </content>
