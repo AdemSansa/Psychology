@@ -10,8 +10,7 @@ import java.sql.Connection;
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage) throws Exception {
-
+    public void start(Stage stage) throws  Exception {
         // Give stage to SceneManager
         SceneManager.setStage(stage);
 
@@ -23,6 +22,8 @@ public class Main extends Application {
 
         // Database connection
         Connection conn = dbconnect.getInstance().getConnection();
+
+      
     }
 
     public static void main(String[] args) {

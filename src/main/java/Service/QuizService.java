@@ -15,9 +15,16 @@ import java.util.List;
 public class QuizService implements Iservice<Quiz> {
     @Override
     public void create(Quiz quiz) throws SQLException {
+        // Implementation remains void to satisfy interface, but logic moved to
+        // createAndReturnId
+        createAndReturnId(quiz);
+    }
+
+    public int createAndReturnId(Quiz quiz) throws SQLException {
 
         String sql = "INSERT INTO quiz (title, description,category,total_questions,active,min_score,max_score,created_at,updated_at) VALUES (?, ?,?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql,
+                Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, quiz.getTitle());
         ps.setString(2, quiz.getDescription());
         ps.setString(3, quiz.getCategory());
@@ -28,7 +35,11 @@ public class QuizService implements Iservice<Quiz> {
         ps.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
         ps.setTimestamp(9, new java.sql.Timestamp(System.currentTimeMillis()));
         ps.executeUpdate();
-        System.out.println("Quiz added successfully!");
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+        return -1;
     }
 
     @Override
@@ -40,6 +51,7 @@ public class QuizService implements Iservice<Quiz> {
         ResultSet rs = st.executeQuery(sql);
         while (rs.next()) {
             Quiz q = new Quiz();
+            q.setId((long) rs.getInt("id"));
             q.setTitle(rs.getString("title"));
             q.setDescription(rs.getString("description"));
             q.setCategory(rs.getString("category"));
@@ -79,28 +91,58 @@ public class QuizService implements Iservice<Quiz> {
     public void update(Quiz quiz) throws SQLException {
 
         String sql = "UPDATE quiz SET title = ?, description = ?, category = ?, total_questions = ?, active = ?, min_score = ?, max_score = ?, updated_at = ? WHERE id = ?";
-            PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, quiz.getTitle());
-            ps.setString(2, quiz.getDescription());
-            ps.setString(3, quiz.getCategory());
-            ps.setInt(4, quiz.getTotalQuestions());
-            ps.setBoolean(5, quiz.isActive());
-            ps.setInt(6, quiz.getMinScore());
-            ps.setInt(7, quiz.getMaxScore());
-            ps.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
-            ps.setInt(9, quiz.getId().intValue());
-            ps.executeUpdate();
-            System.out.println("Quiz updated successfully!");
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
+        ps.setString(1, quiz.getTitle());
+        ps.setString(2, quiz.getDescription());
+        ps.setString(3, quiz.getCategory());
+        ps.setInt(4, quiz.getTotalQuestions());
+        ps.setBoolean(5, quiz.isActive());
+        ps.setInt(6, quiz.getMinScore());
+        ps.setInt(7, quiz.getMaxScore());
+        ps.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
+        ps.setInt(9, quiz.getId().intValue());
+        ps.executeUpdate();
+        System.out.println("Quiz updated successfully!");
     }
 
     @Override
     public void delete(int id) throws SQLException {
+        // Delete related questions first (junction table)
+        String sqlQuestions = "DELETE FROM quiz_question WHERE quiz_id = ?";
+        PreparedStatement psQuestions = dbconnect.getInstance().getConnection().prepareStatement(sqlQuestions);
+        psQuestions.setInt(1, id);
+        psQuestions.executeUpdate();
 
+        // Then delete the quiz
         String sql = "DELETE FROM quiz WHERE id = ?";
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
+        System.out.println("Deleting quiz with ID: " + id);
         ps.setInt(1, id);
         ps.executeUpdate();
         System.out.println("Quiz deleted successfully!");
 
+    }
+
+    public void addQuestionToQuiz(int quizId, int questionId) throws SQLException {
+        String sql = "INSERT INTO quiz_question (quiz_id, question_id) VALUES (?, ?)";
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
+        ps.setInt(1, quizId);
+        ps.setInt(2, questionId);
+        try {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+
+            if (!e.getSQLState().startsWith("23")) {
+                throw e;
+            }
+        }
+    }
+
+    public void removeQuestionFromQuiz(int quizId, int questionId) throws SQLException {
+        String sql = "DELETE FROM quiz_question WHERE quiz_id = ? AND question_id = ?";
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
+        ps.setInt(1, quizId);
+        ps.setInt(2, questionId);
+        ps.executeUpdate();
     }
 }
