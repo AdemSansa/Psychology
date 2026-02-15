@@ -38,6 +38,9 @@
 
             <Button text="Appoitnments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
 
+            <Button text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
+
+
             <Region VBox.vgrow="ALWAYS" />
             
             <Button text="Logout" styleClass="logout-btn" maxWidth="Infinity"/>

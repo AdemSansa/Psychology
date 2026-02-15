@@ -122,7 +122,8 @@
 .card-number {
     -fx-font-size: 30px;
     -fx-font-weight: 800;
-    -fx-text-fill: black;   /* ✅ TEXTE NOIR */
+    -fx-text-fill: black;
+    /* ✅ TEXTE NOIR */
 }
 
 /* ===============================
@@ -237,6 +238,50 @@
     -fx-text-fill: white;
 
 }
-    .booked-entry {
-        -fx-background-color: #6f4e37;
-    }
+
+.booked-entry {
+    -fx-background-color: #6f4e37;
+}
+
+/* ===============================
+   QUIZ CARD
+   =============================== */
+
+.quiz-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 10, 0, 0, 2);
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.quiz-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.25), 15, 0, 0, 4);
+    -fx-translate-y: -3;
+    -fx-border-color: #6f4e37;
+}
+
+.card-category {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #6f4e37;
+    /* Darker brown for better contrast */
+    -fx-background-radius: 4;
+    -fx-padding: 4 8;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    /* Larger font */
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c1a12;
+    /* Very dark brown/almost black */
+}
+
+.card-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: normal;
+}
