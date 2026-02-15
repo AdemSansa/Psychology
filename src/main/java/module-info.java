@@ -26,6 +26,7 @@ module com.example.psy {
 
 
 
+    opens Controllers.QuizAssesment to javafx.fxml;
 
 
     opens Controllers.Event to javafx.fxml;

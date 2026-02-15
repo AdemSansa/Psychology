@@ -39,4 +39,5 @@ public class HomeController {
 
     public void gotoAppoitnments() { SceneManager.switchScene("/com/example/psy/Appointment/AppointmentCalendar.fxml"); }
 
+    public void gotoQuizAssesment() { SceneManager.switchScene("/com/example/psy/QuizAssesment/quizList.fxml"); }
 }

@@ -145,4 +145,31 @@ public class QuizService implements Iservice<Quiz> {
         ps.setInt(2, questionId);
         ps.executeUpdate();
     }
+
+    public List<Question> getQuestionsForQuiz(int quizId) throws SQLException {
+        List<Question> questions = new ArrayList<>();
+        String sql = "SELECT q.* FROM question q " +
+                "JOIN quiz_question qq ON q.id = qq.question_id " +
+                "WHERE qq.quiz_id = ?";
+
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql);
+        ps.setInt(1, quizId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Question question = new Question();
+            question.setId(rs.getLong("id"));
+            question.setQuestionText(rs.getString("question_text"));
+            question.setImagePath(rs.getString("image_path"));
+            question.setRequired(rs.getBoolean("required"));
+            // Note: order_index might be relevant for ordering, but Question entity
+            // constructor used in other places implies it might not be a field directly in
+            // the entity
+            // or it was removed in a previous refactor.
+            // Checking Question.java content from step 62, it has no orderIndex field.
+
+            questions.add(question);
+        }
+        return questions;
+    }
 }
