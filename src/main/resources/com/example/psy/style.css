@@ -1,26 +1,128 @@
 /* ===============================
-   GLOBAL ROOT
+   MARRON & BEIGE MODERN PALETTE
    =============================== */
 
 .root {
-    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
     -fx-font-size: 13px;
     -fx-background-color: linear-gradient(to bottom right, #f5efe6, #e8dccb);
     -fx-text-fill: #3e2c23;
 }
+
+/* ===============================
+   BACKGROUND
+   =============================== */
 
 .background-gradient {
     -fx-background-color: linear-gradient(to bottom right, #f5efe6, #e8dccb);
 }
 
 /* ===============================
-   TITLES
+   SIDEBAR
    =============================== */
+
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #6f4e37, #4e342e);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+}
+
+.logo-title {
+    -fx-text-fill: #f5efe6;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 20 0;
+}
+
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f5efe6;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 15;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: #d2b48c;
+}
+
+.logout-btn {
+    -fx-background-color: rgba(120, 40, 40, 0.1);
+    -fx-text-fill: #8b0000;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #8b0000;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #8b0000;
+    -fx-text-fill: white;
+}
+
+/* ===============================
+   TOPBAR
+   =============================== */
+
+.topbar {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f0e6d6);
+    -fx-padding: 15 30;
+    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
+}
+
+.welcome-text {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4e342e;
+}
+
+/* ===============================
+   DASHBOARD
+   =============================== */
+
+.dashboard-content {
+    -fx-padding: 30;
+}
 
 .section-title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: linear-gradient(to right, #6f4e37, #d2b48c);
+}
+
+/* ===============================
+   STAT CARDS
+   =============================== */
+
+.stat-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 10, 0, 0, 5);
+    -fx-min-width: 220;
+    -fx-min-height: 120;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(111, 78, 55, 0.25), 15, 0, 0, 5);
+    -fx-translate-y: -2;
+}
+
+.card-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #555555;
+}
+
+.card-number {
+    -fx-font-size: 30px;
+    -fx-font-weight: 800;
+    -fx-text-fill: black;   /* ✅ TEXTE NOIR */
 }
 
 /* ===============================
@@ -32,25 +134,12 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 25;
-    -fx-padding: 8 20;
+    -fx-padding: 10 25;
     -fx-cursor: hand;
 }
 
 .btn-primary:hover {
     -fx-background-color: linear-gradient(to right, #5a3e2b, #c4a484);
-}
-
-/* Optional red delete button */
-.btn-danger {
-    -fx-background-color: linear-gradient(to right, #8b0000, #c62828);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 25;
-    -fx-padding: 8 20;
-}
-
-.btn-danger:hover {
-    -fx-background-color: linear-gradient(to right, #6d0000, #b71c1c);
 }
 
 .btn-secondary {
@@ -68,44 +157,7 @@
 }
 
 /* ===============================
-   EVENT CARD
-   =============================== */
-
-.event-card {
-    -fx-background-color: white;
-    -fx-background-radius: 20;
-    -fx-padding: 14;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 18, 0, 0, 6);
-}
-
-.event-card:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 25, 0, 0, 10);
-}
-
-/* ===============================
-   BADGES
-   =============================== */
-
-.badge-type {
-    -fx-background-color: #e3f2fd;
-    -fx-text-fill: #1565c0;
-    -fx-background-radius: 14;
-    -fx-padding: 3 10;
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-}
-
-.badge-status {
-    -fx-background-color: #ede7f6;
-    -fx-text-fill: #5e35b1;
-    -fx-background-radius: 14;
-    -fx-padding: 3 10;
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-}
-
-/* ===============================
-   FORM CONTROLS
+   FORMS
    =============================== */
 
 .form-control {
@@ -114,6 +166,7 @@
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 10;
+    -fx-font-size: 13px;
 }
 
 .form-control:focused {
@@ -122,137 +175,68 @@
 }
 
 /* ===============================
-   TEXT COLORS
+   TABLE VIEW
    =============================== */
 
-.text-muted {
-    -fx-text-fill: #777777;
-}
-
-.text-soft {
-    -fx-text-fill: #5c4a3f;
-}
-
-/* ===============================
-   INPUT SEARCH
-   =============================== */
-
-.search-field {
-    -fx-background-color: #f4f6f8;
-    -fx-background-radius: 25;
-    -fx-padding: 6 12;
-}
-
-/* ===============================
-   IMAGE PLACEHOLDER
-   =============================== */
-
-.image-placeholder {
-    -fx-background-color: #d2b48c;
-    -fx-background-radius: 20;
-    -fx-alignment: center;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-/* ===============================
-   REMOVE BLUE FOCUS BACKGROUND
-   =============================== */
-
-.root {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-}
-
-/* Remove ScrollPane blue */
-.scroll-pane {
+.table-view {
     -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
 }
 
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f2e8dc);
 }
 
-/* Remove FlowPane focus background */
-.flow-pane {
-    -fx-background-color: transparent;
-}
-.therapist-name {
-    -fx-text-fill: #4e342e;      /* deep coffee brown */
-    -fx-font-size: 16px;
+.table-view .column-header .label {
+    -fx-text-fill: #4e342e;
     -fx-font-weight: bold;
-}
-.therapist-role {
-    -fx-text-fill: #7b5e48;      /* soft warm brown */
-    -fx-font-size: 13px;
-}
-.therapist-detail {
-    -fx-text-fill: #5f5b55;      /* warm charcoal */
-    -fx-font-size: 12.5px;
-}
-.therapist-card:hover .therapist-name {
-    -fx-text-fill: #6f4e37;
-}
-#specializationLabel {
-    -fx-text-fill: #6b6258;
-    -fx-font-style: italic;
-}
-
-/* ===============================
-   QUIZ CARD
-   =============================== */
-
-.quiz-card {
-    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
-    -fx-border-color: #e0d6c8;
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-}
-
-.quiz-card:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(111, 78, 55, 0.25), 15, 0, 0, 5);
-    -fx-translate-y: -2;
-    -fx-border-color: #6f4e37;
-}
-
-.card-category {
-    -fx-background-color: #e8dccb;
-    -fx-text-fill: #6f4e37;
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-    -fx-padding: 4 8;
-    -fx-background-radius: 15;
-}
-
-.card-status-active {
-    -fx-text-fill: #27ae60;
-    -fx-font-weight: bold;
-    -fx-font-size: 11px;
-    -fx-background-color: rgba(39, 174, 96, 0.1);
-    -fx-padding: 2 6;
-    -fx-background-radius: 4;
-}
-
-.card-status-inactive {
-    -fx-text-fill: #7f8c8d;
-    -fx-font-weight: bold;
-    -fx-font-size: 11px;
-    -fx-background-color: rgba(127, 140, 141, 0.1);
-    -fx-padding: 2 6;
-    -fx-background-radius: 4;
-}
-
-.card-subtitle {
-    -fx-text-fill: #7b5e48;
     -fx-font-size: 12px;
 }
 
-.btn-sm {
-    -fx-padding: 5 12;
-    -fx-font-size: 11px;
+.table-row-cell {
+    -fx-background-color: white;
 }
 
-.booked-entry {
-    -fx-background-color: #6f4e37;
+.table-row-cell:odd {
+    -fx-background-color: #faf6f0;
 }
+
+.table-row-cell:selected {
+    -fx-background-color: #e8dccb;
+}
+
+/* ===============================
+   THERAPIST CARD
+   =============================== */
+
+.therapist-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
+    -fx-background-radius: 12;
+    -fx-border-color: #e0d6c8;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 15;
+}
+
+.therapist-card:hover {
+    -fx-border-color: #6f4e37;
+    -fx-effect: dropshadow(gaussian, rgba(111, 78, 55, 0.25), 15, 0, 0, 4);
+}
+
+.therapist-initials {
+    -fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c);
+    -fx-background-radius: 50;
+    -fx-min-width: 60;
+    -fx-min-height: 60;
+    -fx-alignment: center;
+}
+
+.therapist-initials-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+
+}
+    .booked-entry {
+        -fx-background-color: #6f4e37;
+    }
