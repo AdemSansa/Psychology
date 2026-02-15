@@ -12,17 +12,17 @@ public class TherapistService implements Iservice<Therapistis> {
 
     @Override
     public void create(Therapistis therapist) throws SQLException {
-        String query = "INSERT INTO therapists (first_name, last_name, email, phone_number, specialization, description, consultation_type, status, user_id, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,NOW(),NOW())";
+        String query = "INSERT INTO therapists (first_name, last_name, email, password, phone_number, specialization, description, consultation_type, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,NOW(),NOW())";
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
         ps.setString(1, therapist.getFirstName());
         ps.setString(2, therapist.getLastName());
         ps.setString(3, therapist.getEmail());
-        ps.setString(4, therapist.getPhoneNumber());
-        ps.setString(5, therapist.getSpecialization());
-        ps.setString(6, therapist.getDescription());
-        ps.setString(7, therapist.getConsultationType());
-        ps.setString(8, therapist.getStatus());
-        ps.setInt(9, therapist.getUserId());
+        ps.setString(4, therapist.getPassword());
+        ps.setString(5, therapist.getPhoneNumber());
+        ps.setString(6, therapist.getSpecialization());
+        ps.setString(7, therapist.getDescription());
+        ps.setString(8, therapist.getConsultationType());
+        ps.setString(9, therapist.getStatus());
         ps.executeUpdate();
         System.out.println("Therapist added successfully!");
     }
@@ -40,12 +40,12 @@ public class TherapistService implements Iservice<Therapistis> {
             t.setFirstName(rs.getString("first_name"));
             t.setLastName(rs.getString("last_name"));
             t.setEmail(rs.getString("email"));
+            t.setPassword(rs.getString("password"));
             t.setPhoneNumber(rs.getString("phone_number"));
             t.setSpecialization(rs.getString("specialization"));
             t.setDescription(rs.getString("description"));
             t.setConsultationType(rs.getString("consultation_type"));
             t.setStatus(rs.getString("status"));
-            t.setUserId(rs.getInt("user_id"));
             t.setCreatedAt(rs.getTimestamp("created_at"));
             t.setUpdatedAt(rs.getTimestamp("updated_at"));
             list.add(t);
@@ -66,12 +66,12 @@ public class TherapistService implements Iservice<Therapistis> {
             t.setFirstName(rs.getString("first_name"));
             t.setLastName(rs.getString("last_name"));
             t.setEmail(rs.getString("email"));
+            t.setPassword(rs.getString("password"));
             t.setPhoneNumber(rs.getString("phone_number"));
             t.setSpecialization(rs.getString("specialization"));
             t.setDescription(rs.getString("description"));
             t.setConsultationType(rs.getString("consultation_type"));
             t.setStatus(rs.getString("status"));
-            t.setUserId(rs.getInt("user_id"));
             t.setCreatedAt(rs.getTimestamp("created_at"));
             t.setUpdatedAt(rs.getTimestamp("updated_at"));
         }
@@ -80,17 +80,17 @@ public class TherapistService implements Iservice<Therapistis> {
 
     @Override
     public void update(Therapistis therapist) throws SQLException {
-        String query = "UPDATE therapists SET first_name=?, last_name=?, email=?, phone_number=?, specialization=?, description=?, consultation_type=?, status=?, user_id=?, updated_at=NOW() WHERE id=?";
+        String query = "UPDATE therapists SET first_name=?, last_name=?, email=?, password=?, phone_number=?, specialization=?, description=?, consultation_type=?, status=?, updated_at=NOW() WHERE id=?";
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
         ps.setString(1, therapist.getFirstName());
         ps.setString(2, therapist.getLastName());
         ps.setString(3, therapist.getEmail());
-        ps.setString(4, therapist.getPhoneNumber());
-        ps.setString(5, therapist.getSpecialization());
-        ps.setString(6, therapist.getDescription());
-        ps.setString(7, therapist.getConsultationType());
-        ps.setString(8, therapist.getStatus());
-        ps.setInt(9, therapist.getUserId());
+        ps.setString(4, therapist.getPassword());
+        ps.setString(5, therapist.getPhoneNumber());
+        ps.setString(6, therapist.getSpecialization());
+        ps.setString(7, therapist.getDescription());
+        ps.setString(8, therapist.getConsultationType());
+        ps.setString(9, therapist.getStatus());
         ps.setInt(10, therapist.getId());
         ps.executeUpdate();
         System.out.println("Therapist updated successfully!");
@@ -105,28 +105,4 @@ public class TherapistService implements Iservice<Therapistis> {
         System.out.println("Therapist deleted successfully!");
     }
 
-    // --- Added for Therapist Management CRUD ---
-    public Therapistis findByUserId(int userId) throws SQLException {
-        String query = "SELECT * FROM therapists WHERE user_id=?";
-        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
-        ps.setInt(1, userId);
-        ResultSet rs = ps.executeQuery();
-        Therapistis t = null;
-        if (rs.next()) {
-            t = new Therapistis();
-            t.setId(rs.getInt("id"));
-            t.setFirstName(rs.getString("first_name"));
-            t.setLastName(rs.getString("last_name"));
-            t.setEmail(rs.getString("email"));
-            t.setPhoneNumber(rs.getString("phone_number"));
-            t.setSpecialization(rs.getString("specialization"));
-            t.setDescription(rs.getString("description"));
-            t.setConsultationType(rs.getString("consultation_type"));
-            t.setStatus(rs.getString("status"));
-            t.setUserId(rs.getInt("user_id"));
-            t.setCreatedAt(rs.getTimestamp("created_at"));
-            t.setUpdatedAt(rs.getTimestamp("updated_at"));
-        }
-        return t;
-    }
 }

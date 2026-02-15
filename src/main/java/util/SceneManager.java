@@ -17,14 +17,14 @@ public class SceneManager {
     public static void switchScene(String fxmlPath) {
         try {
             Parent root = FXMLLoader.load(
-                    SceneManager.class.getResource(fxmlPath)
-            );
+                    SceneManager.class.getResource(fxmlPath));
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     // Scene switch WITH controller access
     public static <T> T switchSceneWithController(String fxmlPath) {
         try {
@@ -41,6 +41,5 @@ public class SceneManager {
             return null;
         }
     }
-
 
 }

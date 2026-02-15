@@ -65,7 +65,6 @@ public class LoginController {
                 showError();
             }
 
-
             rs.close();
             stmt.close();
 

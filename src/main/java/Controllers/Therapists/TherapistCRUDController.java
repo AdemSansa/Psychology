@@ -47,7 +47,9 @@ public class TherapistCRUDController implements Initializable {
     @FXML
     private ComboBox<String> consultationTypeBox;
     @FXML
-    private TextField userIdField;
+    private TextField passwordField;
+    @FXML
+    private Button docteur;
 
     private TherapistService service;
     private ObservableList<Therapistis> therapistList;
@@ -150,7 +152,7 @@ public class TherapistCRUDController implements Initializable {
         specializationField.setText(t.getSpecialization());
         descriptionArea.setText(t.getDescription());
         consultationTypeBox.setValue(t.getConsultationType());
-        userIdField.setText(String.valueOf(t.getUserId()));
+        passwordField.setText(t.getPassword());
 
         modalOverlay.setVisible(true);
     }
@@ -187,16 +189,12 @@ public class TherapistCRUDController implements Initializable {
         t.setFirstName(firstNameField.getText());
         t.setLastName(lastNameField.getText());
         t.setEmail(emailField.getText());
+        t.setPassword(passwordField.getText());
         t.setPhoneNumber(phoneField.getText());
         t.setSpecialization(specializationField.getText());
         t.setDescription(descriptionArea.getText());
         t.setConsultationType(consultationTypeBox.getValue());
         t.setStatus("ACTIVE");
-        try {
-            t.setUserId(Integer.parseInt(userIdField.getText()));
-        } catch (NumberFormatException e) {
-            t.setUserId(0);
-        }
     }
 
     private void deleteTherapist(Therapistis t) {
@@ -230,13 +228,8 @@ public class TherapistCRUDController implements Initializable {
         if (specializationField.getText().isEmpty())
             errorMsg.append("Spécialisation requise\n");
 
-        try {
-            int uid = Integer.parseInt(userIdField.getText());
-            if (uid <= 0)
-                errorMsg.append("ID Utilisateur doit être positif\n");
-        } catch (NumberFormatException e) {
-            errorMsg.append("ID Utilisateur doit être un nombre entier\n");
-        }
+        if (passwordField.getText().isEmpty() || passwordField.getText().length() < 4)
+            errorMsg.append("Mot de passe requis (min 4 caractères)\n");
 
         if (errorMsg.length() == 0)
             return true;
@@ -252,7 +245,7 @@ public class TherapistCRUDController implements Initializable {
         phoneField.clear();
         specializationField.clear();
         descriptionArea.clear();
-        userIdField.clear();
+        passwordField.clear();
         consultationTypeBox.getSelectionModel().clearSelection();
     }
 

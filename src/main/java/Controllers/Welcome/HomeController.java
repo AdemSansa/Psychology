@@ -5,7 +5,6 @@ import util.SceneManager;
 
 public class HomeController {
 
-
     @FXML
     public void gotoFeatures() {
         SceneManager.switchScene("/com/example/psy/intro/features.fxml");
@@ -22,5 +21,7 @@ public class HomeController {
     }
 
     @FXML
-    public void gotoTherapists() { SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml"); }
+    public void gotoTherapists() {
+        SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml");
+    }
 }
