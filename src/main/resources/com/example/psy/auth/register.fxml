@@ -27,13 +27,25 @@
 
                 <VBox spacing="12" maxWidth="350">
                     <VBox spacing="5">
-                        <Label text="Full Name" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
-                        <TextField fx:id="fullNameField" promptText="Enter your full name" styleClass="form-control" prefHeight="40"/>
+                        <Label text="Account Type" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                        <javafx.scene.control.ComboBox fx:id="accountTypeBox" prefWidth="350" prefHeight="40" styleClass="form-control" onAction="#handleAccountTypeChange" />
                     </VBox>
 
                     <VBox spacing="5">
-                        <Label text="Username" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
-                        <TextField fx:id="usernameField" promptText="Choose a username" styleClass="form-control" prefHeight="40"/>
+                        <Label text="Full Name" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                        <TextField fx:id="fullNameField" promptText="Enter your full name (e.g. John Doe)" styleClass="form-control" prefHeight="40"/>
+                    </VBox>
+
+                    <!-- Therapist Specific Fields -->
+                    <VBox fx:id="therapistFields" spacing="12" managed="false" visible="false">
+                        <VBox spacing="5">
+                            <Label text="Phone Number" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                            <TextField fx:id="phoneField" promptText="Enter phone number" styleClass="form-control" prefHeight="40"/>
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="Specialization" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                            <TextField fx:id="specializationField" promptText="Specialization (e.g. Clinical)" styleClass="form-control" prefHeight="40"/>
+                        </VBox>
                     </VBox>
 
                     <VBox spacing="5">

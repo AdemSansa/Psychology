@@ -122,7 +122,8 @@
 .card-number {
     -fx-font-size: 30px;
     -fx-font-weight: 800;
-    -fx-text-fill: black;   /* ✅ TEXTE NOIR */
+    -fx-text-fill: black;
+    /* ✅ TEXTE NOIR */
 }
 
 /* ===============================

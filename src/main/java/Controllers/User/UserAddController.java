@@ -17,9 +17,6 @@ public class UserAddController {
     private TextField fullNameField;
 
     @FXML
-    private TextField usernameField;
-
-    @FXML
     private TextField emailField;
 
     @FXML
@@ -33,30 +30,32 @@ public class UserAddController {
 
     @FXML
     public void initialize() {
-        // définir les rôles disponibles (adapter si nécessaire)
-        roleComboBox.setItems(FXCollections.observableArrayList(Arrays.asList("PATIENT", "ADMIN","DOCTOR")));
+        roleComboBox.setItems(FXCollections.observableArrayList(Arrays.asList("patient", "admin")));
         roleComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
     private void handleAdd(ActionEvent event) {
         String fullName = fullNameField.getText() != null ? fullNameField.getText().trim() : "";
-        String username = usernameField.getText() != null ? usernameField.getText().trim() : "";
         String email = emailField.getText() != null ? emailField.getText().trim() : "";
         String password = passwordField.getText() != null ? passwordField.getText() : "";
         String role = roleComboBox.getValue();
 
-        if (fullName.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        if (fullName.isEmpty() || email.isEmpty() || password.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez remplir tous les champs obligatoires.");
             return;
         }
 
+        String[] names = fullName.split(" ", 2);
+        String firstName = names[0];
+        String lastName = names.length > 1 ? names[1] : "";
+
         User user = new User();
-        user.setFullName(fullName);
-        user.setUsername(username);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setEmail(email);
         user.setPassword(password);
-        user.setRole(role);
+        user.setRole(role.toLowerCase());
 
         try {
             UserService service = new UserService();
@@ -72,7 +71,6 @@ public class UserAddController {
 
     private void clearForm() {
         fullNameField.clear();
-        usernameField.clear();
         emailField.clear();
         passwordField.clear();
         roleComboBox.getSelectionModel().selectFirst();

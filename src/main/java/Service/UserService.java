@@ -13,34 +13,26 @@ import java.util.List;
 public class UserService implements Iservice<User> {
     @Override
     public void create(User user) throws SQLException {
-
-        String Requete = "INSERT INTO users (full_name, username, email, password) VALUES (?,?,?,? )";
+        String Requete = "INSERT INTO users (first_name, last_name, email, password, role) VALUES (?,?,?,?,?)";
         PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(Requete);
-        statement.setString(1, user.getFullName());
-        statement.setString(2, user.getUsername());
+        statement.setString(1, user.getFirstName());
+        statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());
         statement.setString(4, user.getPassword());
+        statement.setString(5, user.getRole());
         statement.executeUpdate();
         System.out.println("User added successfully!");
     }
 
     @Override
     public List<User> list() throws SQLException {
-
         String Requete = "SELECT * FROM users";
         List<User> users = new ArrayList<>();
         try (PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(Requete);
-             ResultSet rs = statement.executeQuery()) {
+                ResultSet rs = statement.executeQuery()) {
 
             while (rs.next()) {
-                User u = new User();
-                u.setFullName(rs.getString("full_name"));
-                u.setUsername(rs.getString("username"));
-                u.setEmail(rs.getString("email"));
-                u.setId(rs.getInt("id"));
-                u.setRole(rs.getString("role"));
-
-                u.setPassword(rs.getString("password"));
+                User u = mapResultSetToUser(rs);
                 users.add(u);
             }
         }
@@ -55,30 +47,23 @@ public class UserService implements Iservice<User> {
         ResultSet rs = statement.executeQuery();
         User user = null;
         if (rs.next()) {
-            user = new User();
-            user.setId(rs.getInt("id"));
-            user.setFullName(rs.getString("full_name"));
-            user.setUsername(rs.getString("username"));
-            user.setEmail(rs.getString("email"));
-            user.setRole(rs.getString("role"));
-            user.setPassword(rs.getString("password"));
+            user = mapResultSetToUser(rs);
         }
-        System.out.println(user);
         return user;
     }
 
     @Override
     public void update(User user) throws SQLException {
-        String Requete = "UPDATE users SET full_name = ?, username = ?, email = ?, password = ? WHERE id = ?";
+        String Requete = "UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ?, role = ? WHERE id = ?";
         PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(Requete);
-        statement.setString(1, user.getFullName());
-        statement.setString(2, user.getUsername());
+        statement.setString(1, user.getFirstName());
+        statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());
         statement.setString(4, user.getPassword());
-        statement.setInt(5, user.getId());
+        statement.setString(5, user.getRole());
+        statement.setInt(6, user.getId());
         statement.executeUpdate();
         System.out.println("User updated successfully!");
-
     }
 
     @Override
@@ -88,19 +73,19 @@ public class UserService implements Iservice<User> {
         statement.setInt(1, id);
         statement.executeUpdate();
         System.out.println("User deleted successfully!");
-
-
     }
-    public boolean UserNameExists(String username) throws SQLException {
-        String query = "SELECT COUNT(*) FROM users WHERE username = ?";
-        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(query);
-        statement.setString(1, username);
-        ResultSet rs = statement.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1) > 0;
-        }
-        return false;
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User u = new User();
+        u.setId(rs.getInt("id"));
+        u.setFirstName(rs.getString("first_name"));
+        u.setLastName(rs.getString("last_name"));
+        u.setEmail(rs.getString("email"));
+        u.setRole(rs.getString("role"));
+        u.setPassword(rs.getString("password"));
+        return u;
     }
+
     public boolean emailExists(String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM users WHERE email = ?";
         PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(query);
