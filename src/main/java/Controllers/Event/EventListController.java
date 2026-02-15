@@ -1,5 +1,7 @@
 package Controllers.Event;
 
+
+import Service.RegistrationService;
 import Entities.Event;
 import Service.EventService;
 import javafx.collections.FXCollections;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
 
 public class EventListController implements Initializable {
 
@@ -118,22 +121,54 @@ public class EventListController implements Initializable {
         // ===== META INFO =====
         Label startLabel = new Label("📅 Start: " + formatDate(event.getDateStart()));
         Label endLabel = new Label("⏱ End: " + formatDate(event.getDateEnd()));
-        Label participantsLabel = new Label("👥 Max participants: " + event.getMaxParticipants());
+        int registered = RegistrationService.countByEvent(event.getIdEvent());
+        int max = event.getMaxParticipants();
+        int dispo = max - registered;
+
+        Label participantsLabel = new Label("👥 Participants: " + registered + " / " + max);
+        Label dispoLabel = new Label("🟢 Dispo: " + dispo);
+
+        participantsLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
+        dispoLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+
+// 🔴 FULL si plus de places
+        if (dispo <= 0) {
+            dispoLabel.setText("🔴 FULL");
+            dispoLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+        }
+
 
         startLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
         endLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
         participantsLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
 
-        VBox metaBox = new VBox(4, startLabel, endLabel, participantsLabel);
+        HBox participantsRow = new HBox(10, participantsLabel, dispoLabel);
+        participantsRow.setAlignment(Pos.CENTER_LEFT);
+
+        VBox metaBox = new VBox(4, startLabel, endLabel, participantsRow);
+
 
         // ===== TYPE BADGE =====
         Label typeBadge = new Label(event.getType());
         typeBadge.setStyle("""
-            -fx-background-color: #e3f2fd;
-            -fx-text-fill: #1565c0;
-            -fx-background-radius: 14;
-            -fx-padding: 3 10;
-        """);
+    -fx-background-color: #e3f2fd;
+    -fx-text-fill: #1565c0;
+    -fx-background-radius: 14;
+    -fx-padding: 3 10;
+""");
+
+// ===== STATUS =====
+        Label statusBadge = new Label(event.getStatus());
+        statusBadge.setStyle("""
+    -fx-background-color: #ede7f6;
+    -fx-text-fill: #5e35b1;
+    -fx-background-radius: 14;
+    -fx-padding: 3 10;
+""");
+
+// 🔥 ALIGN TYPE + STATUS (IMPORTANT)
+        HBox badgeRow = new HBox(8, typeBadge, statusBadge);
+        badgeRow.setAlignment(Pos.CENTER_LEFT);
 
         // ===== DESCRIPTION =====
         Label descLabel = new Label(event.getDescription());
@@ -145,19 +180,45 @@ public class EventListController implements Initializable {
             -fx-text-fill: #5c4a3f;
         """);
 
-        // ===== STATUS =====
-        Label statusBadge = new Label(event.getStatus());
-        statusBadge.setStyle("""
-            -fx-background-color: #ede7f6;
-            -fx-text-fill: #5e35b1;
-            -fx-background-radius: 14;
-            -fx-padding: 3 10;
-        """);
-
         // ===== BUTTONS =====
         Button editBtn = new Button("Edit");
         editBtn.getStyleClass().add("btn-primary");
         editBtn.setOnAction(e -> handleEdit(event));
+        Button registerBtn = new Button("Register");
+        registerBtn.getStyleClass().add("btn-primary");
+
+// 🚫 Désactiver si FULL
+        if (dispo <= 0) {
+            registerBtn.setDisable(true);
+            registerBtn.setText("FULL");
+        }
+
+        registerBtn.setOnAction(e -> {
+            RegistrationController controller =
+                    (RegistrationController) SceneManager.switchSceneWithController(
+                            "/com/example/psy/Event/registration.fxml"
+                    );
+
+            if (controller != null) {
+                controller.setEventId(event.getIdEvent());
+            }
+
+        });
+
+        registerBtn.getStyleClass().add("btn-primary");
+        registerBtn.setOnAction(e -> {
+
+            RegistrationController controller =
+                    (RegistrationController) SceneManager.switchSceneWithController(
+                            "/com/example/psy/Event/registration.fxml"
+                    );
+
+            if (controller != null) {
+                controller.setEventId(event.getIdEvent());   // 🔥 ENVOIE EVENT ID
+            }
+        });
+
+
 
         Button deleteBtn = new Button("Delete");
         deleteBtn.getStyleClass().add("btn-primary");
@@ -169,12 +230,14 @@ public class EventListController implements Initializable {
             }
         });
 
-        HBox btnRow = new HBox(10, editBtn, deleteBtn);
-        btnRow.setAlignment(Pos.CENTER_RIGHT);
+        HBox btnRow = new HBox(10, registerBtn, editBtn, deleteBtn);
+        btnRow.setAlignment(Pos.CENTER);
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox bottomRow = new HBox(10, statusBadge, spacer, btnRow);
+
+        HBox bottomRow = new HBox(btnRow);
+        bottomRow.setAlignment(Pos.CENTER);
+
+
 
         // ===== CARD =====
         VBox card = new VBox(12);
@@ -186,10 +249,12 @@ public class EventListController implements Initializable {
                 titleLabel,
                 metaBox,
                 countdownLabel,
-                typeBadge,
+                badgeRow,   // 🔥 UTILISE badgeRow PAS typeBadge
                 descLabel,
                 bottomRow
         );
+
+
 
 
         return card;
@@ -277,7 +342,9 @@ public class EventListController implements Initializable {
         long mins = minutes % 60;
 
         return "⏳ " + days + "d " + hours + "h " + mins + "m";
+
     }
+
 
 
 }

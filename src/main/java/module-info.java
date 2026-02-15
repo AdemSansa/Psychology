@@ -3,6 +3,7 @@ module com.example.psy {
     requires javafx.fxml;
     requires java.sql;
     requires jbcrypt;
+    requires java.desktop;
 
 
     opens com.example.psy to javafx.fxml;
