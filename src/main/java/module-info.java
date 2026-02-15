@@ -2,6 +2,7 @@ module com.example.psy {
     requires javafx.fxml;
     requires java.sql;
     requires jbcrypt;
+    requires java.desktop;
     requires com.calendarfx.view;
 
 
