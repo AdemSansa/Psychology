@@ -11,21 +11,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws  Exception {
-        URL fxmlUrl = getClass().getResource("/com/example/psy/auth/login.fxml");
-        if (fxmlUrl == null) {
-            throw new IllegalStateException("FXML introuvable: /com/example/psy/login.fxml");
-        }
-        FXMLLoader loader = new FXMLLoader(fxmlUrl);
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
+        // Give stage to SceneManager
+        SceneManager.setStage(stage);
+
+        // Load first page using SceneManager (IMPORTANT for Back)
+        SceneManager.switchScene("/com/example/psy/auth/login.fxml");
 
         stage.setTitle("Slimenify");
-        stage.setScene(scene);
         stage.show();
 
-        SceneManager.setStage(stage);
+        // Database connection
         Connection conn = dbconnect.getInstance().getConnection();
-
 
       
     }
