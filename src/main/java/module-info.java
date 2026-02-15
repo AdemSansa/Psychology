@@ -1,8 +1,8 @@
 module com.example.psy {
-    requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
     requires jbcrypt;
+    requires com.calendarfx.view;
 
 
     opens com.example.psy to javafx.fxml;
@@ -21,6 +21,8 @@ module com.example.psy {
     opens Controllers.Therapists to javafx.fxml;
     opens Controllers.Question  to javafx.fxml;
     opens Controllers.Quiz to javafx.fxml;
+    opens Controllers.Appointment to javafx.fxml;
+
 
 
 

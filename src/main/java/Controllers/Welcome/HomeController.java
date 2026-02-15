@@ -25,6 +25,7 @@ public class HomeController {
     public void gotoTherapists() { SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml"); }
 
     @FXML
+
     public void gotoQuestions() {
         SceneManager.switchScene("/com/example/psy/Question/Question.fxml");
     }
@@ -34,5 +35,8 @@ public class HomeController {
         SceneManager.switchScene("/com/example/psy/Quiz/Quiz.fxml");
     }
 
+
+
+    public void gotoAppoitnments() { SceneManager.switchScene("/com/example/psy/Appointment/AppointmentCalendar.fxml"); }
 
 }
