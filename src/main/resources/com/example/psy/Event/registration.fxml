@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="Controllers.Event.RegistrationController"
             stylesheets="@../style.css"
@@ -11,21 +11,26 @@
     <top>
         <HBox spacing="20" style="-fx-padding:20; -fx-background-color:white;">
             <Button text="←" onAction="#handleBack" styleClass="btn-secondary"/>
-            <Label fx:id="eventInfoLabel" text="Participants" styleClass="section-title"/>
+            <Label fx:id="eventInfoLabel" styleClass="section-title"/>
         </HBox>
     </top>
 
     <center>
-        <VBox spacing="20" alignment="CENTER" style="-fx-padding:30;">
+        <VBox spacing="25" alignment="CENTER" style="-fx-padding:30;">
+            <TextField fx:id="searchField"
+                       promptText="🔍 Search participant..."
+                       styleClass="form-control"
+                       prefWidth="260"/>
+
 
             <TextField fx:id="nameField"
                        promptText="Participant name"
                        styleClass="form-control"
-                       prefWidth="260"/>
+                       prefWidth="300"/>
 
             <ComboBox fx:id="statusBox"
                       styleClass="form-control"
-                      prefWidth="260"/>
+                      prefWidth="300"/>
 
             <Button text="Add / Update"
                     onAction="#handleRegister"

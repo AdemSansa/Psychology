@@ -3,6 +3,7 @@ package Controllers.Event;
 import Entities.Registration;
 import Service.RegistrationService;
 import javafx.collections.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -43,7 +44,19 @@ public class RegistrationListController implements Initializable {
 
         Label name = new Label("👤 Participant: " + r.getParticipantName());
         Label event = new Label("📅 Event ID: " + r.getEventId());
-        Label status = new Label("Status: " + r.getStatus());
+        Label status = new Label(r.getStatus());
+
+        switch (r.getStatus()) {
+            case "registered":
+                status.getStyleClass().add("badge-registered");
+                break;
+            case "cancelled":
+                status.getStyleClass().add("badge-cancelled");
+                break;
+            default:
+                status.getStyleClass().add("badge-attended");
+        }
+
         Label qr = new Label("QR: " + r.getQrCode());
 
         status.setStyle(getStatusColor(r.getStatus()));
@@ -141,5 +154,8 @@ public class RegistrationListController implements Initializable {
     @FXML
     private void handleBack() {
         SceneManager.switchScene("/com/example/psy/Event/events.fxml");
+    }
+
+    public void handleAddOrUpdate(ActionEvent actionEvent) {
     }
 }

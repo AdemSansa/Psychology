@@ -2,6 +2,8 @@ package Service;
 
 import Database.dbconnect;
 import Entities.Registration;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.util.*;
@@ -17,7 +19,7 @@ public class RegistrationService {
             throw new SQLException("Event FULL");
 
         if (nameExists(r.getParticipantName(), r.getEventId()))
-            throw new SQLException("Name already used");
+            throw new SQLException("Name already used in this event");
 
         String sql = "INSERT INTO registrations (event_id, participant_name, status, qr_code) VALUES (?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
@@ -32,7 +34,6 @@ public class RegistrationService {
 
     // ================= UPDATE =================
     public void update(Registration r) throws SQLException {
-
         String sql = "UPDATE registrations SET participant_name=?, status=? WHERE id_registration=?";
         PreparedStatement ps = cnx.prepareStatement(sql);
 
@@ -113,7 +114,25 @@ public class RegistrationService {
         return rs.next();
     }
 
-    public Registration list() {
-        return null;
+    public List<Registration> list() throws SQLException {
+        List<Registration> list = new ArrayList<>();
+        ObservableList<Registration> filtered = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM registrations";
+        Statement st = cnx.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+
+        while (rs.next()) {
+            list.add(new Registration(
+                    rs.getInt("id_registration"),
+                    rs.getInt("event_id"),
+                    rs.getString("participant_name"),
+                    rs.getString("status"),
+                    rs.getTimestamp("registration_date").toLocalDateTime(),
+                    rs.getString("qr_code")
+            ));
+        }
+        return list;
     }
+
 }

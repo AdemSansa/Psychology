@@ -176,4 +176,50 @@
 .flow-pane {
     -fx-background-color: transparent;
 }
+.card-pro {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10,0,0,3);
+    -fx-cursor: hand;
+}
+
+.card-pro:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 18,0,0,6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+/* ===== STATUS BADGES ===== */
+
+.badge-registered {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #2e7d32;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+.badge-cancelled {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #c62828;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+.badge-attended {
+    -fx-background-color: #fff8e1;
+    -fx-text-fill: #f57f17;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+/* ===== CARD HOVER EFFECT ===== */
+
+.event-card:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
 

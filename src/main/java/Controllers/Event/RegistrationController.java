@@ -4,17 +4,19 @@ import Entities.Registration;
 import Service.RegistrationService;
 import javafx.collections.*;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import util.SceneManager;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.UUID;
 
 public class RegistrationController {
 
+    @FXML private TextField searchField;
     @FXML private Label eventInfoLabel;
     @FXML private TextField nameField;
     @FXML private ComboBox<String> statusBox;
@@ -28,8 +30,10 @@ public class RegistrationController {
 
     @FXML
     public void initialize() {
-        statusBox.getItems().addAll("registered", "cancelled", "attended");
+        statusBox.getItems().addAll("registered", "attended", "cancelled");
         statusBox.setValue("registered");
+        searchField.textProperty().addListener((obs, oldV, newV) -> filter());
+
     }
 
     public void setEventId(int id) {
@@ -38,21 +42,25 @@ public class RegistrationController {
         loadParticipants();
     }
 
+    // ================= LOAD =================
     private void loadParticipants() {
         try {
             list.setAll(service.listByEvent(eventId));
+            filtered.setAll(list);
             renderCards();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // ================= ADD / UPDATE =================
     @FXML
     private void handleRegister() {
 
         try {
             if (nameField.getText().isEmpty()) {
-                alert("Enter name");
+                alert("Enter participant name");
                 return;
             }
 
@@ -81,6 +89,7 @@ public class RegistrationController {
         }
     }
 
+    // ================= CARD =================
     private VBox createCard(Registration r) {
 
         Label name = new Label("👤 " + r.getParticipantName());
@@ -107,17 +116,76 @@ public class RegistrationController {
             }
         });
 
-        VBox card = new VBox(10, name, status, new HBox(10, edit, delete));
+        Button qrBtn = new Button("QR");
+        qrBtn.getStyleClass().add("btn-secondary");
+        qrBtn.setOnAction(e -> showQRPopup(r.getQrCode()));
+
+        HBox btnRow = new HBox(10, edit, delete, qrBtn);
+        btnRow.setAlignment(javafx.geometry.Pos.CENTER);
+
+        VBox card = new VBox(16, name, status, btnRow);
         card.getStyleClass().add("event-card");
-        card.setPrefWidth(250);
+
+        card.setPrefWidth(380);   // largeur plus grande
+        card.setMinHeight(150);   // hauteur plus grande
+
+
+
 
         return card;
     }
 
     private void renderCards() {
         cardContainer.getChildren().clear();
-        for (Registration r : list)
+        for (Registration r : filtered)
+
             cardContainer.getChildren().add(createCard(r));
+    }
+    private ObservableList<Registration> filtered = FXCollections.observableArrayList();
+
+
+    // ================= FILTER BY NAME =================
+    private void filter() {
+        String q = searchField.getText().toLowerCase().trim();
+
+        if (q.isEmpty()) {
+            filtered.setAll(list);
+        } else {
+            filtered.setAll(
+                    list.stream()
+                            .filter(r -> r.getParticipantName().toLowerCase().contains(q))
+                            .toList()
+            );
+        }
+
+        renderCards();
+    }
+
+
+    // ================= QR POPUP =================
+    private void showQRPopup(String text) {
+
+        Label title = new Label("QR Code");
+        title.setStyle("-fx-font-size:18; -fx-font-weight:bold;");
+
+        TextArea qrText = new TextArea(text);
+        qrText.setEditable(false);
+        qrText.setWrapText(true);
+
+        Button close = new Button("Close");
+        close.getStyleClass().add("btn-primary");
+
+        VBox box = new VBox(15, title, qrText, close);
+        box.setAlignment(javafx.geometry.Pos.CENTER);
+        box.setStyle("-fx-padding:20;");
+
+        Stage stage = new Stage();
+        stage.setTitle("QR Code");
+
+        close.setOnAction(e -> stage.close());
+
+        stage.setScene(new Scene(box, 320, 220));
+        stage.show();
     }
 
     private void alert(String msg) {
@@ -130,4 +198,5 @@ public class RegistrationController {
     private void handleBack() {
         SceneManager.switchScene("/com/example/psy/Event/events.fxml");
     }
+
 }

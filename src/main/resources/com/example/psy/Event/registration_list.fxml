@@ -8,32 +8,51 @@
             stylesheets="@../style.css"
             styleClass="background-gradient">
 
+    <!-- ===== HEADER ===== -->
     <top>
         <VBox spacing="10" style="-fx-padding:20;">
-            <Label fx:id="titleLabel" styleClass="section-title"/>
-            <TextField fx:id="searchField" promptText="Search participant..." />
+            <Label fx:id="titleLabel" text="Participants" styleClass="section-title"/>
+
+            <TextField fx:id="searchField"
+                       promptText="🔍 Search participant..."
+                       styleClass="form-control"
+                       prefWidth="320"/>
         </VBox>
     </top>
 
+    <!-- ===== FORM ADD / UPDATE ===== -->
     <center>
-        <VBox spacing="15" alignment="CENTER">
+        <VBox spacing="15" alignment="CENTER" style="-fx-padding:20;">
 
-            <TextField fx:id="nameField" promptText="Participant name"/>
-            <ComboBox fx:id="statusBox"/>
+            <HBox spacing="15" alignment="CENTER">
+                <TextField fx:id="nameField"
+                           promptText="Participant name"
+                           styleClass="form-control"
+                           prefWidth="220"/>
 
-            <Button text="Add / Update" onAction="#handleAddOrUpdate"
+                <ComboBox fx:id="statusBox"
+                          styleClass="form-control"
+                          prefWidth="160"/>
+            </HBox>
+
+            <Button text="Add / Update"
+                    onAction="#handleAddOrUpdate"
                     styleClass="btn-primary"/>
 
-            <ScrollPane fitToWidth="true">
-                <FlowPane fx:id="cardContainer" hgap="15" vgap="15"/>
+            <ScrollPane fitToWidth="true" style="-fx-background-color:transparent;">
+                <FlowPane fx:id="cardContainer"
+                          hgap="20" vgap="20"
+                          style="-fx-padding:10;"
+                          alignment="CENTER"/>
             </ScrollPane>
 
         </VBox>
     </center>
 
+    <!-- ===== FOOTER ===== -->
     <bottom>
         <HBox alignment="CENTER_RIGHT" style="-fx-padding:10;">
-            <Label fx:id="totalLabel"/>
+            <Label fx:id="totalLabel" style="-fx-font-weight:bold;"/>
         </HBox>
     </bottom>
 
