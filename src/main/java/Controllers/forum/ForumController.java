@@ -62,6 +62,7 @@ public class ForumController implements Initializable {
 
             contentField.clear();
             loadReviews();
+            showSuccess("Review added successfully!");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,9 +82,7 @@ public class ForumController implements Initializable {
 
                 VBox card = createReviewCard(review);
 
-                // ===== LOAD REPLIES =====
                 for (ReviewReply r : replies) {
-
                     if (r.getReviewId().equals(review.getIdReview())) {
                         VBox replyBox = createReplyBox(r);
                         card.getChildren().add(replyBox);
@@ -130,6 +129,7 @@ public class ForumController implements Initializable {
                 try {
                     reviewService.delete(review.getIdReview());
                     loadReviews();
+                    showSuccess("Review deleted successfully!");
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -157,6 +157,7 @@ public class ForumController implements Initializable {
                         review.setContent(newText);
                         reviewService.update(review);
                         loadReviews();
+                        showSuccess("Review updated successfully!");
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -164,7 +165,6 @@ public class ForumController implements Initializable {
             }
         });
 
-        // REPLY BUTTON
         replyBtn.setOnAction(e -> showReplyInput(card, review));
 
         buttons.getChildren().addAll(replyBtn, editBtn, deleteBtn);
@@ -206,6 +206,7 @@ public class ForumController implements Initializable {
 
                 replyService.create(reply);
                 loadReviews();
+                showSuccess("Reply added successfully!");
 
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -266,6 +267,7 @@ public class ForumController implements Initializable {
                         r.setContent(newText);
                         replyService.update(r);
                         loadReviews();
+                        showSuccess("Reply updated successfully!");
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -280,6 +282,7 @@ public class ForumController implements Initializable {
                 try {
                     replyService.delete(r.getIdReply());
                     loadReviews();
+                    showSuccess("Reply deleted successfully!");
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -324,20 +327,25 @@ public class ForumController implements Initializable {
 
     // ================= ALERTS =================
     private boolean confirmAction(String title, String message) {
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     private void showWarning(String title, String message) {
-
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
