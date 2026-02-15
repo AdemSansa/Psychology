@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 public class Main extends Application {
     @Override
-    public void start(Stage stage) throws Exeption {
+    public void start(Stage stage) throws  Exception {
         URL fxmlUrl = getClass().getResource("/com/example/psy/auth/login.fxml");
         if (fxmlUrl == null) {
             throw new IllegalStateException("FXML introuvable: /com/example/psy/login.fxml");

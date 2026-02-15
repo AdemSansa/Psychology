@@ -236,3 +236,79 @@
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
+.therapist-name {
+    -fx-text-fill: #4e342e;      /* deep coffee brown */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+.therapist-role {
+    -fx-text-fill: #7b5e48;      /* soft warm brown */
+    -fx-font-size: 13px;
+}
+.therapist-detail {
+    -fx-text-fill: #5f5b55;      /* warm charcoal */
+    -fx-font-size: 12.5px;
+}
+.therapist-card:hover .therapist-name {
+    -fx-text-fill: #6f4e37;
+}
+#specializationLabel {
+    -fx-text-fill: #6b6258;
+    -fx-font-style: italic;
+}
+
+/* ===============================
+   QUIZ CARD
+   =============================== */
+
+.quiz-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-border-color: #e0d6c8;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.quiz-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(111, 78, 55, 0.25), 15, 0, 0, 5);
+    -fx-translate-y: -2;
+    -fx-border-color: #6f4e37;
+}
+
+.card-category {
+    -fx-background-color: #e8dccb;
+    -fx-text-fill: #6f4e37;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 8;
+    -fx-background-radius: 15;
+}
+
+.card-status-active {
+    -fx-text-fill: #27ae60;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-background-color: rgba(39, 174, 96, 0.1);
+    -fx-padding: 2 6;
+    -fx-background-radius: 4;
+}
+
+.card-status-inactive {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-background-color: rgba(127, 140, 141, 0.1);
+    -fx-padding: 2 6;
+    -fx-background-radius: 4;
+}
+
+.card-subtitle {
+    -fx-text-fill: #7b5e48;
+    -fx-font-size: 12px;
+}
+
+.btn-sm {
+    -fx-padding: 5 12;
+    -fx-font-size: 11px;
+}

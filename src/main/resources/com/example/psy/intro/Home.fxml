@@ -33,7 +33,10 @@
             <Button text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
             <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
             <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
-            
+            <Button text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
+            <Button text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
+
+
             <Region VBox.vgrow="ALWAYS" />
             
             <Button text="Logout" styleClass="logout-btn" maxWidth="Infinity"/>
@@ -90,6 +93,7 @@
                             <Label text="8" styleClass="card-number"/>
                             <Label text="Next event in 2 days" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px;"/>
                         </VBox>
+
                     </GridPane>
 
                     <!-- Recent Activity / Table Placeholder -->

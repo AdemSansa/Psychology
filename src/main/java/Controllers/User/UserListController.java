@@ -116,6 +116,10 @@ public class UserListController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    @FXML
+    private void GoBack() {
+        SceneManager.switchScene("/com/example/psy/intro/home.fxml");
+    }
 
 
 
