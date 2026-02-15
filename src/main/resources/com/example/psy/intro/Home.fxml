@@ -33,7 +33,8 @@
             <Button text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
             <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
             <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
-            
+            <Button text="Appoitnments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
+
             <Region VBox.vgrow="ALWAYS" />
             
             <Button text="Logout" styleClass="logout-btn" maxWidth="Infinity"/>

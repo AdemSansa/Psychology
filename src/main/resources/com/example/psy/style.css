@@ -177,3 +177,6 @@
     -fx-background-color: transparent;
 }
 
+.booked-entry {
+    -fx-background-color: #6f4e37;
+}
