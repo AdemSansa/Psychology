@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.Appointment.AppointmentDetailsController"
+      spacing="15"
+      alignment="CENTER"
+      stylesheets="@../style.css"
+      styleClass="root"
+      style="-fx-padding: 25;">
+
+    <Label text="Appointment Details" styleClass="section-title"/>
+
+    <Label fx:id="dateLabel" styleClass="text-soft"/>
+    <Label fx:id="timeLabel" styleClass="text-soft"/>
+    <Label fx:id="statusLabel" styleClass="badge-status"/>
+
+    <Button text="Cancel Appointment"
+            fx:id="cancelBtn"
+            onAction="#cancelAppointment"
+            styleClass="btn-danger"/>
+
+    <Button text="Close"
+            onAction="#closeWindow"
+            styleClass="btn-secondary"/>
+
+</VBox>
