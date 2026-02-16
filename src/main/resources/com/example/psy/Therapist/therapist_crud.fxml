@@ -102,8 +102,8 @@
                             </VBox>
 
                             <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                <Label style="-fx-font-weight: bold;" text="User ID *" />
-                                <TextField fx:id="userIdField" styleClass="form-control" promptText="ID utilisateur associé" />
+                                <Label style="-fx-font-weight: bold;" text="Mot de Passe *" />
+                                <TextField fx:id="passwordField" styleClass="form-control" promptText="Mot de passe du médecin" />
                             </VBox>
 
                             <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="4">

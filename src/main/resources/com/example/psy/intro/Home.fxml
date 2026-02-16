@@ -2,10 +2,10 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="Controllers.Welcome.HomeController"
@@ -15,100 +15,59 @@
 
     <!-- LEFT SIDEBAR -->
     <left>
-        <VBox spacing="10" styleClass="sidebar" prefWidth="240">
-            <padding>
-                <Insets top="30" left="15" right="15" bottom="20"/>
-            </padding>
+        <VBox spacing="10" style="-fx-background-color: #3e2723; -fx-padding: 20;" prefWidth="220">
 
-            <!-- Brand Logo Area -->
-            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="logo-container">
-                <padding><Insets bottom="30"/></padding>
-                <!-- Placeholder for logo image if available, using text for now -->
-                <Label text="Slimenify" styleClass="logo-title"/>
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 30 0;">
+                <!-- Replace with logo image if available -->
+                <ImageView fitWidth="32" fitHeight="32">
+                    <image>
+                        <Image url="@../media/Logo_nobackground.png"/>
+                    </image>
+                </ImageView>
+                <Label text="Slimenify" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
             </HBox>
 
-            <Label text="MAIN MENU" style="-fx-text-fill: #95a5a6; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 0 0 5 10;"/>
-            
-            <Button text="Dashboard" styleClass="sidebar-btn" maxWidth="Infinity"/>
-            <Button text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
-            <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
-            <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
-            <Button text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
-            <Button text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
+            <!-- Menu Label -->
+            <Label text="MAIN MENU" style="-fx-text-fill: #95a5a6; -fx-font-size: 10px; -fx-font-weight: bold;"/>
 
-            <Button text="Appoitnments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
+            <!-- Sidebar Buttons -->
+            <VBox spacing="5">
+                <Button fx:id="btnDashboard"
+                        text="Dashboard"
+                        styleClass="sidebar-btn "
+                        maxWidth="Infinity"/>
+                <Button text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
+                <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
+                <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
+                <Button text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
+                  <Button onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
+                <Button text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
+                <Button text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
+                <Button text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
+            </VBox>
 
-            <Region VBox.vgrow="ALWAYS" />
-            
-            <Button text="Logout" styleClass="logout-btn" maxWidth="Infinity"/>
-        </VBox>
+            <!-- Spacer pushes logout to bottom -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Logout Button -->
+            <Button text="Déconnexion"
+                    styleClass="logout-btn"
+                    maxWidth="Infinity"/>        </VBox>
     </left>
 
     <!-- CENTER CONTENT -->
     <center>
         <VBox spacing="0">
+
             <!-- TOP HEADER -->
-            <HBox alignment="CENTER_RIGHT" styleClass="topbar" spacing="15">
-                <Label text="Welcome back, Admin" styleClass="welcome-text"/>
-                <!-- User Avatar Placeholder -->
+            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #f7f5f0; -fx-padding: 10 20;" spacing="15">
+                <Label text="Welcome back, Admin" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px;"/>
                 <Circle radius="18" fill="#ecf0f1" stroke="#bdc3c7"/>
             </HBox>
 
-            <!-- SCROLLABLE DASHBOARD CONTENT -->
-            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
-                <VBox spacing="30" styleClass="dashboard-content">
-                    
-                    <!-- Welcome Hero Section -->
-                    <VBox spacing="10" style="-fx-background-color: linear-gradient(to right, #2c3e50, #4ca1af); -fx-background-radius: 15; -fx-padding: 30;">
-                        <Label text="Good Morning, Admin!" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-                        <Button text="Check Reports" styleClass="btn-secondary" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-border-color: white;"/>
-                    </VBox>
-
-                    <!-- Stats Grid -->
-                    <Label text="Overview" styleClass="section-title"/>
-
-                    <GridPane hgap="20" vgap="20">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="33.3"/>
-                            <ColumnConstraints percentWidth="33.3"/>
-                            <ColumnConstraints percentWidth="33.3"/>
-                        </columnConstraints>
-
-                        <!-- Users Card -->
-                        <VBox styleClass="stat-card, card-blue" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                            <Label text="Total Users" styleClass="card-title"/>
-                            <Label text="1,245" styleClass="card-number"/>
-                            <Label text="+12% from last month" style="-fx-text-fill: #2ecc71; -fx-font-size: 11px;"/>
-                        </VBox>
-
-                        <!-- Therapists Card -->
-                        <VBox styleClass="stat-card, card-green" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <Label text="Active Therapists" styleClass="card-title"/>
-                            <Label text="48" styleClass="card-number"/>
-                            <Label text="3 pending approval" style="-fx-text-fill: #f39c12; -fx-font-size: 11px;"/>
-                        </VBox>
-
-                        <!-- Events Card -->
-                        <VBox styleClass="stat-card, card-purple" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                            <Label text="Upcoming Events" styleClass="card-title"/>
-                            <Label text="8" styleClass="card-number"/>
-                            <Label text="Next event in 2 days" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px;"/>
-                        </VBox>
-
-                    </GridPane>
-
-                    <!-- Recent Activity / Table Placeholder -->
-                    <HBox spacing="20">
-                         <VBox spacing="15" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
-                             <Label text="Recent User Signups" styleClass="section-title" style="-fx-font-size: 18px;"/>
-                             <!-- Table goes here, placeholder for layout -->
-                             <Pane prefHeight="200" style="-fx-background-color: #f9f9f9; -fx-background-radius: 8;"/> 
-                         </VBox>
-                    </HBox>
-
-                </VBox>
-            </ScrollPane>
+            <!-- CONTENT AREA -->
+            <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS"/>
         </VBox>
     </center>
-
 </BorderPane>

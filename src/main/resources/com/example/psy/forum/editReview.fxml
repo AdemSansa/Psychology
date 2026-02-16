@@ -1,0 +1,16 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<VBox spacing="15" alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.forum.EditReviewController"
+      style="-fx-padding: 20px;">
+
+    <Label text="Edit Review" style="-fx-font-size:18px;"/>
+
+    <TextArea fx:id="contentField" prefHeight="120"/>
+
+    <Button text="Update Review" onAction="#updateReview"/>
+
+</VBox>
