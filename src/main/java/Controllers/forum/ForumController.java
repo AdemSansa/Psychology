@@ -50,14 +50,24 @@ public class ForumController implements Initializable {
     @FXML
     private void addReview() {
 
-        if (contentField.getText().trim().isEmpty()) {
+        String content = contentField.getText().trim();
+
+
+        if (content.isEmpty()) {
             showWarning("Missing Content",
                     "Please write something meaningful before submitting.");
             return;
         }
 
+
+        if (content.length() < 10) {
+            showWarning("Too Short",
+                    "Your review must contain at least 10 characters.");
+            return;
+        }
+
         try {
-            Review review = new Review(contentField.getText(), currentUserId);
+            Review review = new Review(content, currentUserId);
             reviewService.create(review);
 
             contentField.clear();
@@ -147,14 +157,22 @@ public class ForumController implements Initializable {
 
                 dialog.showAndWait().ifPresent(newText -> {
 
-                    if (newText.trim().isEmpty()) {
+                    String updatedText = newText.trim();
+
+                    if (updatedText.isEmpty()) {
                         showWarning("Empty Content",
                                 "Message cannot be empty.");
                         return;
                     }
 
+                    if (updatedText.length() < 10) {
+                        showWarning("Too Short",
+                                "Message must contain at least 10 characters.");
+                        return;
+                    }
+
                     try {
-                        review.setContent(newText);
+                        review.setContent(updatedText);
                         reviewService.update(review);
                         loadReviews();
                         showSuccess("Review updated successfully!");
@@ -191,15 +209,23 @@ public class ForumController implements Initializable {
 
         sendReply.setOnAction(ev -> {
 
-            if (replyArea.getText().trim().isEmpty()) {
+            String replyText = replyArea.getText().trim();
+
+            if (replyText.isEmpty()) {
                 showWarning("Empty Reply",
                         "Reply cannot be empty.");
                 return;
             }
 
+            if (replyText.length() < 10) {
+                showWarning("Too Short",
+                        "Reply must contain at least 10 characters.");
+                return;
+            }
+
             try {
                 ReviewReply reply = new ReviewReply(
-                        replyArea.getText(),
+                        replyText,
                         review.getIdReview(),
                         therapistId
                 );
@@ -257,14 +283,22 @@ public class ForumController implements Initializable {
 
                 dialog.showAndWait().ifPresent(newText -> {
 
-                    if (newText.trim().isEmpty()) {
+                    String updatedReply = newText.trim();
+
+                    if (updatedReply.isEmpty()) {
                         showWarning("Empty Reply",
                                 "Reply cannot be empty.");
                         return;
                     }
 
+                    if (updatedReply.length() < 10) {
+                        showWarning("Too Short",
+                                "Reply must contain at least 10 characters.");
+                        return;
+                    }
+
                     try {
-                        r.setContent(newText);
+                        r.setContent(updatedReply);
                         replyService.update(r);
                         loadReviews();
                         showSuccess("Reply updated successfully!");
