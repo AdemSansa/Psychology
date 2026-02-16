@@ -44,12 +44,11 @@ public class HomeController {
         SceneManager.loadPage("/com/example/psy/Question/Question.fxml");
     }
 
-    @FXML
 
-    public void gotoTherapists() { SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml"); }
+
     @FXML
     public void gotoReview() {
-        SceneManager.switchScene("/com/example/psy/forum/forum.fxml");
+        SceneManager.loadPage("/com/example/psy/forum/forum.fxml");
     }
     public void gotoQuiz() {
         SceneManager.loadPage("/com/example/psy/Quiz/Quiz.fxml");

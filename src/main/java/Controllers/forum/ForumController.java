@@ -26,7 +26,7 @@ public class ForumController implements Initializable {
     private final ReviewService reviewService = new ReviewService();
     private final Reply_ReviewService replyService = new Reply_ReviewService();
 
-    private final int currentUserId = 1;
+    private final int currentUserId = 13;
     private final int therapistId = 2;
 
     @Override
