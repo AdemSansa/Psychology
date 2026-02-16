@@ -1,6 +1,7 @@
 package Controllers.Therapists;
 
 import Entities.Therapistis;
+import Entities.User;
 import Service.TherapistService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import util.SceneManager;
+import util.Session;
 
 import java.io.IOException;
 import java.net.URL;
@@ -51,17 +53,25 @@ public class TherapistCRUDController implements Initializable {
     @FXML
     private Button docteur;
 
+    @FXML
+    private Button ajoutdocteur;
+
+
+
+
     private TherapistService service;
     private ObservableList<Therapistis> therapistList;
     private Therapistis currentTherapist = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        User user = Session.getInstance().getUser();
         service = new TherapistService();
         therapistList = FXCollections.observableArrayList();
         consultationTypeBox.setItems(FXCollections.observableArrayList("ONLINE", "IN_PERSON", "BOTH"));
 
         loadTherapists();
+        updateVisibility(user.getRole());
     }
 
     private void loadTherapists() {
@@ -259,6 +269,20 @@ public class TherapistCRUDController implements Initializable {
 
     @FXML
     void handleSwitch(ActionEvent event) {
-        SceneManager.switchScene("/com/example/psy/Therapist/availability_crud.fxml");
+        SceneManager.loadPage("/com/example/psy/Therapist/availability_crud.fxml");
+    }
+    private void setButtonVisible(javafx.scene.control.Button btn, boolean visible) {
+        if (btn != null) {
+            btn.setVisible(visible);
+            btn.setManaged(visible);
+        }
+    }
+
+    public void updateVisibility(String role)
+    {
+        switch (role) {
+            case "patient":
+                setButtonVisible(ajoutdocteur,false);
+        }
     }
 }

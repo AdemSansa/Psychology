@@ -89,8 +89,8 @@ public class HomeController {
             case "therapist":
                 setButtonVisible(btnAppointments, true);
                 setButtonVisible(btnForum, true);
-                setButtonVisible(btnEvents, true); // Therapists might see events?
-                // Add other therapist specific buttons if any
+                setButtonVisible(btnEvents, true);
+                setButtonVisible(btnTherapists,true);
                 break;
             default:
                 // Unknown role, minimal access

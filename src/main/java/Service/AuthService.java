@@ -108,6 +108,17 @@ public class AuthService {
                 t.setLastName(therapistRs.getString("last_name"));
                 t.setEmail(therapistRs.getString("email"));
                 t.setPassword(storedHash);
+                User user  = new User();
+                user.setId(t.getId());
+                user.setFirstName(t.getFirstName());
+                user.setLastName(t.getLastName());
+                user.setEmail(t.getEmail());
+                user.setRole("therapist");
+                Session session = Session.getInstance();
+                session.setUser(user);
+
+
+
                 return "therapist";
             }
         }

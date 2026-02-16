@@ -219,7 +219,7 @@ public class AvailabilityCRUDController implements Initializable {
 
     @FXML
     private void goToTherapists() {
-        SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml");
+        SceneManager.loadPage("/com/example/psy/Therapist/therapist_crud.fxml");
     }
 
     // ======================== Helpers ========================
@@ -296,4 +296,5 @@ public class AvailabilityCRUDController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 }

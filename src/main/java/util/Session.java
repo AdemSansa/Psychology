@@ -1,5 +1,6 @@
 package util;
 
+import Entities.Therapistis;
 import Entities.User;
 
 public class Session {
@@ -18,6 +19,7 @@ public class Session {
     public void setUser(User user) {
         this.loggedInUser = user;
     }
+
 
     public User getUser() {
         return loggedInUser;
