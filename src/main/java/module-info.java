@@ -4,7 +4,7 @@ module com.example.psy {
     requires jbcrypt;
     requires java.desktop;
     requires com.calendarfx.view;
-
+    requires mysql.connector.j;
 
 
     opens com.example.psy to javafx.fxml;
