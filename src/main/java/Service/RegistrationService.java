@@ -2,123 +2,137 @@ package Service;
 
 import Database.dbconnect;
 import Entities.Registration;
-import interfaces.Iservice;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class RegistrationService implements Iservice<Registration> {
+public class RegistrationService {
 
-    private final Connection cnx;
-
-    public RegistrationService() {
-        cnx = dbconnect.getInstance().getConnection();
-    }
+    private static Connection cnx = dbconnect.getInstance().getConnection();
 
     // ================= CREATE =================
-    @Override
     public void create(Registration r) throws SQLException {
 
-        String sql = "INSERT INTO registrations (user_id, event_id, status, qr_code) VALUES (?, ?, ?, ?)";
+        if (isEventFull(r.getEventId()))
+            throw new SQLException("Event FULL");
+
+        if (nameExists(r.getParticipantName(), r.getEventId()))
+            throw new SQLException("Name already used in this event");
+
+        String sql = "INSERT INTO registrations (event_id, participant_name, status, qr_code) VALUES (?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
 
-        ps.setInt(1, r.getUserId());
-        ps.setInt(2, r.getEventId());
-
-        if (r.getStatus() != null)
-            ps.setString(3, r.getStatus());
-        else
-            ps.setString(3, "registered");
-
-        if (r.getQrCode() != null)
-            ps.setString(4, r.getQrCode());
-        else
-            ps.setNull(4, Types.LONGVARCHAR);
+        ps.setInt(1, r.getEventId());
+        ps.setString(2, r.getParticipantName());
+        ps.setString(3, r.getStatus());
+        ps.setString(4, r.getQrCode());
 
         ps.executeUpdate();
-        System.out.println("Registration created successfully!");
     }
 
-    // ================= READ ALL =================
-    @Override
-    public List<Registration> list() throws SQLException {
+    // ================= UPDATE =================
+    public void update(Registration r) throws SQLException {
+        String sql = "UPDATE registrations SET participant_name=?, status=? WHERE id_registration=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+
+        ps.setString(1, r.getParticipantName());
+        ps.setString(2, r.getStatus());
+        ps.setInt(3, r.getIdRegistration());
+
+        ps.executeUpdate();
+    }
+
+    // ================= DELETE =================
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM registrations WHERE id_registration=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, id);
+        ps.executeUpdate();
+    }
+
+    // ================= LIST BY EVENT =================
+    public List<Registration> listByEvent(int eventId) throws SQLException {
 
         List<Registration> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM registrations WHERE event_id=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, eventId);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            list.add(new Registration(
+                    rs.getInt("id_registration"),
+                    rs.getInt("event_id"),
+                    rs.getString("participant_name"),
+                    rs.getString("status"),
+                    rs.getTimestamp("registration_date").toLocalDateTime(),
+                    rs.getString("qr_code")
+            ));
+        }
+        return list;
+    }
+
+    // ================= COUNT =================
+    public static int countByEvent(int eventId) {
+        try {
+            String sql = "SELECT COUNT(*) FROM registrations WHERE event_id=?";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    // ================= EVENT FULL =================
+    public boolean isEventFull(int eventId) throws SQLException {
+
+        int registered = countByEvent(eventId);
+
+        String sql = "SELECT max_participants FROM event WHERE id_event=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, eventId);
+        ResultSet rs = ps.executeQuery();
+
+        int max = 0;
+        if (rs.next()) max = rs.getInt(1);
+
+        return registered >= max;
+    }
+
+    // ================= UNIQUE NAME =================
+    public boolean nameExists(String name, int eventId) throws SQLException {
+        String sql = "SELECT id_registration FROM registrations WHERE participant_name=? AND event_id=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setString(1, name);
+        ps.setInt(2, eventId);
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
+    }
+
+    public List<Registration> list() throws SQLException {
+        List<Registration> list = new ArrayList<>();
+        ObservableList<Registration> filtered = FXCollections.observableArrayList();
+
         String sql = "SELECT * FROM registrations";
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(sql);
 
         while (rs.next()) {
-            Registration r = new Registration(
+            list.add(new Registration(
                     rs.getInt("id_registration"),
-                    rs.getInt("user_id"),
                     rs.getInt("event_id"),
+                    rs.getString("participant_name"),
                     rs.getString("status"),
                     rs.getTimestamp("registration_date").toLocalDateTime(),
                     rs.getString("qr_code")
-            );
-
-            list.add(r);
+            ));
         }
-
         return list;
     }
 
-    // ================= READ BY ID =================
-    @Override
-    public Registration read(int id) throws SQLException {
-
-        String sql = "SELECT * FROM registrations WHERE id_registration=?";
-        PreparedStatement ps = cnx.prepareStatement(sql);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            return new Registration(
-                    rs.getInt("id_registration"),
-                    rs.getInt("user_id"),
-                    rs.getInt("event_id"),
-                    rs.getString("status"),
-                    rs.getTimestamp("registration_date").toLocalDateTime(),
-                    rs.getString("qr_code")
-            );
-        }
-
-        return null;
-    }
-
-    // ================= UPDATE =================
-    @Override
-    public void update(Registration r) throws SQLException {
-
-        String sql = "UPDATE registrations SET user_id=?, event_id=?, status=?, qr_code=? WHERE id_registration=?";
-        PreparedStatement ps = cnx.prepareStatement(sql);
-
-        ps.setInt(1, r.getUserId());
-        ps.setInt(2, r.getEventId());
-        ps.setString(3, r.getStatus());
-
-        if (r.getQrCode() != null)
-            ps.setString(4, r.getQrCode());
-        else
-            ps.setNull(4, Types.LONGVARCHAR);
-
-        ps.setInt(5, r.getIdRegistration());
-
-        ps.executeUpdate();
-        System.out.println("Registration updated successfully!");
-    }
-
-    // ================= DELETE =================
-    @Override
-    public void delete(int id) throws SQLException {
-
-        String sql = "DELETE FROM registrations WHERE id_registration=?";
-        PreparedStatement ps = cnx.prepareStatement(sql);
-        ps.setInt(1, id);
-        ps.executeUpdate();
-
-        System.out.println("Registration deleted successfully!");
-    }
 }

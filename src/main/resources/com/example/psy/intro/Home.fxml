@@ -1,26 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="550" prefWidth="900" stylesheets="@../style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="Controllers.Welcome.HomeController">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Welcome.HomeController"
+            stylesheets="@../style.css"
+            prefWidth="1200" prefHeight="750"
+            styleClass="background-gradient">
 
-    <Pane prefHeight="550" prefWidth="900" styleClass="background" />
+    <!-- LEFT SIDEBAR -->
+    <left>
+        <VBox spacing="10" style="-fx-background-color: #3e2723; -fx-padding: 20;" prefWidth="220">
 
-                <VBox alignment="CENTER" layoutX="250" layoutY="53.0" prefHeight="482.0" prefWidth="400" spacing="20" styleClass="login-card">
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 30 0;">
+                <!-- Replace with logo image if available -->
+                <ImageView fitWidth="32" fitHeight="32">
+                    <image>
+                        <Image url="@../media/Logo_nobackground.png"/>
+                    </image>
+                </ImageView>
+                <Label text="Slimenify" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+            </HBox>
 
-                    <Label styleClass="app-title" text="Welcome to Slimenify " />
+            <!-- Menu Label -->
+            <Label text="MAIN MENU" style="-fx-text-fill: #95a5a6; -fx-font-size: 10px; -fx-font-weight: bold;"/>
 
-                    <Label styleClass="subtitle" text="A safe and supportive space for your mental well-being." wrapText="true" />
+            <!-- Sidebar Buttons -->
+            <VBox spacing="5">
+                <Button fx:id="btnDashboard"
+                        text="Dashboard"
+                        styleClass="sidebar-btn "
+                        maxWidth="Infinity"/>
+                <Button text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
+                <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
+                <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
+                <Button text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
+                  <Button onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
+                <Button text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
+                <Button text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
+                <Button text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
+            </VBox>
 
-                    <Button onAction="#gotoFeatures" styleClass="login-button" text="Next" />
-        <Button onAction="#gotoUsers" styleClass="login-button" text="users list" />
-        <Button onAction="#gotoEvents" styleClass="login-button" text="events list" />
-        <Button onAction="#gotoTherapists" styleClass="login-button" text="therapists list" />
-       <Button onAction="#gotoReview" styleClass="login-button" text="forum" />
+            <!-- Spacer pushes logout to bottom -->
+            <Region VBox.vgrow="ALWAYS"/>
 
-                </VBox>
-</AnchorPane>
+            <!-- Logout Button -->
+            <Button text="Déconnexion"
+                    styleClass="logout-btn"
+                    maxWidth="Infinity"/>        </VBox>
+    </left>
+
+    <!-- CENTER CONTENT -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- TOP HEADER -->
+            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #f7f5f0; -fx-padding: 10 20;" spacing="15">
+                <Label text="Welcome back, Admin" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px;"/>
+                <Circle radius="18" fill="#ecf0f1" stroke="#bdc3c7"/>
+            </HBox>
+
+            <!-- CONTENT AREA -->
+            <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </center>
+</BorderPane>

@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class dbconnect {
 
     private static final String URL =
-            "jdbc:mysql://localhost:3306/mindcare?useSSL=false&serverTimezone=UTC";
+            "jdbc:mysql://ballast.proxy.rlwy.net:37218/railway?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASSWORD = ""; // XAMPP default
+    private static final String PASSWORD = "PCYyKuqcoYIaQwrbVSBSBDnCGThKpShC";
 
     // Singleton instance
     private static dbconnect instance;

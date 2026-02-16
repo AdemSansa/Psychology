@@ -20,75 +20,55 @@ public class UserEditController implements Initializable {
     private TextField fullNameField;
 
     @FXML
-    private TextField usernameField;
-
-    @FXML
     private TextField emailField;
-
 
     @FXML
     private ComboBox<String> roleComboBox;
 
     private User currentUser;
 
-    // --------------------------------------------------
-    // Initialize UI ONLY (never touch currentUser here)
-    // --------------------------------------------------
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         roleComboBox.setItems(
-                FXCollections.observableArrayList("PATIENT", "ADMIN","DOCTOR")
-        );
+                FXCollections.observableArrayList("patient", "admin"));
     }
 
-    // --------------------------------------------------
-    // Inject user from previous controller
-    // --------------------------------------------------
     public void setUser(User user) {
-        if (user == null) return;
+        if (user == null)
+            return;
 
         this.currentUser = user;
         fillForm();
     }
 
-    // --------------------------------------------------
-    // Fill form with user data
-    // --------------------------------------------------
     private void fillForm() {
         fullNameField.setText(currentUser.getFullName());
-        usernameField.setText(currentUser.getUsername());
         emailField.setText(currentUser.getEmail());
-        roleComboBox.setValue(currentUser.getRole());
+        roleComboBox.setValue(currentUser.getRole().toLowerCase());
     }
 
-    // --------------------------------------------------
-    // Save changes
-    // --------------------------------------------------
     @FXML
     private void handleSave(ActionEvent event) {
-
         if (currentUser == null) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun utilisateur sélectionné.");
             return;
         }
 
         String fullName = fullNameField.getText().trim();
-        String username = usernameField.getText().trim();
         String email = emailField.getText().trim();
         String role = roleComboBox.getValue();
 
-        if (fullName.isEmpty() || username.isEmpty() || email.isEmpty()) {
+        if (fullName.isEmpty() || email.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation",
-                    "Nom, nom d'utilisateur et email sont obligatoires.");
+                    "Nom et email sont obligatoires.");
             return;
         }
 
-        currentUser.setFullName(fullName);
-        currentUser.setUsername(username);
+        String[] names = fullName.split(" ", 2);
+        currentUser.setFirstName(names[0]);
+        currentUser.setLastName(names.length > 1 ? names[1] : "");
         currentUser.setEmail(email);
-        currentUser.setRole(role);
-
-
+        currentUser.setRole(role.toLowerCase());
 
         try {
             UserService service = new UserService();
@@ -104,9 +84,6 @@ public class UserEditController implements Initializable {
         }
     }
 
-    // --------------------------------------------------
-    // Cancel / Close
-    // --------------------------------------------------
     @FXML
     private void handleCancel() {
         closeWindow();
@@ -116,9 +93,6 @@ public class UserEditController implements Initializable {
         fullNameField.getScene().getWindow().hide();
     }
 
-    // --------------------------------------------------
-    // Utility
-    // --------------------------------------------------
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
