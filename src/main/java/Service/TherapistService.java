@@ -105,4 +105,13 @@ public class TherapistService implements Iservice<Therapistis> {
         System.out.println("Therapist deleted successfully!");
     }
 
+    public void updatePassword(String email, String hashedPassword) throws SQLException {
+        String query = "UPDATE therapists SET password = ?, updated_at = NOW() WHERE email = ?";
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
+        ps.setString(1, hashedPassword);
+        ps.setString(2, email);
+        ps.executeUpdate();
+        System.out.println("Therapist password updated successfully!");
+    }
+
 }

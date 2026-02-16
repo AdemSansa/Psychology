@@ -1,5 +1,6 @@
 package Controllers.Welcome;
 
+import Service.AuthService;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import util.SceneManager;
@@ -17,6 +18,12 @@ public class HomeController {
 
         // Default page
         SceneManager.loadPage("/com/example/psy/intro/dashboard.fxml");
+    }
+
+    @FXML
+    public void handleLogout() {
+        AuthService.getInstance().logout();
+        SceneManager.switchScene("/com/example/psy/auth/login.fxml");
     }
 
     @FXML
@@ -38,6 +45,7 @@ public class HomeController {
     public void gotoAppoitnments() {
         SceneManager.loadPage("/com/example/psy/Appointment/AppointmentCalendar.fxml");
     }
+
     @FXML
 
     public void gotoQuestions() {
@@ -45,16 +53,15 @@ public class HomeController {
     }
 
     @FXML
-
-    public void gotoTherapists() { SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml"); }
-    @FXML
     public void gotoReview() {
-        SceneManager.switchScene("/com/example/psy/forum/forum.fxml");
+        SceneManager.loadPage("/com/example/psy/forum/forum.fxml");
     }
+
     public void gotoQuiz() {
         SceneManager.loadPage("/com/example/psy/Quiz/Quiz.fxml");
     }
 
-    public void gotoQuizAssesment() { SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml"); }
+    public void gotoQuizAssesment() {
+        SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml");
+    }
 }
-
