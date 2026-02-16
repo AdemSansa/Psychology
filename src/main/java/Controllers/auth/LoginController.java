@@ -20,7 +20,7 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
-    private final AuthService authService = new AuthService();
+    private final AuthService authService = AuthService.getInstance();
 
     @FXML
     private void handleLogin() {
@@ -43,7 +43,7 @@ public class LoginController {
                     SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
                     break;
                 case "therapist":
-                    SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml");
+                    SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
                     break;
                 default: // patient or employee
                     SceneManager.switchScene("/com/example/psy/intro/features.fxml");
@@ -58,6 +58,11 @@ public class LoginController {
     private void showError(String message) {
         messageLabel.setStyle("-fx-text-fill: red;");
         messageLabel.setText(message != null ? message : "Invalid login credentials.");
+    }
+
+    @FXML
+    private void handleForgotPassword() {
+        SceneManager.switchScene("/com/example/psy/auth/forgot_password.fxml");
     }
 
     @FXML

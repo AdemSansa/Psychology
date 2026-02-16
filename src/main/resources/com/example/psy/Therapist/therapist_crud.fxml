@@ -37,7 +37,7 @@
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#handleSwitch" styleClass="btn-secondary" text="Gérer les Disponibilités ➜" />
-                        <Button mnemonicParsing="false" onAction="#openAddModal" styleClass="btn-primary" text="+ Ajouter un médecin" />
+                        <Button mnemonicParsing="false" fx:id="ajoutdocteur" onAction="#openAddModal" styleClass="btn-primary" text="+ Ajouter un médecin" />
                     </children>
                 </HBox>
 
