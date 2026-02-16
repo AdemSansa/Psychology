@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 
 
 public class EventListController implements Initializable {
+    private VBox selectedCard = null;
+
 
     @FXML private TextField searchField;
     @FXML private FlowPane cardContainer;
@@ -126,15 +128,22 @@ public class EventListController implements Initializable {
         int dispo = max - registered;
 
         Label participantsLabel = new Label("👥 Participants: " + registered + " / " + max);
-        Label dispoLabel = new Label("🟢 Dispo: " + dispo);
+        Label dispoLabel = new Label();
 
-        participantsLabel.setStyle("-fx-text-fill: #6f4e37; -fx-font-size: 12px;");
-        dispoLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-
-// 🔴 FULL si plus de places
-        if (dispo <= 0) {
+        if (dispo > 0) {
+            dispoLabel.setText("🟢 Dispo: " + dispo);
+            dispoLabel.setStyle("""
+        -fx-text-fill: #2e7d32;
+        -fx-font-weight: bold;
+        -fx-font-size: 12px;
+    """);
+        } else {
             dispoLabel.setText("🔴 FULL");
-            dispoLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            dispoLabel.setStyle("""
+        -fx-text-fill: #c62828;
+        -fx-font-weight: bold;
+        -fx-font-size: 12px;
+    """);
         }
 
 
@@ -253,6 +262,31 @@ public class EventListController implements Initializable {
                 descLabel,
                 bottomRow
         );
+
+        card.setOnMouseClicked(e -> {
+
+            // retirer ancienne sélection
+            if (selectedCard != null) {
+                selectedCard.getStyleClass().remove("event-card-selected");
+            }
+
+            // sélectionner nouvelle carte
+            selectedCard = card;
+            card.getStyleClass().add("event-card-selected");
+
+        });
+// ===== SELECTION CARD (bordure marron) =====
+        card.setOnMouseClicked(e -> {
+
+            // retirer ancienne sélection
+            if (selectedCard != null) {
+                selectedCard.getStyleClass().remove("event-card-selected");
+            }
+
+            // nouvelle sélection
+            selectedCard = card;
+            card.getStyleClass().add("event-card-selected");
+        });
 
 
 

@@ -104,5 +104,15 @@ public class UserService implements Iservice<User> {
         statement.setString(2, email);
         statement.executeUpdate();
         System.out.println("User password updated successfully!");
+    public User readByEmail(String email) throws SQLException {
+        String query = "SELECT * FROM users WHERE email = ?";
+        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(query);
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        User user = null;
+        if (rs.next()) {
+            user = mapResultSetToUser(rs);
+        }
+        return user;
     }
 }

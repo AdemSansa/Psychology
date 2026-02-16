@@ -37,14 +37,14 @@
                         text="Dashboard"
                         styleClass="sidebar-btn "
                         maxWidth="Infinity"/>
-                <Button text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
-                <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
-                <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
-                <Button text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
-                  <Button onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
-                <Button text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
-                <Button text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
-                <Button text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
+                <Button fx:id="btnUsers" text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
+                <Button fx:id="btnTherapists" text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
+                <Button fx:id="btnEvents" text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
+                <Button fx:id="btnAppointments" text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
+                  <Button fx:id="btnForum" onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
+                <Button fx:id="btnQuestions" text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
+                <Button fx:id="btnQuizzes" text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
+                <Button fx:id="btnQuizAssessment" text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
             </VBox>
 
             <!-- Spacer pushes logout to bottom -->
@@ -54,6 +54,7 @@
             <Button text="Déconnexion"
                     onAction="#handleLogout"
                     styleClass="logout-btn"
+                    onAction="#logout"
                     maxWidth="Infinity"/>        </VBox>
     </left>
 

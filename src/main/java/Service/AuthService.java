@@ -4,12 +4,11 @@ import Database.dbconnect;
 import Entities.Therapistis;
 import Entities.User;
 import util.PasswordUtil;
-import util.SessionManager;
+import util.Session;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class AuthService {
 
@@ -84,7 +83,11 @@ public class AuthService {
                 user.setLastName(userRs.getString("last_name"));
                 user.setEmail(userRs.getString("email"));
                 user.setRole(userRs.getString("role"));
-                SessionManager.setUserSession(user);
+
+                Session session = Session.getInstance();
+                session.setUser(user);
+
+
                 return user.getRole();
             }
         }
@@ -104,7 +107,6 @@ public class AuthService {
                 t.setLastName(therapistRs.getString("last_name"));
                 t.setEmail(therapistRs.getString("email"));
                 t.setPassword(storedHash);
-                SessionManager.setTherapistSession(t);
                 return "therapist";
             }
         }
@@ -112,9 +114,8 @@ public class AuthService {
         throw new Exception("Invalid email or password.");
     }
 
-    public void logout() {
-        SessionManager.logout();
-    }
+
+
 
     public boolean verifyEmailExists(String email) {
         try {
@@ -147,4 +148,9 @@ public class AuthService {
             throw new Exception("Database error while resetting password: " + e.getMessage());
         }
     }
+
+    public void logout() {
+        Session session = Session.getInstance();
+        session.clear();}
+
 }
