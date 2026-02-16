@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Quiz.QuizController"
+            stylesheets="@../style.css"
+            prefHeight="600.0" prefWidth="800.0">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" styleClass="header-container">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Button text="← Back"  onAction="#goBack" styleClass="btn-secondary"/>
+            <Label text="Quiz Management" styleClass="page-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Add New Quiz" onAction="#handleAddQuiz" styleClass="btn-primary"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                <GridPane fx:id="quizGrid" hgap="20" vgap="20">
+                </GridPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>

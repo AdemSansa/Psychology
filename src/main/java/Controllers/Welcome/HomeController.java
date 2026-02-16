@@ -38,4 +38,18 @@ public class HomeController {
     public void gotoAppoitnments() {
         SceneManager.loadPage("/com/example/psy/Appointment/AppointmentCalendar.fxml");
     }
+    @FXML
+
+    public void gotoQuestions() {
+        SceneManager.loadPage("/com/example/psy/Question/Question.fxml");
+    }
+
+    @FXML
+    public void gotoQuiz() {
+        SceneManager.loadPage("/com/example/psy/Quiz/Quiz.fxml");
+    }
+
+
+    public void gotoQuizAssesment() { SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml"); }
 }
+

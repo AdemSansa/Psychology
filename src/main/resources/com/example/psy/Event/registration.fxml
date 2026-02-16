@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Event.RegistrationController"
+            stylesheets="@../style.css"
+            styleClass="background-gradient">
+
+    <top>
+        <HBox spacing="20" style="-fx-padding:20; -fx-background-color:white;">
+            <Button text="←" onAction="#handleBack" styleClass="btn-secondary"/>
+            <Label fx:id="eventInfoLabel" styleClass="section-title"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="25" alignment="CENTER" style="-fx-padding:30;">
+            <TextField fx:id="searchField"
+                       promptText="🔍 Search participant..."
+                       styleClass="form-control"
+                       prefWidth="260"/>
+
+
+            <TextField fx:id="nameField"
+                       promptText="Participant name"
+                       styleClass="form-control"
+                       prefWidth="300"/>
+
+            <ComboBox fx:id="statusBox"
+                      styleClass="form-control"
+                      prefWidth="300"/>
+
+            <Button text="Add / Update"
+                    onAction="#handleRegister"
+                    styleClass="btn-primary"/>
+
+            <ScrollPane fitToWidth="true">
+                <FlowPane fx:id="cardContainer"
+                          hgap="20" vgap="20"
+                          style="-fx-padding:20;"/>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>

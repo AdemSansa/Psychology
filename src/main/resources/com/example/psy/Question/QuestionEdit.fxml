@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Question.QuestionEditController"
+            prefHeight="500.0" prefWidth="600.0"
+            styleClass="background-gradient"
+            stylesheets="@../style.css">
+
+    <top>
+        <VBox spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="20" right="20" bottom="10" left="20"/>
+            </padding>
+            <Label text="Edit Question" styleClass="section-title"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="30" bottom="20" left="30"/>
+            </padding>
+            
+            <GridPane hgap="15" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="100" prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <!-- Quiz ID -->
+                <Label text="Quiz ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtQuizId" styleClass="form-control" promptText="Enter Quiz ID" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <!-- Question Text -->
+                <Label text="Question Text:" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.valignment="TOP"/>
+                <TextArea fx:id="txtQuestionText" styleClass="form-control" promptText="Enter question text here..." prefRowCount="4" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <!-- Order Index -->
+                <Label text="Order Index:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtOrderIndex" styleClass="form-control" promptText="e.g. 1, 2, 3" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <!-- Image Path -->
+                <Label text="Image Path:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtImagePath" styleClass="form-control" promptText="Optional image path or URL" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <!-- Required Checkbox -->
+                <CheckBox fx:id="chkRequired" text="Required Answer" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="10" right="30" bottom="20" left="30"/>
+            </padding>
+            <Button fx:id="btnCancel" text="Cancel" onAction="#handleCancel" styleClass="btn-secondary"/>
+            <Button fx:id="btnUpdate" text="Update Question" onAction="#handleUpdate" styleClass="btn-primary"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

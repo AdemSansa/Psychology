@@ -5,83 +5,39 @@ import java.time.LocalDateTime;
 public class Registration {
 
     private int idRegistration;
-    private int userId;
     private int eventId;
-    private String status; // registered, cancelled, attended
+    private String participantName;
+    private String status;
     private LocalDateTime registrationDate;
     private String qrCode;
 
-    // ===== Constructors =====
-
     public Registration() {}
 
-    // Constructor for INSERT (without id & registrationDate)
-    public Registration(int userId, int eventId, String status, String qrCode) {
-        this.userId = userId;
+    public Registration(int id, int eventId, String name, String status,
+                        LocalDateTime date, String qr) {
+        this.idRegistration = id;
         this.eventId = eventId;
+        this.participantName = name;
         this.status = status;
-        this.qrCode = qrCode;
+        this.registrationDate = date;
+        this.qrCode = qr;
     }
 
-    // Full constructor (for SELECT)
-    public Registration(int idRegistration, int userId, int eventId,
-                        String status, LocalDateTime registrationDate, String qrCode) {
-        this.idRegistration = idRegistration;
-        this.userId = userId;
-        this.eventId = eventId;
-        this.status = status;
-        this.registrationDate = registrationDate;
-        this.qrCode = qrCode;
-    }
+    public int getIdRegistration() { return idRegistration; }
+    public void setIdRegistration(int id) { this.idRegistration = id; }
 
-    // ===== Getters & Setters =====
+    public int getEventId() { return eventId; }
+    public void setEventId(int eventId) { this.eventId = eventId; }
 
-    public int getIdRegistration() {
-        return idRegistration;
-    }
+    public String getParticipantName() { return participantName; }
+    public void setParticipantName(String name) { this.participantName = name; }
 
-    public void setIdRegistration(int idRegistration) {
-        this.idRegistration = idRegistration;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public int getUserId() {
-        return userId;
-    }
+    public LocalDateTime getRegistrationDate() { return registrationDate; }
+    public void setRegistrationDate(LocalDateTime date) { this.registrationDate = date; }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public String getQrCode() {
-        return qrCode;
-    }
-
-    public void setQrCode(String qrCode) {
-        this.qrCode = qrCode;
-    }
-
+    public String getQrCode() { return qrCode; }
+    public void setQrCode(String qr) { this.qrCode = qr; }
 }
