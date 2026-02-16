@@ -2,19 +2,22 @@ package Controllers.Therapists;
 
 import Entities.Availabilities;
 import Entities.Day;
+import Entities.Therapistis;
 import Service.AvailabilityService;
+import Service.TherapistService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
 import util.SceneManager;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class AvailabilityCRUDController implements Initializable {
 
@@ -42,9 +45,10 @@ public class AvailabilityCRUDController implements Initializable {
     @FXML
     private CheckBox availableCheck;
     @FXML
-    private TextField therapistIdField;
+    private ComboBox<Therapistis> therapistCombo;
 
     private final AvailabilityService service = new AvailabilityService();
+    private final TherapistService therapistService = new TherapistService();
     private final ObservableList<Availabilities> data = FXCollections.observableArrayList();
 
     @Override
@@ -56,9 +60,46 @@ public class AvailabilityCRUDController implements Initializable {
         endColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         availableColumn.setCellValueFactory(new PropertyValueFactory<>("available"));
         therapistIdColumn.setCellValueFactory(new PropertyValueFactory<>("therapistId"));
+        therapistIdColumn.setCellFactory(column -> new TableCell<Availabilities, Integer>() {
+            @Override
+            protected void updateItem(Integer id, boolean empty) {
+                super.updateItem(id, empty);
+                if (empty || id == null) {
+                    setText(null);
+                } else {
+                    String name = "Inconnu (" + id + ")";
+                    for (Therapistis t : therapistCombo.getItems()) {
+                        if (t.getId() == id) {
+                            name = t.getFirstName() + " " + t.getLastName();
+                            break;
+                        }
+                    }
+                    setText(name);
+                }
+            }
+        });
 
         // Populate day ComboBox with all enum values
         dayCombo.setItems(FXCollections.observableArrayList(Day.values()));
+
+        // Populate therapist ComboBox
+        try {
+            therapistCombo.setItems(FXCollections.observableArrayList(therapistService.list()));
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement des thérapeutes : " + e.getMessage());
+        }
+
+        therapistCombo.setConverter(new StringConverter<Therapistis>() {
+            @Override
+            public String toString(Therapistis t) {
+                return t == null ? null : t.getFirstName() + " " + t.getLastName();
+            }
+
+            @Override
+            public Therapistis fromString(String string) {
+                return null; // Not needed for selection
+            }
+        });
 
         // Default: available
         availableCheck.setSelected(true);
@@ -66,7 +107,6 @@ public class AvailabilityCRUDController implements Initializable {
         // Load all data
         loadData();
 
-        // On row click, populate form for editing
         availTable.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> {
                     if (newVal != null)
@@ -89,7 +129,15 @@ public class AvailabilityCRUDController implements Initializable {
         startTimeField.setText(a.getStartTime().toString().substring(0, 5));
         endTimeField.setText(a.getEndTime().toString().substring(0, 5));
         availableCheck.setSelected(a.isAvailable());
-        therapistIdField.setText(String.valueOf(a.getTherapistId()));
+        therapistCombo.getSelectionModel().clearSelection();
+        if (a.getTherapistId() > 0) {
+            for (Therapistis t : therapistCombo.getItems()) {
+                if (t.getId() == a.getTherapistId()) {
+                    therapistCombo.setValue(t);
+                    break;
+                }
+            }
+        }
     }
 
     // ======================== CRUD Actions ========================
@@ -181,7 +229,9 @@ public class AvailabilityCRUDController implements Initializable {
         a.setStartTime(Time.valueOf(startTimeField.getText().trim() + ":00"));
         a.setEndTime(Time.valueOf(endTimeField.getText().trim() + ":00"));
         a.setAvailable(availableCheck.isSelected());
-        a.setTherapistId(Integer.parseInt(therapistIdField.getText().trim()));
+        if (therapistCombo.getValue() != null) {
+            a.setTherapistId(therapistCombo.getValue().getId());
+        }
     }
 
     /**
@@ -219,17 +269,9 @@ public class AvailabilityCRUDController implements Initializable {
                 errors.append("• L'heure de début doit être avant l'heure de fin.\n");
         }
 
-        // ID thérapeute — obligatoire + numérique + positif
-        if (therapistIdField.getText() == null || therapistIdField.getText().trim().isEmpty())
-            errors.append("• L'ID du thérapeute est obligatoire.\n");
-        else {
-            try {
-                int tid = Integer.parseInt(therapistIdField.getText().trim());
-                if (tid <= 0)
-                    errors.append("• L'ID du thérapeute doit être positif.\n");
-            } catch (NumberFormatException e) {
-                errors.append("• L'ID du thérapeute doit être un nombre entier.\n");
-            }
+        // Thérapeute — obligatoire
+        if (therapistCombo.getValue() == null) {
+            errors.append("• Veuillez sélectionner un thérapeute.\n");
         }
 
         if (errors.length() > 0) {
@@ -244,7 +286,7 @@ public class AvailabilityCRUDController implements Initializable {
         startTimeField.clear();
         endTimeField.clear();
         availableCheck.setSelected(true);
-        therapistIdField.clear();
+        therapistCombo.getSelectionModel().clearSelection();
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {

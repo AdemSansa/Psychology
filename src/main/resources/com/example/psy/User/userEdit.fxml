@@ -28,15 +28,7 @@
 
                 <!-- Full Name -->
                 <Label text="Full Name" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="fullNameField" promptText="Enter full name" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control"/>
-
-                <!-- Email -->
-                <Label text="Email" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="emailField" promptText="Enter email" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="form-control"/>
-
-                <!-- Username -->
-                <Label text="Username" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="usernameField" promptText="Enter username" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="form-control"/>
+                <TextField fx:id="fullNameField" promptText="Enter full name (e.g. John Doe)" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control"/>
 
                 <!-- Role -->
                 <Label text="Role" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
