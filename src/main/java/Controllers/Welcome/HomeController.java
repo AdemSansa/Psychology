@@ -1,5 +1,6 @@
 package Controllers.Welcome;
 
+import Service.AuthService;
 import Entities.User;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -105,6 +106,12 @@ public class HomeController {
     }
 
     @FXML
+    public void handleLogout() {
+        AuthService.getInstance().logout();
+        SceneManager.switchScene("/com/example/psy/auth/login.fxml");
+    }
+
+    @FXML
     public void gotoUsers() {
         SceneManager.loadPage("/com/example/psy/User/users.fxml");
     }
@@ -143,10 +150,9 @@ public class HomeController {
         SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml");
     }
 
-    // utilitaire si user a set<String> roles
-
     public void logout() {
         Session.getInstance().clear();
         SceneManager.switchScene("/com/example/psy/auth/login.fxml");
     }
+
 }

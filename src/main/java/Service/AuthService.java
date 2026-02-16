@@ -12,8 +12,22 @@ import java.sql.ResultSet;
 
 public class AuthService {
 
+    private static AuthService instance;
+
     private final UserService userDAO = new UserService();
     private final TherapistService therapistDAO = new TherapistService();
+
+    // Private constructor for singleton pattern
+    private AuthService() {
+    }
+
+    // Singleton getInstance method
+    public static AuthService getInstance() {
+        if (instance == null) {
+            instance = new AuthService();
+        }
+        return instance;
+    }
 
     public void register(User user) throws Exception {
         validateBasicInfo(user.getEmail(), user.getPassword());
@@ -100,6 +114,40 @@ public class AuthService {
         throw new Exception("Invalid email or password.");
     }
 
+
+
+
+    public boolean verifyEmailExists(String email) {
+        try {
+            return userDAO.emailExists(email);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void resetPassword(String email, String newPassword) throws Exception {
+        if (newPassword == null || newPassword.length() < 6) {
+            throw new Exception("Password must be at least 6 characters long.");
+        }
+
+        String hashedPassword = PasswordUtil.hashPassword(newPassword);
+
+        try {
+            if (userDAO.emailExists(email)) {
+                // Check if it's a patient (by looking up in users table, though AuthService
+                // current login logic checks both)
+                // Actually, our login logic checked users first, then therapists.
+                // We'll follow the same pattern: check if it's in users first.
+                userDAO.updatePassword(email, hashedPassword);
+            } else {
+                // Check therapists table
+                therapistDAO.updatePassword(email, hashedPassword);
+            }
+        } catch (SQLException e) {
+            throw new Exception("Database error while resetting password: " + e.getMessage());
+        }
+    }
 
     public void logout() {
         Session session = Session.getInstance();

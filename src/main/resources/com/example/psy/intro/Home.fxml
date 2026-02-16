@@ -52,6 +52,7 @@
 
             <!-- Logout Button -->
             <Button text="Déconnexion"
+                    onAction="#handleLogout"
                     styleClass="logout-btn"
                     onAction="#logout"
                     maxWidth="Infinity"/>        </VBox>
