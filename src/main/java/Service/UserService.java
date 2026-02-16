@@ -96,4 +96,14 @@ public class UserService implements Iservice<User> {
         }
         return false;
     }
+    public User findUser  (String email) throws SQLException {
+        String query = "SELECT * FROM users WHERE email = ?";
+        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(query);
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            return mapResultSetToUser(rs);
+        }
+        return null;
+    }
 }

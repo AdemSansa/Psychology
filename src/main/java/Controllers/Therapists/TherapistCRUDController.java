@@ -259,6 +259,6 @@ public class TherapistCRUDController implements Initializable {
 
     @FXML
     void handleSwitch(ActionEvent event) {
-        SceneManager.switchScene("/com/example/psy/Therapist/availability_crud.fxml");
+        SceneManager.loadPage("/com/example/psy/Therapist/availability_crud.fxml");
     }
 }

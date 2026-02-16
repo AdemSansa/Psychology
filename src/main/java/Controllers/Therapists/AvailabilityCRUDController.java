@@ -35,7 +35,6 @@ public class AvailabilityCRUDController implements Initializable {
     private TableColumn<Availabilities, Boolean> availableColumn;
     @FXML
     private TableColumn<Availabilities, Integer> therapistIdColumn;
-
     @FXML
     private ComboBox<Day> dayCombo;
     @FXML
@@ -53,7 +52,6 @@ public class AvailabilityCRUDController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Configure table columns
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         dayColumn.setCellValueFactory(new PropertyValueFactory<>("day"));
         startColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
@@ -79,10 +77,9 @@ public class AvailabilityCRUDController implements Initializable {
             }
         });
 
-        // Populate day ComboBox with all enum values
+
         dayCombo.setItems(FXCollections.observableArrayList(Day.values()));
 
-        // Populate therapist ComboBox
         try {
             therapistCombo.setItems(FXCollections.observableArrayList(therapistService.list()));
         } catch (SQLException e) {
@@ -101,10 +98,10 @@ public class AvailabilityCRUDController implements Initializable {
             }
         });
 
-        // Default: available
+
         availableCheck.setSelected(true);
 
-        // Load all data
+
         loadData();
 
         availTable.getSelectionModel().selectedItemProperty().addListener(
@@ -219,7 +216,7 @@ public class AvailabilityCRUDController implements Initializable {
 
     @FXML
     private void goToTherapists() {
-        SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml");
+        SceneManager.loadPage("/com/example/psy/Therapist/therapist_crud.fxml");
     }
 
     // ======================== Helpers ========================

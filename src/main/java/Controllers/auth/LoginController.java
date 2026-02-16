@@ -43,7 +43,7 @@ public class LoginController {
                     SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
                     break;
                 case "therapist":
-                    SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml");
+                    SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
                     break;
                 default: // patient or employee
                     SceneManager.switchScene("/com/example/psy/intro/features.fxml");

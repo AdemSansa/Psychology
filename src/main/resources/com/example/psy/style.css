@@ -369,3 +369,15 @@
 .logout-btn:hover {
     -fx-background-color: rgba(255, 0, 0, 0.15);
 }
+.therapist-name
+{
+    -fx-text-fill: black;
+}
+.therapist-role
+{
+    -fx-text-fill: black;
+}
+.therapist-detail
+{
+    -fx-text-fill: black;
+}

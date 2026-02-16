@@ -37,7 +37,7 @@
                         text="Dashboard"
                         styleClass="sidebar-btn "
                         maxWidth="Infinity"/>
-                <Button text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
+                <Button text="Users" styleClass="sidebar-btn"  onAction="#gotoUsers" maxWidth="Infinity"/>
                 <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
                 <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
                 <Button text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
