@@ -293,4 +293,5 @@ public class AvailabilityCRUDController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 }

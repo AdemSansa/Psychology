@@ -288,6 +288,25 @@
     -fx-text-fill: white;
 
 }
+    .booked-entry {
+        -fx-background-color: #6f4e37;
+    }
+/* Carte normale */
+.event-card {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 12;
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+}
+
+/* Carte sélectionnée = bordure marron */
+.event-card-selected {
+    -fx-border-color: #8B5E3C;   /* MARRON */
+    -fx-border-width: 3;
+    -fx-border-radius: 18;
+}
 
 .booked-entry {
     -fx-background-color: #6f4e37;
@@ -368,16 +387,4 @@
 
 .logout-btn:hover {
     -fx-background-color: rgba(255, 0, 0, 0.15);
-}
-.therapist-name
-{
-    -fx-text-fill: black;
-}
-.therapist-role
-{
-    -fx-text-fill: black;
-}
-.therapist-detail
-{
-    -fx-text-fill: black;
 }

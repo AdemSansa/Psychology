@@ -30,7 +30,7 @@ public class RegisterController {
     @FXML
     private Label messageLabel;
 
-    private final AuthService authService = new AuthService();
+    private final AuthService authService = AuthService.getInstance();
 
     @FXML
     public void initialize() {
