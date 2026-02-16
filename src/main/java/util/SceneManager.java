@@ -1,31 +1,36 @@
 package util;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class SceneManager {
+
     private static Stage stage;
 
     public static void setStage(Stage primaryStage) {
         stage = primaryStage;
     }
-
+    private static StackPane contentArea;
+    public static void setContentArea(StackPane pane) {
+        contentArea = pane;
+    }
     public static void switchScene(String fxmlPath) {
         try {
-            Parent root = FXMLLoader.load(
-                    SceneManager.class.getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
+            Parent root = loader.load();
+
             stage.setScene(new Scene(root));
             stage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Scene switch WITH controller access
     public static <T> T switchSceneWithController(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
@@ -36,10 +41,25 @@ public class SceneManager {
 
             return loader.getController();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+    public static void loadPage(String fxmlPath) {
+        try {
+            if (contentArea == null) {
+                throw new IllegalStateException("ContentArea not set!");
+            }
 
+            Node page = FXMLLoader.load(SceneManager.class.getResource(fxmlPath));
+
+            contentArea.getChildren().setAll(page);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void goBack() {
+    }
 }

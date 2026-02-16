@@ -11,7 +11,10 @@
             fx:controller="Controllers.User.UserListController"
             stylesheets="@../style.css"
             prefWidth="1000" prefHeight="650"
-            styleClass="background-gradient">
+            styleClass="background-gradient"><Button text="← Retour"
+                                                     onAction="#GoBack"
+                                                     styleClass="btn-secondary"
+                                                     prefHeight="35"/>
 
     <VBox spacing="20"
           AnchorPane.topAnchor="30"

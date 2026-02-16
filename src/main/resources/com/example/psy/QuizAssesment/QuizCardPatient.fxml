@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      stylesheets="@../style.css"
+
+      fx:controller="Controllers.QuizAssesment.QuizCardPatientController"
+      styleClass="quiz-card"
+      prefWidth="220" prefHeight="180"
+      minWidth="220" maxWidth="220"
+      spacing="10">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label fx:id="categoryLabel" text="Category" styleClass="card-category"/>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <Label fx:id="titleLabel" text="Quiz Title" styleClass="card-title" wrapText="true" VBox.vgrow="ALWAYS"/>
+
+    <Label fx:id="questionsLabel" text="10 Questions" styleClass="card-subtitle"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Start Quiz" onAction="#handleStart" styleClass="btn-primary, btn-sm"/>
+    </HBox>
+
+</VBox>

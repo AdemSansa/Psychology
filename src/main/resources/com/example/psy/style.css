@@ -232,8 +232,140 @@
     -fx-alignment: center;
 }
 
+/* Remove FlowPane focus background */
+.flow-pane {
+    -fx-background-color: transparent;
+}
+.card-pro {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10,0,0,3);
+    -fx-cursor: hand;
+}
+
+.card-pro:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 18,0,0,6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+/* ===== STATUS BADGES ===== */
+
+.badge-registered {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #2e7d32;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+.badge-cancelled {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #c62828;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+.badge-attended {
+    -fx-background-color: #fff8e1;
+    -fx-text-fill: #f57f17;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+/* ===== CARD HOVER EFFECT ===== */
+
+.event-card:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
 .therapist-initials-label {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+
+}
+
+.booked-entry {
+    -fx-background-color: #6f4e37;
+}
+
+/* ===============================
+   QUIZ CARD
+   =============================== */
+
+.quiz-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 10, 0, 0, 2);
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.quiz-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.25), 15, 0, 0, 4);
+    -fx-translate-y: -3;
+    -fx-border-color: #6f4e37;
+}
+
+.card-category {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #6f4e37;
+    /* Darker brown for better contrast */
+    -fx-background-radius: 4;
+    -fx-padding: 4 8;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    /* Larger font */
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c1a12;
+    /* Very dark brown/almost black */
+}
+
+.card-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: normal;
+}
+/* SIDEBAR BUTTON BASE STYLE */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-alignment: CENTER_LEFT;
+
+    -fx-padding: 10 15;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+/* HOVER EFFECT */
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ACTIVE (SELECTED) BUTTON */
+.sidebar-btn.active {
+    -fx-background-color: #5c8f6f;  /* green like screenshot */
+    -fx-text-fill: white;
+}
+.logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff7675;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 15;
+    -fx-background-radius: 8;
+}
+
+.logout-btn:hover {
+    -fx-background-color: rgba(255, 0, 0, 0.15);
 }
