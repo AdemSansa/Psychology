@@ -5,11 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import Database.dbconnect;
+import Service.AuthService;
 import util.PasswordUtil;
 import util.SceneManager;
 
@@ -24,60 +20,44 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
+    private final AuthService authService = new AuthService();
+
     @FXML
     private void handleLogin() {
-
-        // (Remove this later – for testing only)
-        usernameField.setText("adem.sansa7@gmail.com");
-        passwordField.setText("adem2003");
-
-        String email = usernameField.getText();
+        String identifier = usernameField.getText();
         String password = passwordField.getText();
 
-        if (email.isEmpty() || password.isEmpty()) {
+        if (identifier.isEmpty() || password.isEmpty()) {
             messageLabel.setText("Please fill in all fields.");
             return;
         }
 
-        String query = "SELECT * FROM users WHERE email = ?";
-
         try {
-            // ✅ Get Singleton connection
-            Connection conn = dbconnect.getInstance().getConnection();
+            String role = authService.login(identifier, password);
+            messageLabel.setStyle("-fx-text-fill: green;");
+            messageLabel.setText("Login successful ✔");
 
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, email);
-
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                String storedHashedPassword = rs.getString("password");
-
-                if (PasswordUtil.verifyPassword(password, storedHashedPassword)) {
-                    messageLabel.setStyle("-fx-text-fill: green;");
-                    messageLabel.setText("Login successful ✔");
-
+            // Role-based redirection
+            switch (role.toLowerCase()) {
+                case "admin":
                     SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
-                } else {
-                    showError();
-                }
-            } else {
-                showError();
+                    break;
+                case "therapist":
+                    SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml");
+                    break;
+                default: // patient or employee
+                    SceneManager.switchScene("/com/example/psy/intro/features.fxml");
+                    break;
             }
 
-
-            rs.close();
-            stmt.close();
-
         } catch (Exception e) {
-            e.printStackTrace();
-            messageLabel.setText("Database connection error.");
+            showError(e.getMessage());
         }
     }
 
-    private void showError() {
+    private void showError(String message) {
         messageLabel.setStyle("-fx-text-fill: red;");
-        messageLabel.setText("Invalid email or password.");
+        messageLabel.setText(message != null ? message : "Invalid login credentials.");
     }
 
     @FXML

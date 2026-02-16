@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Question.QuestionListController"
+            prefHeight="600.0" prefWidth="800.0"
+            styleClass="background-gradient"
+            stylesheets="@../style.css">
+
+    <top>
+        <VBox spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Button text="← Back"  onAction="#goBack" styleClass="btn-secondary"/>
+            <Label text="Questions Management" styleClass="section-title"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="0" right="20" bottom="10" left="20"/>
+            </padding>
+            <TableView fx:id="table" VBox.vgrow="ALWAYS">
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="50" minWidth="50" maxWidth="50"/>
+                    <TableColumn fx:id="quizIdColumn" text="Quiz ID" prefWidth="80"/>
+                    <TableColumn fx:id="questionTextColumn" text="Question Text"/>
+                    <TableColumn fx:id="requiredColumn" text="Required" prefWidth="70"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="10" right="20" bottom="20" left="20"/>
+            </padding>
+            <Button fx:id="btnAdd" text="Add Question" onAction="#handleAdd" styleClass="btn-primary"/>
+            <Button fx:id="btnEdit" text="Edit" onAction="#handleEdit" styleClass="btn-secondary"/>
+            <Button fx:id="btnDelete" text="Delete" onAction="#handleDelete" styleClass="logout-btn"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

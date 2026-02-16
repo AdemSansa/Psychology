@@ -10,119 +10,132 @@
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Controllers.Event.EventEditController"
-            prefHeight="500.0" prefWidth="600.0">
+            styleClass="background-gradient" stylesheets="@../style.css"
+            prefHeight="600.0" prefWidth="700.0">
 
     <children>
         <ScrollPane fitToWidth="true"
                     AnchorPane.topAnchor="0"
                     AnchorPane.bottomAnchor="0"
                     AnchorPane.leftAnchor="0"
-                    AnchorPane.rightAnchor="0">
+                    AnchorPane.rightAnchor="0"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
 
             <content>
-                <VBox spacing="15">
+                <VBox alignment="CENTER" spacing="15">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets top="30" right="30" bottom="30" left="30"/>
                     </padding>
 
-                    <Label text="Edit Event"
-                           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+                    <VBox spacing="20" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" maxWidth="650">
+                        
+                        <Label text="Edit Event Details"
+                               styleClass="section-title" style="-fx-font-size: 22px;" />
 
-                    <!-- Title -->
-                    <VBox spacing="5">
-                        <Label text="Title" />
-                        <TextField fx:id="titleField" promptText="Event title" />
+                        <GridPane hgap="20" vgap="15">
+                             <columnConstraints>
+                                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                             </columnConstraints>
+
+                             <!-- Image URL -->
+                             <VBox spacing="5" GridPane.columnSpan="2" GridPane.rowIndex="0">
+                                 <Label text="Image URL" style="-fx-font-weight: bold;"/>
+                                 <HBox spacing="10">
+                                     <TextField fx:id="imageUrlField" promptText="https://example.com/image.jpg" styleClass="form-control" HBox.hgrow="ALWAYS"/>
+                                     <Button text="Preview" onAction="#handlePreviewImage" styleClass="btn-secondary"/>
+                                 </HBox>
+                                 <ImageView fx:id="eventImageView"
+                                            fitHeight="200"
+                                            fitWidth="550"
+                                            preserveRatio="true"
+                                            style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);"/>
+                             </VBox>
+
+                             <!-- Title -->
+                             <VBox spacing="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                 <Label text="Title" style="-fx-font-weight: bold;"/>
+                                 <TextField fx:id="titleField" promptText="Event title" styleClass="form-control" />
+                             </VBox>
+
+                             <!-- Description -->
+                             <VBox spacing="5" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                 <Label text="Description" style="-fx-font-weight: bold;"/>
+                                 <TextArea fx:id="descriptionField" promptText="Event description" prefRowCount="3" styleClass="form-control" wrapText="true"/>
+                             </VBox>
+
+                             <!-- Start -->
+                             <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                                 <Label text="Start Date Time" style="-fx-font-weight: bold;"/>
+                                 <HBox spacing="10">
+                                     <DatePicker fx:id="dateStartPicker" maxWidth="Infinity" styleClass="form-control" HBox.hgrow="ALWAYS"/>
+                                     <TextField fx:id="timeStartField" promptText="HH:mm" styleClass="form-control" prefWidth="80"/>
+                                 </HBox>
+                             </VBox>
+
+                             <!-- End -->
+                             <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <Label text="End Date Time" style="-fx-font-weight: bold;"/>
+                                 <HBox spacing="10">
+                                     <DatePicker fx:id="dateEndPicker" maxWidth="Infinity" styleClass="form-control" HBox.hgrow="ALWAYS"/>
+                                     <TextField fx:id="timeEndField" promptText="HH:mm" styleClass="form-control" prefWidth="80"/>
+                                 </HBox>
+                             </VBox>
+
+                             <!-- Type -->
+                             <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                                 <Label text="Type" style="-fx-font-weight: bold;"/>
+                                 <ComboBox fx:id="typeComboBox" promptText="Select event type" styleClass="form-control" maxWidth="Infinity">
+                                     <items>
+                                         <FXCollections fx:factory="observableArrayList">
+                                             <String fx:value="online"/>
+                                             <String fx:value="physique"/>
+                                             <String fx:value="hybride"/>
+                                         </FXCollections>
+                                     </items>
+                                 </ComboBox>
+                             </VBox>
+
+                             <!-- Status -->
+                             <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <Label text="Status" style="-fx-font-weight: bold;"/>
+                                 <ComboBox fx:id="statusComboBox" promptText="Select status" styleClass="form-control" maxWidth="Infinity">
+                                     <items>
+                                         <FXCollections fx:factory="observableArrayList">
+                                             <String fx:value="draft"/>
+                                             <String fx:value="published"/>
+                                             <String fx:value="cancelled"/>
+                                         </FXCollections>
+                                     </items>
+                                 </ComboBox>
+                             </VBox>
+
+                             <!-- Location -->
+                             <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                                 <Label text="Location" style="-fx-font-weight: bold;"/>
+                                 <TextField fx:id="locationField" promptText="Event location" styleClass="form-control" />
+                             </VBox>
+                             
+                             <!-- Max -->
+                             <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <Label text="Max Participants" style="-fx-font-weight: bold;"/>
+                                 <TextField fx:id="maxParticipantsField" promptText="Number" styleClass="form-control" />
+                             </VBox>
+
+                        </GridPane>
+
+                        <!-- Buttons -->
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button text="Cancel"
+                                    onAction="#handleCancel"
+                                    styleClass="btn-secondary" />
+
+                            <Button text="Save Changes"
+                                    onAction="#handleUpdateEvent"
+                                    styleClass="btn-primary" />
+                        </HBox>
+
                     </VBox>
-
-                    <!-- Description -->
-                    <VBox spacing="5">
-                        <Label text="Description" />
-                        <TextArea fx:id="descriptionField"
-                                  promptText="Event description"
-                                  prefRowCount="3" />
-                    </VBox>
-
-                    <!-- Type -->
-                    <VBox spacing="5">
-                        <Label text="Type" />
-                        <ComboBox fx:id="typeComboBox" promptText="Select event type">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="online"/>
-                                    <String fx:value="physique"/>
-                                    <String fx:value="hybride"/>
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
-                    </VBox>
-
-                    <!-- Start -->
-                    <VBox spacing="5">
-                        <Label text="Start Date Time" />
-                        <DatePicker fx:id="dateStartPicker"/>
-                        <TextField fx:id="timeStartField" promptText="HH:mm" />
-                    </VBox>
-
-                    <!-- End -->
-                    <VBox spacing="5">
-                        <Label text="End Date Time" />
-                        <DatePicker fx:id="dateEndPicker"/>
-                        <TextField fx:id="timeEndField" promptText="HH:mm" />
-                    </VBox>
-
-                    <!-- Location -->
-                    <VBox spacing="5">
-                        <Label text="Location" />
-                        <TextField fx:id="locationField" promptText="Event location" />
-                    </VBox>
-
-                    <!-- Max -->
-                    <VBox spacing="5">
-                        <Label text="Max Participants" />
-                        <TextField fx:id="maxParticipantsField" promptText="Number of participants" />
-                    </VBox>
-
-                    <!-- Status -->
-                    <VBox spacing="5">
-                        <Label text="Status" />
-                        <ComboBox fx:id="statusComboBox" promptText="Select status">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="draft"/>
-                                    <String fx:value="published"/>
-                                    <String fx:value="cancelled"/>
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
-                    </VBox>
-
-                    <!-- Image URL -->
-                    <VBox spacing="5">
-                        <Label text="Image URL" />
-                        <TextField fx:id="imageUrlField"
-                                   promptText="https://example.com/image.jpg" />
-
-                        <ImageView fx:id="eventImageView"
-                                   fitHeight="160"
-                                   fitWidth="260"
-                                   preserveRatio="true"
-                                   style="-fx-border-color: #ccc; -fx-border-width: 1;" />
-
-                        <Button text="Preview Image"
-                                onAction="#handlePreviewImage"/>
-                    </VBox>
-
-                    <!-- Buttons -->
-                    <HBox spacing="10" alignment="CENTER_RIGHT">
-                        <Button text="Cancel"
-                                onAction="#handleCancel"
-                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
-
-                        <Button text="Update Event"
-                                onAction="#handleUpdateEvent"
-                                style="-fx-background-color: #3498db; -fx-text-fill: white;" />
-                    </HBox>
-
                 </VBox>
             </content>
         </ScrollPane>

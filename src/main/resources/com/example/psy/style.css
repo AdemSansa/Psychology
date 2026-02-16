@@ -1,435 +1,371 @@
 /* ===============================
-   COLOR PALETTE
+   MARRON & BEIGE MODERN PALETTE
    =============================== */
-/*
-Primary:   #7b9e7f  (calm green)
-Accent:    #ac9885  (warm beige)
-Surface:   #ffffff  (clean white)
-Text dark: #3f4f4f
-Text soft: #7a8a8a
-*/
+
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: linear-gradient(to bottom right, #f5efe6, #e8dccb);
+    -fx-text-fill: #3e2c23;
+}
 
 /* ===============================
    BACKGROUND
    =============================== */
-.background {
-    -fx-background-color: linear-gradient(to bottom right,
-    #ac9885,
-    #ffffff);
+
+.background-gradient {
+    -fx-background-color: linear-gradient(to bottom right, #f5efe6, #e8dccb);
 }
 
 /* ===============================
-   CARD CONTAINER
+   SIDEBAR
    =============================== */
-.login-card {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 18;
-    -fx-padding: 30;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.10), 18, 0, 0, 6);
+
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #6f4e37, #4e342e);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
 }
 
-/* ===============================
-   TITLES
-   =============================== */
-.app-title {
-    -fx-font-size: 28px;
+.logo-title {
+    -fx-text-fill: #f5efe6;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #7b9e7f;
+    -fx-padding: 0 0 20 0;
 }
 
-.subtitle {
-    -fx-font-size: 14px;
-    -fx-text-fill: #7a8a8a;
-}
-
-/* ===============================
-   INPUT FIELDS
-   =============================== */
-.input {
-    -fx-pref-width: 260;
-    -fx-pref-height: 40;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-border-color: #ac9885;
-    -fx-background-color: #ffffff;
-    -fx-padding: 0 12 0 12;
-    -fx-font-size: 13px;
-    -fx-text-fill: #3f4f4f;
-}
-
-.input:focused {
-    -fx-border-color: #7b9e7f;
-    -fx-border-width: 1.5;
-}
-
-/* ===============================
-   PRIMARY BUTTON
-   =============================== */
-.login-button {
-    -fx-pref-width: 260;
-    -fx-pref-height: 42;
-    -fx-background-radius: 12;
-    -fx-background-color: #7b9e7f;
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-
-.login-button:hover {
-    -fx-background-color: #6a8e6f;
-}
-
-/* ===============================
-   LINK BUTTONS
-   =============================== */
-.link-button {
+.sidebar-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #7b9e7f;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-padding: 0;
-    -fx-cursor: hand;
-}
-
-.link-button:hover {
-    -fx-text-fill: #6a8e6f;
-    -fx-underline: true;
-}
-
-/* ===============================
-   MESSAGES (ERROR / INFO)
-   =============================== */
-.message {
-    -fx-text-fill: #ac9885;
-    -fx-font-size: 12px;
-}
-
-/* ===============================
-   FOOTER TEXT
-   =============================== */
-.footer-text {
-    -fx-text-fill: #7a8a8a;
-    -fx-font-size: 11px;
-}
-
-/* style.css - styles pour userAdd.fxml */
-
-/* racine */
-.root {
-    -fx-font-family: "Segoe UI", Roboto, Arial;
+    -fx-text-fill: #f5efe6;
     -fx-font-size: 13px;
-    -fx-background-color: #f4f6f8;
-}
-
-/* conteneur du formulaire */
-.user-add-root .form-grid {
-    -fx-background-color: white;
-    -fx-background-radius: 8;
-    -fx-padding: 18;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0.0, 0, 2);
-}
-
-/* labels */
-.form-label {
-    -fx-font-weight: 600;
-    -fx-text-fill: #2b2b2b;
-    -fx-padding: 4 0 4 0;
-}
-
-/* champs texte et password */
-.text-field.form-control,
-.password-field.form-control {
-    -fx-background-color: white;
-    -fx-border-color: #d0d7de;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-padding: 6 8 6 8;
-    -fx-prompt-text-fill: derive(#6b6f76, -20%);
-}
-
-/* combo box */
-.combo-box.form-control,
-.combo-box.form-combo {
-    -fx-border-color: #d0d7de;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-padding: 0 0 0 6;
-}
-
-/* focus */
-.text-field:focused,
-.password-field:focused,
-.combo-box:focused {
-    -fx-border-color: #4a90e2;
-    -fx-focus-color: #4a90e2;
-    -fx-faint-focus-color: rgba(74, 144, 226, 0.16);
-}
-
-/* bouton général */
-.button.btn {
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 15;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-color: transparent;
     -fx-cursor: hand;
-    -fx-padding: 6 14 6 14;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
-    -fx-font-weight: 600;
 }
 
-/* bouton primaire */
-.button.btn-primary {
-    -fx-background-color: linear-gradient(#4a90e2, #357ABD);
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: #d2b48c;
+}
+
+.logout-btn {
+    -fx-background-color: rgba(120, 40, 40, 0.1);
+    -fx-text-fill: #8b0000;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #8b0000;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #8b0000;
     -fx-text-fill: white;
-    -fx-effect: dropshadow(gaussian, rgba(53, 122, 189, 0.25), 6, 0.0, 0, 2);
-}
-
-/* hover / pressed */
-.button.btn-primary:hover {
-    -fx-background-color: linear-gradient(#5aa0f0, #3b7fd0);
-}
-
-.button.btn-primary:pressed {
-    -fx-background-color: linear-gradient(#3273c2, #2b61a8);
-    -fx-translate-y: 1;
-}
-
-/* petites corrections de layout */
-.grid-pane .column-constraints {
-    -fx-hgap: 10;
 }
 
 /* ===============================
-   THERAPIST CARD REDESIGN
+   TOPBAR
    =============================== */
-.therapist-card {
+
+.topbar {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f0e6d6);
+    -fx-padding: 15 30;
+    -fx-effect: dropshadow(two-pass-box, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
+}
+
+.welcome-text {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4e342e;
+}
+
+/* ===============================
+   DASHBOARD
+   =============================== */
+
+.dashboard-content {
+    -fx-padding: 30;
+}
+
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #6f4e37, #d2b48c);
+}
+
+/* ===============================
+   STAT CARDS
+   =============================== */
+
+.stat-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 10, 0, 0, 5);
+    -fx-min-width: 220;
+    -fx-min-height: 120;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(111, 78, 55, 0.25), 15, 0, 0, 5);
+    -fx-translate-y: -2;
+}
+
+.card-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #555555;
+}
+
+.card-number {
+    -fx-font-size: 30px;
+    -fx-font-weight: 800;
+    -fx-text-fill: black;
+    /* ✅ TEXTE NOIR */
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #6f4e37, #d2b48c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #5a3e2b, #c4a484);
+}
+
+.btn-secondary {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #4e342e;
+    -fx-font-weight: bold;
+    -fx-border-color: #d2b48c;
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
+    -fx-padding: 8 20;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #f2e8dc;
+}
+
+/* ===============================
+   FORMS
+   =============================== */
+
+.form-control {
     -fx-background-color: white;
+    -fx-border-color: #d2b48c;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-font-size: 13px;
+}
+
+.form-control:focused {
+    -fx-border-color: #6f4e37;
+    -fx-effect: dropshadow(gaussian, rgba(111, 78, 55, 0.2), 5, 0, 0, 0);
+}
+
+/* ===============================
+   TABLE VIEW
+   =============================== */
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f2e8dc);
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #4e342e;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #faf6f0;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e8dccb;
+}
+
+/* ===============================
+   THERAPIST CARD
+   =============================== */
+
+.therapist-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
     -fx-background-radius: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
-    -fx-border-color: #eaeaea;
+    -fx-border-color: #e0d6c8;
     -fx-border-radius: 12;
     -fx-border-width: 1;
+    -fx-padding: 15;
 }
 
 .therapist-card:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 15, 0, 0, 4);
-    -fx-border-color: #dadada;
+    -fx-border-color: #6f4e37;
+    -fx-effect: dropshadow(gaussian, rgba(111, 78, 55, 0.25), 15, 0, 0, 4);
 }
 
 .therapist-initials {
-    -fx-background-color: #f2f0eb;
-    /* Beige light */
+    -fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c);
     -fx-background-radius: 50;
+    -fx-min-width: 60;
+    -fx-min-height: 60;
     -fx-alignment: center;
+}
+
+/* Remove FlowPane focus background */
+.flow-pane {
+    -fx-background-color: transparent;
+}
+.card-pro {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10,0,0,3);
+    -fx-cursor: hand;
+}
+
+.card-pro:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 18,0,0,6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+/* ===== STATUS BADGES ===== */
+
+.badge-registered {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #2e7d32;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+.badge-cancelled {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #c62828;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+.badge-attended {
+    -fx-background-color: #fff8e1;
+    -fx-text-fill: #f57f17;
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+}
+
+/* ===== CARD HOVER EFFECT ===== */
+
+.event-card:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
 .therapist-initials-label {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #8b7d6b;
-    /* Darker beige/brown */
+    -fx-text-fill: white;
+
 }
 
-.therapist-name {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+.booked-entry {
+    -fx-background-color: #6f4e37;
 }
 
-.therapist-role {
-    -fx-font-size: 13px;
-    -fx-text-fill: #7b9e7f;
-    /* Green */
+/* ===============================
+   QUIZ CARD
+   =============================== */
+
+.quiz-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 10, 0, 0, 2);
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
 }
 
-.therapist-detail {
+.quiz-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.25), 15, 0, 0, 4);
+    -fx-translate-y: -3;
+    -fx-border-color: #6f4e37;
+}
+
+.card-category {
     -fx-font-size: 12px;
-    -fx-text-fill: #666666;
-}
-
-.therapist-tag {
-    -fx-background-color: #f5f5f5;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #6f4e37;
+    /* Darker brown for better contrast */
     -fx-background-radius: 4;
     -fx-padding: 4 8;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    /* Larger font */
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c1a12;
+    /* Very dark brown/almost black */
+}
+
+.card-subtitle {
+    -fx-font-size: 13px;
     -fx-text-fill: #555555;
-    -fx-font-size: 11px;
+    -fx-font-weight: normal;
 }
-
-/* ===============================
-   ACTION BUTTONS
-   =============================== */
-.btn-action {
-    -fx-background-color: #f9f9f9;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-text-fill: #444;
-    -fx-cursor: hand;
-    -fx-font-size: 12px;
-}
-
-.btn-action:hover {
-    -fx-background-color: #f0f0f0;
-}
-
-.btn-add {
-    -fx-background-color: #6d4c41;
-    /* Dark brown */
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 8 16;
-    -fx-cursor: hand;
-}
-
-.btn-add:hover {
-    -fx-background-color: #5d4037;
-}
-
-.btn-delete {
-    -fx-background-color: #fff0f0;
-    -fx-border-color: #ffcccc;
-    -fx-text-fill: #d32f2f;
-}
-
-.btn-delete:hover {
-    -fx-background-color: #ffe6e6;
-}
-
-/* ===============================
-   MODAL DIALOG
-   =============================== */
-/* ===============================
-   BOOKING INTERFACE (Availability)
-   =============================== */
-
-/* Sidebar Therapist List */
-.therapist-list-cell {
+/* SIDEBAR BUTTON BASE STYLE */
+.sidebar-btn {
     -fx-background-color: transparent;
-    -fx-padding: 8;
-    -fx-border-color: transparent transparent #eee transparent;
-    -fx-border-width: 1;
-    -fx-cursor: hand;
-}
-
-.therapist-list-cell:selected {
-    -fx-background-color: #f0f7ff;
-    -fx-border-left-color: #4a90e2;
-    -fx-border-left-width: 4;
-}
-
-.therapist-list-name {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
-}
-
-.therapist-list-role {
-    -fx-font-size: 11px;
-    -fx-text-fill: #777;
-}
-
-/* Calendar Grid */
-.calendar-grid {
-    -fx-background-color: white;
-    -fx-padding: 20;
-}
-
-.day-column {
-    -fx-alignment: top-center;
-    -fx-spacing: 12;
-    -fx-min-width: 100;
-}
-
-.date-header {
-    -fx-alignment: center;
-    -fx-padding: 0 0 15 0;
-    -fx-border-color: transparent transparent #eee transparent;
-    -fx-border-width: 1;
-}
-
-.day-name {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
-}
-
-.day-date {
-    -fx-font-size: 12px;
-    -fx-text-fill: #888;
-}
-
-.today-header .day-name {
-    -fx-text-fill: #4a90e2;
-    /* Highlight today */
-}
-
-/* Time Slot Buttons */
-.time-slot-button {
-    -fx-background-color: #e0f2f1;
-    /* Light Teal */
-    -fx-text-fill: #00695c;
-    /* Dark Teal */
-    -fx-font-weight: bold;
-    -fx-font-size: 12px;
-    -fx-background-radius: 6;
-    -fx-min-width: 80;
-    -fx-min-height: 35;
-    -fx-cursor: hand;
-    -fx-alignment: center;
-}
-
-.time-slot-button:hover {
-    -fx-background-color: #b2dfdb;
-}
-
-.time-slot-button:selected {
-    /* Pseudo-class handling via styleClass in code */
-    -fx-background-color: #00695c;
     -fx-text-fill: white;
-    -fx-effect: dropshadow(gaussian, rgba(0, 105, 92, 0.4), 8, 0, 0, 2);
-}
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-alignment: CENTER_LEFT;
 
-.time-slot-button.selected {
-    -fx-background-color: #00695c;
-    -fx-text-fill: white;
-}
-
-.no-slots-label {
-    -fx-text-fill: #ccc;
-    -fx-font-style: italic;
-    -fx-font-size: 11px;
-}
-
-.modal-content {
-    -fx-background-color: white;
+    -fx-padding: 10 15;
     -fx-background-radius: 8;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 20, 0, 0, 0);
-    -fx-padding: 24;
+    -fx-cursor: hand;
 }
 
-.modal-header {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
-    -fx-padding: 0 0 16 0;
-    -fx-border-color: transparent transparent #eee transparent;
-    -fx-border-width: 1;
+/* HOVER EFFECT */
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
 }
 
-.form-label {
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #555;
+/* ACTIVE (SELECTED) BUTTON */
+.sidebar-btn.active {
+    -fx-background-color: #5c8f6f;  /* green like screenshot */
+    -fx-text-fill: white;
+}
+.logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff7675;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 15;
+    -fx-background-radius: 8;
 }
 
-.form-input {
-    -fx-background-color: #fcfcfc;
-    -fx-border-color: #ddd;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
-    -fx-padding: 8;
-}
-
-.form-input:focused {
-    -fx-border-color: #8b7d6b;
-    -fx-background-color: white;
+.logout-btn:hover {
+    -fx-background-color: rgba(255, 0, 0, 0.15);
 }

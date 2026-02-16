@@ -159,4 +159,21 @@ public class EventService implements Iservice<Event> {
 
         System.out.println("Event deleted successfully!");
     }
+    private final RegistrationService registrationService = new RegistrationService();
+
+
+    public int getMaxParticipants(int eventId) {
+        int max = 0;
+        try {
+            String sql = "SELECT max_participants FROM event WHERE id_event=?";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) max = rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return max;
+    }
+
 }
