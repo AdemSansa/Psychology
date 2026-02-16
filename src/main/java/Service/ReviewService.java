@@ -20,7 +20,7 @@ public class ReviewService implements Iservice<Review> {
     @Override
     public void create(Review review) throws SQLException {
 
-        String sql = "INSERT INTO review (content, id_user) VALUES (?, ?)";
+        String sql = "INSERT INTO review (content, id_usr) VALUES (?, ?)";
 
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, review.getContent());
@@ -44,7 +44,7 @@ public class ReviewService implements Iservice<Review> {
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_user")
+                    rs.getInt("id_usr")
             );
             reviews.add(r);
         }
@@ -66,7 +66,7 @@ public class ReviewService implements Iservice<Review> {
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_user")
+                    rs.getInt("id_usr")
             );
         }
         return null;
@@ -76,7 +76,7 @@ public class ReviewService implements Iservice<Review> {
     @Override
     public void update(Review review) throws SQLException {
 
-        String sql = "UPDATE review SET content=?, id_user=? WHERE id_review=?";
+        String sql = "UPDATE review SET content=?, id_usr=? WHERE id_review=?";
 
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, review.getContent());

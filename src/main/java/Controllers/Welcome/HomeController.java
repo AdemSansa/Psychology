@@ -45,10 +45,15 @@ public class HomeController {
     }
 
     @FXML
+
+    public void gotoTherapists() { SceneManager.switchScene("/com/example/psy/Therapist/therapist_crud.fxml"); }
+    @FXML
+    public void gotoReview() {
+        SceneManager.switchScene("/com/example/psy/forum/forum.fxml");
+    }
     public void gotoQuiz() {
         SceneManager.loadPage("/com/example/psy/Quiz/Quiz.fxml");
     }
-
 
     public void gotoQuizAssesment() { SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml"); }
 }

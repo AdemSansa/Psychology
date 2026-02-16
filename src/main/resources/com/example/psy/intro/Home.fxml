@@ -41,7 +41,7 @@
                 <Button text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
                 <Button text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
                 <Button text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
-
+                  <Button onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
                 <Button text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
                 <Button text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
                 <Button text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>

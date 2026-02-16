@@ -6,6 +6,7 @@ module com.example.psy {
     requires com.calendarfx.view;
 
 
+
     opens com.example.psy to javafx.fxml;
     exports application;
     opens application to javafx.fxml;
@@ -20,6 +21,7 @@ module com.example.psy {
     exports Entities;
     opens Entities to javafx.fxml;
     opens Controllers.Therapists to javafx.fxml;
+    opens Controllers.forum to javafx.fxml;
     opens Controllers.Question  to javafx.fxml;
     opens Controllers.Quiz to javafx.fxml;
     opens Controllers.Appointment to javafx.fxml;
