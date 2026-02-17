@@ -11,7 +11,6 @@ import util.SceneManager;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class UserEditController implements Initializable {
@@ -30,27 +29,37 @@ public class UserEditController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         roleComboBox.setItems(
-                FXCollections.observableArrayList("patient", "admin"));
+                FXCollections.observableArrayList("patient", "admin")
+        );
     }
 
+    // reçoit l'utilisateur sélectionné depuis UserListController
     public void setUser(User user) {
-        if (user == null)
-            return;
+        if (user == null) return;
 
         this.currentUser = user;
         fillForm();
     }
 
+    // remplir les champs automatiquement
     private void fillForm() {
+        if (currentUser == null) return;
+
         fullNameField.setText(currentUser.getFullName());
         emailField.setText(currentUser.getEmail());
-        roleComboBox.setValue(currentUser.getRole().toLowerCase());
+
+        if (currentUser.getRole() != null) {
+            roleComboBox.setValue(currentUser.getRole().toLowerCase());
+        }
     }
 
     @FXML
     private void handleSave(ActionEvent event) {
+
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun utilisateur sélectionné.");
+            showAlert(Alert.AlertType.ERROR,
+                    "Erreur",
+                    "Aucun utilisateur sélectionné.");
             return;
         }
 
@@ -58,12 +67,15 @@ public class UserEditController implements Initializable {
         String email = emailField.getText().trim();
         String role = roleComboBox.getValue();
 
-        if (fullName.isEmpty() || email.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Validation",
-                    "Nom et email sont obligatoires.");
+        // validation
+        if (fullName.isEmpty() || email.isEmpty() || role == null) {
+            showAlert(Alert.AlertType.WARNING,
+                    "Validation",
+                    "Tous les champs sont obligatoires.");
             return;
         }
 
+        // séparer nom et prénom
         String[] names = fullName.split(" ", 2);
         currentUser.setFirstName(names[0]);
         currentUser.setLastName(names.length > 1 ? names[1] : "");
@@ -75,22 +87,23 @@ public class UserEditController implements Initializable {
             service.update(currentUser);
 
             showAlert(Alert.AlertType.INFORMATION,
-                    "Succès", "Utilisateur mis à jour avec succès.");
+                    "Succès",
+                    "Utilisateur modifié avec succès.");
+
+            // retour vers la liste (le tableau sera rechargé)
             SceneManager.switchScene("/com/example/psy/User/users.fxml");
 
         } catch (SQLException e) {
+            e.printStackTrace();
             showAlert(Alert.AlertType.ERROR,
-                    "Erreur", "Échec de la mise à jour : " + e.getMessage());
+                    "Erreur",
+                    "Erreur lors de la modification : " + e.getMessage());
         }
     }
 
     @FXML
     private void handleCancel() {
-        closeWindow();
-    }
-
-    private void closeWindow() {
-        fullNameField.getScene().getWindow().hide();
+        SceneManager.switchScene("/com/example/psy/User/users.fxml");
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

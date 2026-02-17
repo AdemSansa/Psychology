@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import util.SceneManager;
 
@@ -34,93 +31,124 @@ public class UserListController implements Initializable {
     @FXML
     private TableColumn<User, String> roleColumn;
 
+    @FXML
+    private TextField searchField;
+
     private final ObservableList<User> users = FXCollections.observableArrayList();
+
+    private final UserService userService = new UserService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // configure columns
-        if (idColumn != null) idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        if (nameColumn != null) nameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-        if (emailColumn != null) emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        if (roleColumn != null) roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        // load users from DAO
+        // Lier les colonnes aux getters de User
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName")); // fullName = firstName + " " + lastName
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+
+        // Charger les utilisateurs
+        loadUsers();
+
+        // Permet de lancer la recherche en appuyant sur Enter
+        searchField.setOnAction(e -> rechercherUser());
+    }
+
+    private void loadUsers() {
         try {
-            UserService dao = new UserService();
-            List<User> list = dao.list();
-            if (list != null) {
-                users.setAll(list);
-            }
-            System.out.println("Loaded " + users.size() + " users from database.");
+            List<User> list = userService.list();
+            users.setAll(list);
+            userTable.setItems(users);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (userTable != null) userTable.setItems(users);
     }
 
+    // ----------------------- Méthode de recherche -----------------------
+    @FXML
+    private void rechercherUser() {
+        String motCle = searchField.getText().trim();
+        try {
+            List<User> resultats;
+            if (!motCle.isEmpty()) {
+                resultats = userService.rechercher(motCle);
+            } else {
+                resultats = userService.list();
+            }
+            users.setAll(resultats);
+            userTable.setItems(users);
+            System.out.println("Résultat recherche : " + resultats.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ----------------------- Ajouter un utilisateur -----------------------
     public void GoToUserAdd() {
         SceneManager.switchScene("/com/example/psy/User/userAdd.fxml");
     }
+
+    // ----------------------- Modifier un utilisateur -----------------------
     public void GoToUserEdit() {
+
         User selected = userTable.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
+
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING,
+                    "Avertissement",
+                    "Veuillez sélectionner un utilisateur.");
+            return;
+        }
 
         UserEditController controller =
                 SceneManager.switchSceneWithController(
                         "/com/example/psy/User/userEdit.fxml"
                 );
 
-        controller.setUser(selected);
+        controller.setUser(selected); // envoie des données
     }
+
+    // ----------------------- Supprimer un utilisateur -----------------------
     public void deleteUser() {
         User selected = userTable.getSelectionModel().getSelectedItem();
+
         if (selected == null) {
-            showAlert(Alert.AlertType.WARNING, "Avertissement", "Veuillez sélectionner un utilisateur.");
+            showAlert(Alert.AlertType.WARNING,
+                    "Avertissement",
+                    "Veuillez sélectionner un utilisateur.");
             return;
         }
 
-        // 1️⃣ Confirmation dialog
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmer la suppression");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Êtes-vous sûr de vouloir supprimer l'utilisateur " + selected.getFullName() + " ?");
+        confirm.setContentText("Supprimer " + selected.getFullName() + " ?");
 
-        // Show and wait for user response
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try {
-                    // 2️⃣ Delete from DB
-                    UserService dao = new UserService();
-                    dao.delete(selected.getId());
-
-                    // 3️⃣ Remove from observable list (updates TableView)
+                    userService.delete(selected.getId());
                     users.remove(selected);
-
-                    // Optional success alert
-                    showAlert(Alert.AlertType.INFORMATION, "Succès", "Utilisateur supprimé avec succès.");
-
+                    showAlert(Alert.AlertType.INFORMATION,
+                            "Succès",
+                            "Utilisateur supprimé.");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de supprimer l'utilisateur : " + e.getMessage());
                 }
             }
         });
     }
 
-    // Utility method for showing alerts
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
+    // ----------------------- Retour -----------------------
     @FXML
     private void GoBack() {
         SceneManager.switchScene("/com/example/psy/intro/home.fxml");
     }
 
-
-
+    // ----------------------- Alertes -----------------------
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }

@@ -20,6 +20,8 @@ module com.example.psy {
     opens Controllers.User to javafx.fxml;
     exports Entities;
     opens Entities to javafx.fxml;
+    exports Service;
+    opens Service;
     opens Controllers.Therapists to javafx.fxml;
     opens Controllers.forum to javafx.fxml;
     opens Controllers.Question  to javafx.fxml;

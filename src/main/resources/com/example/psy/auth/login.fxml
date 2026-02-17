@@ -27,6 +27,7 @@
             <!-- Main glass card -->
             <HBox alignment="CENTER" maxWidth="900" maxHeight="580" styleClass="glass-pane">
                 
+
                 <!-- Left Section: Abstract Art/Branding -->
                 <VBox alignment="CENTER" prefWidth="420" spacing="20" style="-fx-padding: 40;">
                     <StackPane>
