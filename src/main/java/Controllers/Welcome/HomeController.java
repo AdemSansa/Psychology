@@ -13,10 +13,14 @@ import java.text.BreakIterator;
 
 public class HomeController {
 
-
     @FXML
     private StackPane contentArea;
 
+    @FXML
+    private javafx.scene.control.Label welcomeLabel;
+
+    @FXML
+    private javafx.scene.control.Label RoleLabel;
 
     @FXML
     private javafx.scene.control.Button btnDashboard;
@@ -49,6 +53,20 @@ public class HomeController {
         if (user != null) {
             System.out.println("Welcome " + user.getFullName() + " (" + user.getRole() + ")");
             updateSidebarVisibility(user.getRole());
+
+            // Update welcome label
+            String displayName = Session.getInstance().getUser().getFullName();
+
+            if (displayName == null || displayName.trim().isEmpty()) {
+                displayName = user.getRole();
+            }
+            if (welcomeLabel != null) {
+                welcomeLabel.setText("Bienvenue, " + displayName);
+            }
+                if (RoleLabel != null) {
+                    RoleLabel.setText(user.getRole());
+                }
+
         } else {
             System.out.println("No user logged in session.");
             // Handle case where no user is logged in if necessary, maybe redirect to login
@@ -97,7 +115,8 @@ public class HomeController {
                 setButtonVisible(btnAppointments, true);
                 setButtonVisible(btnForumtherapist, true);
                 setButtonVisible(btnEvents, true);
-                setButtonVisible(btnTherapists,true);
+                setButtonVisible(btnTherapists, true);
+                setButtonVisible(btnQuizAssessment, true);
                 break;
             default:
                 // Unknown role, minimal access

@@ -33,6 +33,7 @@ public class TherapistService implements Iservice<Therapistis> {
         user.setRole("THERAPIST");
         UserService userService = new UserService();
         userService.create(user);
+
         System.out.println("Therapist added successfully!");
     }
 

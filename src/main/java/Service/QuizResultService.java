@@ -112,6 +112,43 @@ public class QuizResultService implements Iservice<QuizResult> {
         }
     }
 
+    /**
+     * Get all quiz results for a specific user, ordered by most recent first.
+     * Loads full Quiz details (title, category, description) for each result.
+     * 
+     * @param userId The ID of the user
+     * @return List of QuizResult objects with complete Quiz information
+     * @throws SQLException if database error occurs
+     */
+    public List<QuizResult> getResultsByUserId(int userId) throws SQLException {
+        List<QuizResult> results = new ArrayList<>();
+        String sql = "SELECT * FROM quiz_results WHERE user_id = ? ORDER BY taken_at DESC";
+
+        try (PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(sql)) {
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                QuizService quizService = new QuizService();
+
+                while (rs.next()) {
+                    QuizResult qr = mapResultSetToQuizResult(rs);
+
+                    // Load full quiz details instead of just ID
+                    int quizId = rs.getInt("quiz_id");
+                    Quiz fullQuiz = quizService.read(quizId);
+                    if (fullQuiz != null) {
+                        fullQuiz.setId((long) quizId);
+                        qr.setQuiz(fullQuiz);
+                    }
+
+                    results.add(qr);
+                }
+            }
+        }
+
+        return results;
+    }
+
     // Helper method to map ResultSet to QuizResult
     private QuizResult mapResultSetToQuizResult(ResultSet rs) throws SQLException {
         QuizResult qr = new QuizResult();

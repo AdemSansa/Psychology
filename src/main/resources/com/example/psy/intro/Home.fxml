@@ -64,12 +64,39 @@
     <center>
         <VBox spacing="0">
 
-            <!-- TOP HEADER -->
-            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #f7f5f0; -fx-padding: 10 20;" spacing="15">
-                <Label text="Welcome back, Admin" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px;"/>
-                <Circle radius="18" fill="#ecf0f1" stroke="#bdc3c7"/>
-            </HBox>
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  prefHeight="70"
+                  styleClass="top-header">
 
+                <!-- LEFT : ROLE -->
+                <VBox alignment="CENTER_LEFT" spacing="2">
+                    <Label fx:id="RoleLabel"
+                           text="ADMIN"
+                           styleClass="role-text"/>
+                    <Label text="Your access level"
+                           styleClass="subtitle-text"/>
+                </VBox>
+
+                <!-- SPACER -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- RIGHT : WELCOME -->
+                <VBox alignment="CENTER_RIGHT" spacing="2">
+                    <Label fx:id="welcomeLabel"
+                           text="Welcome, Adem"
+                           styleClass="welcome-text"/>
+                    <Label text="Glad to see you again 👋"
+                           styleClass="subtitle-text"/>
+                </VBox>
+
+                <!-- AVATAR -->
+                <StackPane>
+                    <Circle radius="22" styleClass="avatar-circle"/>
+                    <Label text="A" styleClass="avatar-text"/>
+                </StackPane>
+
+            </HBox>
             <!-- CONTENT AREA -->
             <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS"/>
         </VBox>
