@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
@@ -14,25 +11,64 @@
             prefHeight="450.0" prefWidth="500.0"
             styleClass="background-gradient">
 
-    <VBox alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-        <VBox spacing="20" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" maxWidth="500">
+    <VBox alignment="CENTER"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
 
+        <VBox spacing="20"
+              style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
+              maxWidth="500">
+
+            <!-- Title -->
             <Label text="Edit User Details"
-                   styleClass="section-title" style="-fx-font-size: 20px;" />
+                   styleClass="section-title"
+                   style="-fx-font-size: 20px;" />
 
             <GridPane hgap="15" vgap="15">
+
                 <columnConstraints>
                     <ColumnConstraints minWidth="100" />
                     <ColumnConstraints hgrow="ALWAYS" />
                 </columnConstraints>
 
                 <!-- Full Name -->
-                <Label text="Full Name" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="fullNameField" promptText="Enter full name (e.g. John Doe)" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control"/>
+                <Label text="Full Name"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+
+                <TextField fx:id="fullNameField"
+                           promptText="Enter full name"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"
+                           styleClass="form-control"/>
+
+                <!-- Email -->
+                <Label text="Email"
+                       GridPane.rowIndex="1"
+                       GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+
+                <TextField fx:id="emailField"
+                           promptText="Enter email"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="1"
+                           styleClass="form-control"/>
 
                 <!-- Role -->
-                <Label text="Role" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
-                <ComboBox fx:id="roleComboBox" promptText="Select role" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="form-control" maxWidth="Infinity"/>
+                <Label text="Role"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+
+                <ComboBox fx:id="roleComboBox"
+                          promptText="Select role"
+                          GridPane.rowIndex="2"
+                          GridPane.columnIndex="1"
+                          styleClass="form-control"
+                          maxWidth="Infinity"/>
 
             </GridPane>
 
@@ -42,11 +78,11 @@
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <Button text="Cancel"
                         onAction="#handleCancel"
-                        styleClass="btn-secondary" />
+                        styleClass="btn-secondary"/>
 
                 <Button text="Save Changes"
                         onAction="#handleSave"
-                        styleClass="btn-primary" />
+                        styleClass="btn-primary"/>
             </HBox>
 
         </VBox>

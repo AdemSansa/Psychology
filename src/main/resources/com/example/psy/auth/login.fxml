@@ -38,7 +38,7 @@
                 
                 <VBox spacing="15" maxWidth="350">
                     <VBox spacing="5">
-                        <Label text="Username" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                        <Label text="Email Address" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
                         <TextField fx:id="usernameField" promptText="Enter your username" styleClass="form-control" prefHeight="45"/>
                     </VBox>
                     

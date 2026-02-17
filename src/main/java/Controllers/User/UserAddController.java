@@ -13,67 +13,64 @@ import java.util.Arrays;
 
 public class UserAddController {
 
-    @FXML
-    private TextField fullNameField;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private ComboBox<String> roleComboBox;
-
-    @FXML
-    private Button addButton;
+    @FXML private TextField fullNameField;
+    @FXML private TextField emailField;
+    @FXML private PasswordField passwordField;
+    @FXML private ComboBox<String> roleComboBox;
+    @FXML private Button addButton;
+    @FXML private Button cancelButton;
 
     @FXML
     public void initialize() {
+        // Initialiser les rôles
         roleComboBox.setItems(FXCollections.observableArrayList(Arrays.asList("patient", "admin")));
         roleComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
     private void handleAdd(ActionEvent event) {
-        String fullName = fullNameField.getText() != null ? fullNameField.getText().trim() : "";
-        String email = emailField.getText() != null ? emailField.getText().trim() : "";
-        String password = passwordField.getText() != null ? passwordField.getText() : "";
+        String fullName = fullNameField.getText().trim();
+        String email = emailField.getText().trim();
+        String password = passwordField.getText();
         String role = roleComboBox.getValue();
 
-        if (fullName.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || role == null) {
             showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez remplir tous les champs obligatoires.");
             return;
         }
 
+        // Séparer nom et prénom
         String[] names = fullName.split(" ", 2);
         String firstName = names[0];
         String lastName = names.length > 1 ? names[1] : "";
 
+        // Créer l'utilisateur
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(password); // si besoin, hash
         user.setRole(role.toLowerCase());
 
         try {
             UserService service = new UserService();
-            service.create(user);
+            service.create(user); // ajouter dans la base
+
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Utilisateur ajouté avec succès.");
-            clearForm();
+
+            // Revenir à la liste des utilisateurs
             SceneManager.switchScene("/com/example/psy/User/users.fxml");
+
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Erreur", "Échec lors de l'ajout de l'utilisateur : " + e.getMessage());
         }
     }
 
-    private void clearForm() {
-        fullNameField.clear();
-        emailField.clear();
-        passwordField.clear();
-        roleComboBox.getSelectionModel().selectFirst();
+    @FXML
+    private void handleCancel(ActionEvent event) {
+        // Retourner à la liste
+        SceneManager.switchScene("/com/example/psy/User/users.fxml");
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {

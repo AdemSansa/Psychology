@@ -11,34 +11,43 @@
             fx:controller="Controllers.User.UserListController"
             stylesheets="@../style.css"
             prefWidth="1000" prefHeight="650"
-            styleClass="background-gradient"><Button text="← Retour"
-                                                     onAction="#GoBack"
-                                                     styleClass="btn-secondary"
-                                                     prefHeight="35"/>
+            styleClass="background-gradient">
+
+    <!-- Bouton retour -->
+    <Button text="← " onAction="#GoBack"
+            styleClass="btn-secondary"
+            prefHeight="35"
+            AnchorPane.topAnchor="10"
+            AnchorPane.leftAnchor="10"/>
 
     <VBox spacing="20"
-          AnchorPane.topAnchor="30"
+          AnchorPane.topAnchor="50"
           AnchorPane.leftAnchor="30"
           AnchorPane.rightAnchor="30"
           AnchorPane.bottomAnchor="30">
 
         <!-- Header Card -->
-        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
-             <Label text="User Management" styleClass="section-title"/>
-             <Region HBox.hgrow="ALWAYS"/>
-             <Button text="+ Add New User" onAction="#GoToUserAdd" styleClass="btn-primary"/>
+        <HBox alignment="CENTER_LEFT" spacing="20"
+              style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
+            <Label text="User Management" styleClass="section-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="+ Add New User" onAction="#GoToUserAdd" styleClass="btn-primary"/>
         </HBox>
 
         <!-- Table Card -->
-        <VBox spacing="15" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
-            
+        <VBox spacing="15" VBox.vgrow="ALWAYS"
+              style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
+
+            <!-- Recherche + Actions -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField promptText="Search users..." styleClass="form-control" prefWidth="300"/>
+                <TextField fx:id="searchField" promptText="Search users..." styleClass="form-control" prefWidth="300"/>
+                <Button text="Search" onAction="#rechercherUser" styleClass="btn-primary"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="Edit Selected" onAction="#GoToUserEdit" styleClass="btn-secondary"/>
                 <Button text="Delete Selected" onAction="#deleteUser" styleClass="logout-btn"/>
             </HBox>
 
+            <!-- TableView -->
             <TableView fx:id="userTable" VBox.vgrow="ALWAYS" styleClass="table-view">
                 <columns>
                     <TableColumn text="ID" fx:id="idColumn" prefWidth="80"/>
