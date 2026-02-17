@@ -83,7 +83,8 @@ public class ReviewService implements Iservice<Review> {
         ps.setInt(2, review.getIdUser());
         ps.setInt(3, review.getIdReview());
 
-        ps.executeUpdate();
+        int rows = ps.executeUpdate();
+        System.out.println("Rows updated: " + rows);
         System.out.println("Review updated successfully!");
     }
 
@@ -97,5 +98,16 @@ public class ReviewService implements Iservice<Review> {
         ps.executeUpdate();
 
         System.out.println("Review deleted successfully!");
+    }
+    public boolean isExist(String  content ) throws SQLException {
+        String sql = "SELECT * FROM review WHERE content = ?";
+        PreparedStatement  ps = cnx.prepareStatement(sql);
+        ps.setString(1, content);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+        return true;
+        }
+        return false;
+
     }
 }
