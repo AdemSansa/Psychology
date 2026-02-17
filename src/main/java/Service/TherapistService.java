@@ -30,7 +30,7 @@ public class TherapistService implements Iservice<Therapistis> {
         user.setLastName(therapist.getLastName());
         user.setEmail(therapist.getEmail());
         user.setPassword(therapist.getPassword());
-        user.setRole("THERAPIST");
+        user.setRole("therapist");
         UserService userService = new UserService();
         userService.create(user);
 

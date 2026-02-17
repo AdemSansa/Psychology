@@ -35,7 +35,7 @@ public class forumadminController implements Initializable {
             tableReviews.getItems().clear();
             for (Review r : reviews) {
                 tableReviews.getItems().add(r);
-                // Possibilité d’afficher les replies dans une colonne ou un VBox pour chaque review
+                // Possibilité d’afficher les replies dans une colonne ou un VBox pour chaque
             }
 
         } catch (SQLException e) {

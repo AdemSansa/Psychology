@@ -2,6 +2,7 @@ package Controllers.forum;
 import Entities.Therapistis;
 import Entities.Review;
 import Entities.ReviewReply;
+import Entities.User;
 import Service.ReviewService;
 import Service.Reply_ReviewService;
 import util.Session;
@@ -97,12 +98,14 @@ public class forumtherapistController implements Initializable {
             String text = replyArea.getText().trim();
 
             // 1. Session check
-            Therapistis therapist = Session.getInstance().getTherapist();
-            if (therapist == null) {
+            User user = Session.getInstance().getUser();
+            System.out.println(user.getRole());
+
+            if (user.getRole() == "patient") {
                 showWarning("Not logged in", "You must be logged in as a therapist to reply.");
                 return;
             }
-            int therapistId = therapist.getId();
+            int therapistId = user.getId();
 
             // 2. Content validation
             if (text.isEmpty() || text.length() < 10) {
