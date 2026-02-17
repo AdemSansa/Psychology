@@ -1,7 +1,6 @@
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="Controllers.forum.forumadminController"
@@ -13,44 +12,15 @@
                   -fx-font-weight:bold;
                   -fx-text-fill:#2E7D32;" />
 
-    <TableView fx:id="forumTable"
-               prefHeight="600"
-               style="-fx-background-color:#F5F5DC;
-                      -fx-border-color:#A5D6A7;
-                      -fx-border-radius:10;">
+    <ScrollPane fitToWidth="true"
+                style="-fx-background:#F0F8F5;">
 
-        <columns>
+        <content>
+            <VBox fx:id="reviewContainer"
+                  spacing="20"
+                  style="-fx-padding:10;" />
+        </content>
 
-            <TableColumn fx:id="colReviewId"
-                         text="Review ID"
-                         prefWidth="80"/>
-
-            <TableColumn fx:id="colUserId"
-                         text="User ID"
-                         prefWidth="80"/>
-
-            <TableColumn fx:id="colReviewDate"
-                         text="Review Date"
-                         prefWidth="150"/>
-
-            <TableColumn fx:id="colReviewContent"
-                         text="Review Content"
-                         prefWidth="250"/>
-
-            <TableColumn fx:id="colTherapistId"
-                         text="Therapist ID"
-                         prefWidth="100"/>
-
-            <TableColumn fx:id="colReplyDate"
-                         text="Reply Date"
-                         prefWidth="150"/>
-
-            <TableColumn fx:id="colReplyContent"
-                         text="Reply Content"
-                         prefWidth="250"/>
-
-        </columns>
-
-    </TableView>
+    </ScrollPane>
 
 </VBox>

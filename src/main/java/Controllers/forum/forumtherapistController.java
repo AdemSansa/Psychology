@@ -1,5 +1,5 @@
 package Controllers.forum;
-import Entities.Therapistis;
+
 import Entities.Review;
 import Entities.ReviewReply;
 import Entities.User;
@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.geometry.Insets;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -25,22 +26,24 @@ public class forumtherapistController implements Initializable {
     private final ReviewService reviewService = new ReviewService();
     private final Reply_ReviewService replyService = new Reply_ReviewService();
 
-    private int currentTherapistId;
+    private int currentTherapistId = 0;
 
     @Override
-
-
     public void initialize(URL url, ResourceBundle rb) {
-        // On ne vérifie plus si le thérapeute est null
-        // On récupère l'ID du thérapeute (0 si non défini)
-        currentTherapistId = Session.getInstance().getTherapist() != null
-                ? Session.getInstance().getTherapist().getId()
-                : 0;
+
+        // Background beige clair
+        reviewContainer.setStyle("-fx-background-color: #F5F5DC;");
+        reviewContainer.setSpacing(15);
+        reviewContainer.setPadding(new Insets(20));
+
+        User user = Session.getInstance().getUser();
+
+        if (user != null && user.getRole().equals("therapist")) {
+            currentTherapistId = user.getId();
+        }
 
         loadReviews();
     }
-
-
 
     private void loadReviews() {
         reviewContainer.getChildren().clear();
@@ -58,27 +61,37 @@ public class forumtherapistController implements Initializable {
     }
 
     private VBox createReviewCard(Review review, List<ReviewReply> replies) {
-        VBox card = new VBox(10);
-        card.setStyle("-fx-background-color:#F5F5DC; -fx-padding:15; -fx-background-radius:15; -fx-border-color:#A5D6A7; -fx-border-radius:15;");
 
-        Label date = new Label(review.getCreatedAt().toString());
-        date.setStyle("-fx-text-fill:gray; -fx-font-size:11px;");
+        VBox card = new VBox(10);
+        card.setStyle("-fx-background-color: #FAF3E0; -fx-padding:15; "
+                + "-fx-background-radius:15; -fx-border-radius:15;");
+        card.setPadding(new Insets(10));
 
         Label content = new Label(review.getContent());
         content.setWrapText(true);
-        content.setStyle("-fx-font-size:14px; -fx-text-fill:#2E7D32;");
+        content.setStyle("-fx-font-size:14px; -fx-text-fill:#5D4037;");
 
-        // Ajouter Reply Button
-        Button replyBtn = styledGreenButton("Reply");
-        replyBtn.setOnAction(e -> showReplyInput(card, review));
+        Button replyBtn = new Button("💬 Reply");
+        replyBtn.setStyle("-fx-background-color:#A5D6A7; -fx-text-fill:white; "
+                + "-fx-background-radius:20; -fx-padding:5 15 5 15;");
 
-        card.getChildren().addAll(date, content, replyBtn);
+        replyBtn.setOnAction(e -> {
 
-        // Ajouter replies
+            User user = Session.getInstance().getUser();
+
+            if (user == null || !user.getRole().equals("therapist")) {
+                showWarning("Access denied", "Only therapists can reply.");
+                return;
+            }
+
+            showReplyInput(card, review);
+        });
+
+        card.getChildren().addAll(content, replyBtn);
+
         for (ReviewReply r : replies) {
-            if (r.getReviewId().equals(review.getIdReview())) {
-                VBox replyBox = createReplyBox(r);
-                card.getChildren().add(replyBox);
+            if (r.getReviewId() == review.getIdReview()) {
+                card.getChildren().add(createReplyBox(r));
             }
         }
 
@@ -86,97 +99,156 @@ public class forumtherapistController implements Initializable {
     }
 
     private void showReplyInput(VBox card, Review review) {
-        VBox replyInputBox = new VBox(8);
-        replyInputBox.setStyle("-fx-background-color:#E8F5E9; -fx-padding:10; -fx-background-radius:12;");
+
+        VBox inputBox = new VBox(8);
 
         TextArea replyArea = new TextArea();
         replyArea.setPromptText("Write your reply...");
         replyArea.setStyle("-fx-background-radius:10;");
 
-        Button sendReply = styledGreenButton("Send Reply");
-        sendReply.setOnAction(ev -> {
+        Button send = new Button("📨 Send");
+        send.setStyle("-fx-background-color:#81C784; -fx-text-fill:white; "
+                + "-fx-background-radius:20; -fx-padding:5 15 5 15;");
+
+        send.setOnAction(e -> {
+
+            User user = Session.getInstance().getUser();
+
+            if (user == null || !user.getRole().equals("therapist")) {
+                showWarning("Access denied", "Only therapists can reply.");
+                return;
+            }
+
             String text = replyArea.getText().trim();
 
-            // 1. Session check
-            User user = Session.getInstance().getUser();
-            System.out.println(user.getRole());
-
-            if (user.getRole() == "patient") {
-                showWarning("Not logged in", "You must be logged in as a therapist to reply.");
-                return;
-            }
-            int therapistId = user.getId();
-
-            // 2. Content validation
-            if (text.isEmpty() || text.length() < 10) {
-                showWarning("Invalid reply", "Reply must contain at least 10 characters.");
+            // ✅ Contrôle de saisie
+            if (text.isEmpty()) {
+                showWarning("Empty reply", "Reply cannot be empty.");
                 return;
             }
 
-            // 3. Insertion
+            if (text.length() < 10) {
+                showWarning("Too short", "Reply must contain at least 10 characters.");
+                return;
+            }
+
             try {
-                ReviewReply reply = new ReviewReply(text, review.getIdReview(), therapistId);
+                ReviewReply reply = new ReviewReply(
+                        text,
+                        review.getIdReview(),
+                        user.getId()
+                );
+
                 replyService.create(reply);
                 loadReviews();
-                showSuccess("Reply added!");
+                showSuccess("Reply added successfully!");
+
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                showWarning("Error", "Unable to add reply.");
             }
         });
 
-        replyInputBox.getChildren().addAll(replyArea, sendReply);
-        if (!card.getChildren().contains(replyInputBox)) {
-            card.getChildren().add(replyInputBox);
-        }
+        inputBox.getChildren().addAll(replyArea, send);
+        card.getChildren().add(inputBox);
     }
 
     private VBox createReplyBox(ReviewReply r) {
-        VBox replyBox = new VBox(5);
-        replyBox.setStyle("-fx-background-color:#FAF3E0; -fx-padding:10; -fx-background-radius:12; -fx-border-color:#C8E6C9; -fx-border-radius:12;");
 
-        Label replyContent = new Label("Therapist: " + r.getContent());
-        replyContent.setWrapText(true);
-        replyContent.setStyle("-fx-text-fill:#2E7D32;");
+        VBox box = new VBox(5);
+        box.setStyle("-fx-background-color:#FFF8E1; -fx-padding:10; "
+                + "-fx-background-radius:12;");
+        box.setPadding(new Insets(8));
 
-        Label replyDate = new Label(r.getCreatedAt().toString());
-        replyDate.setStyle("-fx-font-size:10px; -fx-text-fill:gray;");
+        Label content = new Label("👩‍⚕️ " + r.getContent());
+        content.setWrapText(true);
+        content.setStyle("-fx-text-fill:#4E342E;");
 
-        HBox buttons = new HBox(10);
+        box.getChildren().add(content);
+
         if (r.getIdTherapist() == currentTherapistId) {
-            Button edit = styledYellowButton("Edit");
-            Button delete = styledRedButton("Delete");
 
+            // HBox pour mettre les boutons côte à côte
+            HBox buttonBox = new HBox(10);
+
+            Button edit = new Button("✏ Edit");
+            edit.setStyle("-fx-background-color:#FFE082; -fx-background-radius:20;");
+
+            Button delete = new Button("🗑 Delete");
+            delete.setStyle("-fx-background-color:#EF9A9A; -fx-text-fill:white; "
+                    + "-fx-background-radius:20;");
+
+            // ✅ Confirmation avant EDIT
             edit.setOnAction(e -> {
+
+                if (!confirmAction("Edit", "Do you really want to edit this reply?"))
+                    return;
+
                 TextInputDialog dialog = new TextInputDialog(r.getContent());
                 dialog.setHeaderText("Edit your reply");
+
                 dialog.showAndWait().ifPresent(newText -> {
+
                     String updated = newText.trim();
-                    if (updated.length() < 10) { showWarning("Too short", "Reply must have at least 10 characters."); return; }
-                    try { r.setContent(updated); replyService.update(r); loadReviews(); showSuccess("Reply updated!"); } catch (SQLException ex) { ex.printStackTrace(); }
+
+                    if (updated.isEmpty()) {
+                        showWarning("Empty", "Reply cannot be empty.");
+                        return;
+                    }
+
+                    try {
+                        r.setContent(updated);
+                        replyService.update(r);
+                        loadReviews();
+                        showSuccess("Reply updated successfully!");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
                 });
             });
 
+            // ✅ Confirmation avant DELETE
             delete.setOnAction(e -> {
-                if (confirmAction("Delete", "Delete this reply?")) {
-                    try { replyService.delete(r.getIdReply()); loadReviews(); showSuccess("Reply deleted!"); } catch (SQLException ex) { ex.printStackTrace(); }
+
+                if (confirmAction("Delete", "Do you really want to delete this reply?")) {
+                    try {
+                        replyService.delete(r.getIdReply());
+                        loadReviews();
+                        showSuccess("Reply deleted successfully!");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             });
 
-            buttons.getChildren().addAll(edit, delete);
-            replyBox.getChildren().addAll(replyContent, replyDate, buttons);
-        } else {
-            replyBox.getChildren().addAll(replyContent, replyDate);
+            buttonBox.getChildren().addAll(edit, delete);
+            box.getChildren().add(buttonBox);
         }
 
-        return replyBox;
+        return box;
     }
 
-    private Button styledGreenButton(String text) { Button btn = new Button(text); btn.setStyle("-fx-background-color:#81C784; -fx-text-fill:white; -fx-background-radius:15;"); return btn; }
-    private Button styledYellowButton(String text) { Button btn = new Button(text); btn.setStyle("-fx-background-color:#FFF59D; -fx-background-radius:15;"); return btn; }
-    private Button styledRedButton(String text) { Button btn = new Button(text); btn.setStyle("-fx-background-color:#EF9A9A; -fx-text-fill:white; -fx-background-radius:15;"); return btn; }
+    private boolean confirmAction(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Optional<ButtonType> res = alert.showAndWait();
+        return res.isPresent() && res.get() == ButtonType.OK;
+    }
 
-    private boolean confirmAction(String title, String message) { Alert alert = new Alert(Alert.AlertType.CONFIRMATION); alert.setTitle(title); alert.setHeaderText(null); alert.setContentText(message); Optional<ButtonType> res = alert.showAndWait(); return res.isPresent() && res.get() == ButtonType.OK; }
-    private void showWarning(String t, String m) { Alert a = new Alert(Alert.AlertType.WARNING); a.setTitle(t); a.setHeaderText(null); a.setContentText(m); a.showAndWait(); }
-    private void showSuccess(String m) { Alert a = new Alert(Alert.AlertType.INFORMATION); a.setTitle("Success"); a.setHeaderText(null); a.setContentText(m); a.showAndWait(); }
+    private void showWarning(String t, String m) {
+        Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setTitle(t);
+        a.setHeaderText(null);
+        a.setContentText(m);
+        a.showAndWait();
+    }
+
+    private void showSuccess(String m) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle("Success");
+        a.setHeaderText(null);
+        a.setContentText(m);
+        a.showAndWait();
+    }
 }
