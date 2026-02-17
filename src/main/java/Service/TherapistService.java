@@ -124,4 +124,28 @@ public class TherapistService implements Iservice<Therapistis> {
         System.out.println("Therapist password updated successfully!");
     }
 
+    public Therapistis readByEmail(String email) throws SQLException {
+        String query = "SELECT * FROM therapists WHERE email=?";
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+        Therapistis t = null;
+        if (rs.next()) {
+            t = new Therapistis();
+            t.setId(rs.getInt("id"));
+            t.setFirstName(rs.getString("first_name"));
+            t.setLastName(rs.getString("last_name"));
+            t.setEmail(rs.getString("email"));
+            t.setPassword(rs.getString("password"));
+            t.setPhoneNumber(rs.getString("phone_number"));
+            t.setSpecialization(rs.getString("specialization"));
+            t.setDescription(rs.getString("description"));
+            t.setConsultationType(rs.getString("consultation_type"));
+            t.setStatus(rs.getString("status"));
+            t.setCreatedAt(rs.getTimestamp("created_at"));
+            t.setUpdatedAt(rs.getTimestamp("updated_at"));
+        }
+        return t;
+    }
+
 }

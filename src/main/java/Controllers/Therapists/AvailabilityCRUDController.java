@@ -54,6 +54,7 @@ public class AvailabilityCRUDController implements Initializable {
     private final AvailabilityService service = new AvailabilityService();
     private final TherapistService therapistService = new TherapistService();
     private final ObservableList<Availabilities> data = FXCollections.observableArrayList();
+    private Therapistis currentTherapist;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -111,6 +112,11 @@ public class AvailabilityCRUDController implements Initializable {
             therapistBox.setVisible(false);
             therapistBox.setManaged(false);
             therapistIdColumn.setVisible(false);
+            try {
+                currentTherapist = therapistService.readByEmail(user.getEmail());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         loadData();
@@ -125,8 +131,8 @@ public class AvailabilityCRUDController implements Initializable {
     private void loadData() {
         try {
             User user = Session.getInstance().getUser();
-            if ("therapist".equals(user.getRole())) {
-                data.setAll(service.listByTherapistId(user.getId()));
+            if ("therapist".equals(user.getRole()) && currentTherapist != null) {
+                data.setAll(service.listByTherapistId(currentTherapist.getId()));
             } else {
                 data.setAll(service.list());
             }
@@ -245,7 +251,9 @@ public class AvailabilityCRUDController implements Initializable {
 
         User user = Session.getInstance().getUser();
         if ("therapist".equals(user.getRole())) {
-            a.setTherapistId(user.getId());
+            if (currentTherapist != null) {
+                a.setTherapistId(currentTherapist.getId());
+            }
         } else if (therapistCombo.getValue() != null) {
             a.setTherapistId(therapistCombo.getValue().getId());
         }
@@ -309,7 +317,9 @@ public class AvailabilityCRUDController implements Initializable {
 
                 User user = Session.getInstance().getUser();
                 if ("therapist".equals(user.getRole())) {
-                    temp.setTherapistId(user.getId());
+                    if (currentTherapist != null) {
+                        temp.setTherapistId(currentTherapist.getId());
+                    }
                 } else if (therapistCombo.getValue() != null) {
                     temp.setTherapistId(therapistCombo.getValue().getId());
                 }
