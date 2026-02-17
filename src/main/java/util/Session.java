@@ -4,10 +4,15 @@ import Entities.Therapistis;
 import Entities.User;
 
 public class Session {
-    private static Session instance;
-    private User loggedInUser;
 
-    private Session() {}
+    private static Session instance;
+
+    private User currentUser;        // pour les patients/admin
+    private Therapistis currentTherapist; // pour les thérapeutes
+
+    private Session() {
+        // constructeur privé
+    }
 
     public static Session getInstance() {
         if (instance == null) {
@@ -16,22 +21,27 @@ public class Session {
         return instance;
     }
 
+    // ====== Patient / Admin ======
     public void setUser(User user) {
-        this.loggedInUser = user;
+        this.currentUser = user;
     }
-
 
     public User getUser() {
-        return loggedInUser;
+        return currentUser;
     }
 
+    // ====== Thérapeute ======
+    public void setTherapist(Therapistis therapist) {
+        this.currentTherapist = therapist;
+    }
+
+    public Therapistis getTherapist() {
+        return currentTherapist;
+    }
+
+    // ====== Clear session ======
     public void clear() {
-        loggedInUser = null;
-    }
-
-    public boolean isLoggedIn() {
-        return loggedInUser != null;
+        currentUser = null;
+        currentTherapist = null;
     }
 }
-
-

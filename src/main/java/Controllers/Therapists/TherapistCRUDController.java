@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
+import util.PasswordUtil;
 import util.SceneManager;
 import util.Session;
 
@@ -55,9 +56,8 @@ public class TherapistCRUDController implements Initializable {
 
     @FXML
     private Button ajoutdocteur;
-
-
-
+    @FXML
+    private Button dispo;
 
     private TherapistService service;
     private ObservableList<Therapistis> therapistList;
@@ -69,7 +69,6 @@ public class TherapistCRUDController implements Initializable {
         service = new TherapistService();
         therapistList = FXCollections.observableArrayList();
         consultationTypeBox.setItems(FXCollections.observableArrayList("ONLINE", "IN_PERSON", "BOTH"));
-
         loadTherapists();
         updateVisibility(user.getRole());
     }
@@ -127,12 +126,17 @@ public class TherapistCRUDController implements Initializable {
                     if (specializationLabel != null)
                         specializationLabel.setText(t.getSpecialization());
 
+                    User user = Session.getInstance().getUser();
+
                     if (editBtn != null)
                         editBtn.setOnAction(e -> openEditModal(t));
                     if (deleteBtn != null)
                         deleteBtn.setOnAction(e -> deleteTherapist(t));
 
+                    updateCardButtonsVisibility(card, user.getRole());
+
                     cardsContainer.getChildren().add(card);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -199,7 +203,14 @@ public class TherapistCRUDController implements Initializable {
         t.setFirstName(firstNameField.getText());
         t.setLastName(lastNameField.getText());
         t.setEmail(emailField.getText());
-        t.setPassword(passwordField.getText());
+
+        String newPassword = passwordField.getText();
+        // Hash the password if it's a new therapist or if the password has been
+        // modified
+        if (t.getPassword() == null || !newPassword.equals(t.getPassword())) {
+            t.setPassword(PasswordUtil.hashPassword(newPassword));
+        }
+
         t.setPhoneNumber(phoneField.getText());
         t.setSpecialization(specializationField.getText());
         t.setDescription(descriptionArea.getText());
@@ -227,19 +238,44 @@ public class TherapistCRUDController implements Initializable {
     private boolean validateInput() {
         StringBuilder errorMsg = new StringBuilder();
 
-        if (firstNameField.getText().isEmpty())
-            errorMsg.append("Prénom requis\n");
-        if (lastNameField.getText().isEmpty())
-            errorMsg.append("Nom requis\n");
-        if (emailField.getText().isEmpty() || !emailField.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$"))
-            errorMsg.append("Email invalide\n");
-        if (phoneField.getText().isEmpty() || !phoneField.getText().matches("\\+?\\d{8,15}"))
-            errorMsg.append("Téléphone invalide (8-15 chiffres)\n");
-        if (specializationField.getText().isEmpty())
-            errorMsg.append("Spécialisation requise\n");
+        // Reset styles
+        firstNameField.getStyleClass().remove("form-error");
+        lastNameField.getStyleClass().remove("form-error");
+        emailField.getStyleClass().remove("form-error");
+        phoneField.getStyleClass().remove("form-error");
+        specializationField.getStyleClass().remove("form-error");
+        passwordField.getStyleClass().remove("form-error");
 
-        if (passwordField.getText().isEmpty() || passwordField.getText().length() < 4)
-            errorMsg.append("Mot de passe requis (min 4 caractères)\n");
+        if (firstNameField.getText() == null || firstNameField.getText().trim().isEmpty()) {
+            errorMsg.append("• Prénom requis\n");
+            firstNameField.getStyleClass().add("form-error");
+        }
+
+        if (lastNameField.getText() == null || lastNameField.getText().trim().isEmpty()) {
+            errorMsg.append("• Nom requis\n");
+            lastNameField.getStyleClass().add("form-error");
+        }
+
+        if (emailField.getText() == null || !emailField.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            errorMsg.append("• Email invalide\n");
+            emailField.getStyleClass().add("form-error");
+        }
+
+        // Tunisian phone: exactly 8 digits, often starts with 2, 4, 5, 7, 9
+        if (phoneField.getText() == null || !phoneField.getText().matches("^[24579]\\d{7}$")) {
+            errorMsg.append("• Numéro tunisien invalide (8 chiffres requis)\n");
+            phoneField.getStyleClass().add("form-error");
+        }
+
+        if (specializationField.getText() == null || specializationField.getText().trim().isEmpty()) {
+            errorMsg.append("• Spécialisation requise\n");
+            specializationField.getStyleClass().add("form-error");
+        }
+
+        if (passwordField.getText() == null || passwordField.getText().length() < 4) {
+            errorMsg.append("• Mot de passe requis (min 4 caractères)\n");
+            passwordField.getStyleClass().add("form-error");
+        }
 
         if (errorMsg.length() == 0)
             return true;
@@ -271,6 +307,7 @@ public class TherapistCRUDController implements Initializable {
     void handleSwitch(ActionEvent event) {
         SceneManager.loadPage("/com/example/psy/Therapist/availability_crud.fxml");
     }
+
     private void setButtonVisible(javafx.scene.control.Button btn, boolean visible) {
         if (btn != null) {
             btn.setVisible(visible);
@@ -278,11 +315,33 @@ public class TherapistCRUDController implements Initializable {
         }
     }
 
-    public void updateVisibility(String role)
-    {
+    public void updateVisibility(String role) {
         switch (role) {
             case "patient":
-                setButtonVisible(ajoutdocteur,false);
+                setButtonVisible(ajoutdocteur, false);
+                setButtonVisible(dispo, false);
+
+                break;
+            case "therapist":
+                setButtonVisible(ajoutdocteur, false);
+                break;
         }
     }
+
+    private void updateCardButtonsVisibility(Node card, String role) {
+        Button editBtn = (Button) card.lookup("#editButton");
+        Button deleteBtn = (Button) card.lookup("#deleteButton");
+
+        switch (role) {
+            case "patient":
+                setButtonVisible(editBtn, false);
+                setButtonVisible(deleteBtn, false);
+                break;
+            case "therapist":
+                setButtonVisible(editBtn, false);
+                setButtonVisible(deleteBtn, false);
+                break;
+        }
+    }
+
 }

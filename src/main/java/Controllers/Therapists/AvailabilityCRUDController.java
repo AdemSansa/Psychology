@@ -11,8 +11,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import Entities.User;
 import util.SceneManager;
+import util.Session;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -35,7 +38,6 @@ public class AvailabilityCRUDController implements Initializable {
     private TableColumn<Availabilities, Boolean> availableColumn;
     @FXML
     private TableColumn<Availabilities, Integer> therapistIdColumn;
-
     @FXML
     private ComboBox<Day> dayCombo;
     @FXML
@@ -46,14 +48,16 @@ public class AvailabilityCRUDController implements Initializable {
     private CheckBox availableCheck;
     @FXML
     private ComboBox<Therapistis> therapistCombo;
+    @FXML
+    private VBox therapistBox;
 
     private final AvailabilityService service = new AvailabilityService();
     private final TherapistService therapistService = new TherapistService();
     private final ObservableList<Availabilities> data = FXCollections.observableArrayList();
+    private Therapistis currentTherapist;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Configure table columns
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         dayColumn.setCellValueFactory(new PropertyValueFactory<>("day"));
         startColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
@@ -79,10 +83,8 @@ public class AvailabilityCRUDController implements Initializable {
             }
         });
 
-        // Populate day ComboBox with all enum values
         dayCombo.setItems(FXCollections.observableArrayList(Day.values()));
 
-        // Populate therapist ComboBox
         try {
             therapistCombo.setItems(FXCollections.observableArrayList(therapistService.list()));
         } catch (SQLException e) {
@@ -101,10 +103,22 @@ public class AvailabilityCRUDController implements Initializable {
             }
         });
 
-        // Default: available
         availableCheck.setSelected(true);
 
-        // Load all data
+        User user = Session.getInstance().getUser();
+        boolean isTherapist = "therapist".equals(user.getRole());
+
+        if (isTherapist) {
+            therapistBox.setVisible(false);
+            therapistBox.setManaged(false);
+            therapistIdColumn.setVisible(false);
+            try {
+                currentTherapist = therapistService.readByEmail(user.getEmail());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
         loadData();
 
         availTable.getSelectionModel().selectedItemProperty().addListener(
@@ -116,7 +130,12 @@ public class AvailabilityCRUDController implements Initializable {
 
     private void loadData() {
         try {
-            data.setAll(service.list());
+            User user = Session.getInstance().getUser();
+            if ("therapist".equals(user.getRole()) && currentTherapist != null) {
+                data.setAll(service.listByTherapistId(currentTherapist.getId()));
+            } else {
+                data.setAll(service.list());
+            }
             availTable.setItems(data);
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur de chargement : " + e.getMessage());
@@ -229,7 +248,13 @@ public class AvailabilityCRUDController implements Initializable {
         a.setStartTime(Time.valueOf(startTimeField.getText().trim() + ":00"));
         a.setEndTime(Time.valueOf(endTimeField.getText().trim() + ":00"));
         a.setAvailable(availableCheck.isSelected());
-        if (therapistCombo.getValue() != null) {
+
+        User user = Session.getInstance().getUser();
+        if ("therapist".equals(user.getRole())) {
+            if (currentTherapist != null) {
+                a.setTherapistId(currentTherapist.getId());
+            }
+        } else if (therapistCombo.getValue() != null) {
             a.setTherapistId(therapistCombo.getValue().getId());
         }
     }
@@ -240,24 +265,38 @@ public class AvailabilityCRUDController implements Initializable {
     private boolean validateForm() {
         StringBuilder errors = new StringBuilder();
 
+        // Reset styles
+        dayCombo.getStyleClass().remove("form-error");
+        startTimeField.getStyleClass().remove("form-error");
+        endTimeField.getStyleClass().remove("form-error");
+        therapistCombo.getStyleClass().remove("form-error");
+
         // Jour — obligatoire
-        if (dayCombo.getValue() == null)
+        if (dayCombo.getValue() == null) {
             errors.append("• Le jour est obligatoire.\n");
+            dayCombo.getStyleClass().add("form-error");
+        }
 
         // Heure début — obligatoire + format HH:mm
         String startText = startTimeField.getText() != null ? startTimeField.getText().trim() : "";
         String endText = endTimeField.getText() != null ? endTimeField.getText().trim() : "";
 
-        if (startText.isEmpty())
+        if (startText.isEmpty()) {
             errors.append("• L'heure de début est obligatoire.\n");
-        else if (!startText.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$"))
+            startTimeField.getStyleClass().add("form-error");
+        } else if (!startText.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
             errors.append("• Format d'heure de début invalide (utilisez HH:mm).\n");
+            startTimeField.getStyleClass().add("form-error");
+        }
 
         // Heure fin — obligatoire + format HH:mm
-        if (endText.isEmpty())
+        if (endText.isEmpty()) {
             errors.append("• L'heure de fin est obligatoire.\n");
-        else if (!endText.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$"))
+            endTimeField.getStyleClass().add("form-error");
+        } else if (!endText.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
             errors.append("• Format d'heure de fin invalide (utilisez HH:mm).\n");
+            endTimeField.getStyleClass().add("form-error");
+        }
 
         // Heure début < Heure fin
         if (!startText.isEmpty() && !endText.isEmpty()
@@ -265,13 +304,50 @@ public class AvailabilityCRUDController implements Initializable {
                 && endText.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
             Time start = Time.valueOf(startText + ":00");
             Time end = Time.valueOf(endText + ":00");
-            if (!start.before(end))
+            if (!start.before(end)) {
                 errors.append("• L'heure de début doit être avant l'heure de fin.\n");
+                startTimeField.getStyleClass().add("form-error");
+                endTimeField.getStyleClass().add("form-error");
+            } else {
+                // Overlap check
+                Availabilities temp = new Availabilities();
+                temp.setDay(dayCombo.getValue());
+                temp.setStartTime(start);
+                temp.setEndTime(end);
+
+                User user = Session.getInstance().getUser();
+                if ("therapist".equals(user.getRole())) {
+                    if (currentTherapist != null) {
+                        temp.setTherapistId(currentTherapist.getId());
+                    }
+                } else if (therapistCombo.getValue() != null) {
+                    temp.setTherapistId(therapistCombo.getValue().getId());
+                }
+
+                // Set ID if editing to exclude self from overlap
+                Availabilities selected = availTable.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    temp.setId(selected.getId());
+                }
+
+                try {
+                    if (service.isOverlap(temp)) {
+                        errors.append("• Cette plage horaire chevauche une disponibilité existante.\n");
+                        startTimeField.getStyleClass().add("form-error");
+                        endTimeField.getStyleClass().add("form-error");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        // Thérapeute — obligatoire
-        if (therapistCombo.getValue() == null) {
+        // Thérapeute — obligatoire sauf si c'est un thérapeute qui utilise son propre
+        // ID
+        User user = Session.getInstance().getUser();
+        if (!"therapist".equals(user.getRole()) && therapistCombo.getValue() == null) {
             errors.append("• Veuillez sélectionner un thérapeute.\n");
+            therapistCombo.getStyleClass().add("form-error");
         }
 
         if (errors.length() > 0) {

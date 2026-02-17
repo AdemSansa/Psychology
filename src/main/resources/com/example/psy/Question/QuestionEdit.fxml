@@ -35,17 +35,11 @@
                     <ColumnConstraints hgrow="ALWAYS"/>
                 </columnConstraints>
 
-                <!-- Quiz ID -->
-                <Label text="Quiz ID:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtQuizId" styleClass="form-control" promptText="Enter Quiz ID" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                 <!-- Question Text -->
                 <Label text="Question Text:" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.valignment="TOP"/>
                 <TextArea fx:id="txtQuestionText" styleClass="form-control" promptText="Enter question text here..." prefRowCount="4" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                <!-- Order Index -->
-                <Label text="Order Index:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtOrderIndex" styleClass="form-control" promptText="e.g. 1, 2, 3" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                 <!-- Image Path -->
                 <Label text="Image Path:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>

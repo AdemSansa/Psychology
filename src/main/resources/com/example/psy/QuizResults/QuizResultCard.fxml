@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      stylesheets="@../style.css"
+      fx:controller="Controllers.QuizResults.QuizResultCardController"
+      styleClass="quiz-card"
+      prefWidth="280" prefHeight="200"
+      minWidth="280" maxWidth="280"
+      spacing="12">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <!-- Quiz Info Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label fx:id="categoryLabel" text="Category" styleClass="card-category"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="dateLabel" text="Feb 17, 2026" styleClass="card-subtitle"/>
+    </HBox>
+
+    <!-- Quiz Title -->
+    <Label fx:id="titleLabel" text="Quiz Title" styleClass="card-title" wrapText="true"/>
+
+    <!-- Score Display -->
+    <HBox alignment="CENTER_LEFT" spacing="15" VBox.vgrow="ALWAYS">
+        <Circle fx:id="scoreIndicator" radius="25" fill="#3498db" stroke="#2980b9" strokeWidth="2"/>
+        <VBox spacing="2">
+            <Label fx:id="scoreLabel" text="75%" styleClass="card-title"/>
+            <Label fx:id="moodLabel" text="Good / Stable" styleClass="card-subtitle"/>
+        </VBox>
+    </HBox>
+
+</VBox>

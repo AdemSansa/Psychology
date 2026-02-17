@@ -1,0 +1,17 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.control.ScrollPane?>
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.forum.forumtherapistController"
+      spacing="20"
+      style="-fx-padding: 40; -fx-background-color: #F0F8F5;">
+
+    <ScrollPane fitToWidth="true" prefWidth="900">
+        <content>
+            <VBox fx:id="reviewContainer" spacing="15"/>
+        </content>
+    </ScrollPane>
+
+</HBox>

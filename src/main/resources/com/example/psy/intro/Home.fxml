@@ -41,7 +41,9 @@
                 <Button fx:id="btnTherapists" text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
                 <Button fx:id="btnEvents" text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
                 <Button fx:id="btnAppointments" text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
-                  <Button fx:id="btnForum" onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
+                <Button fx:id="btnForum" onAction="#gotoReviewadmin" styleClass="sidebar-btn"  text="forumadmin" />
+                <Button fx:id="btnForumtherapist" onAction="#gotoReviewtherapist" styleClass="sidebar-btn"  text="forum" />
+                <Button fx:id="btnForumUsr" onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
                 <Button fx:id="btnQuestions" text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizzes" text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizAssessment" text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
@@ -62,12 +64,39 @@
     <center>
         <VBox spacing="0">
 
-            <!-- TOP HEADER -->
-            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #f7f5f0; -fx-padding: 10 20;" spacing="15">
-                <Label text="Welcome back, Admin" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px;"/>
-                <Circle radius="18" fill="#ecf0f1" stroke="#bdc3c7"/>
-            </HBox>
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  prefHeight="70"
+                  styleClass="top-header">
 
+                <!-- LEFT : ROLE -->
+                <VBox alignment="CENTER_LEFT" spacing="2">
+                    <Label fx:id="RoleLabel"
+                           text="ADMIN"
+                           styleClass="role-text"/>
+                    <Label text="Your access level"
+                           styleClass="subtitle-text"/>
+                </VBox>
+
+                <!-- SPACER -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- RIGHT : WELCOME -->
+                <VBox alignment="CENTER_RIGHT" spacing="2">
+                    <Label fx:id="welcomeLabel"
+                           text="Welcome, Adem"
+                           styleClass="welcome-text"/>
+                    <Label text="Glad to see you again 👋"
+                           styleClass="subtitle-text"/>
+                </VBox>
+
+                <!-- AVATAR -->
+                <StackPane>
+                    <Circle radius="22" styleClass="avatar-circle"/>
+                    <Label text="A" styleClass="avatar-text"/>
+                </StackPane>
+
+            </HBox>
             <!-- CONTENT AREA -->
             <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS"/>
         </VBox>

@@ -34,7 +34,7 @@ public class Therapistis {
         this.status = "ACTIVE";
     }
 
-    // Getters & Setters
+
     public int getId() {
         return id;
     }

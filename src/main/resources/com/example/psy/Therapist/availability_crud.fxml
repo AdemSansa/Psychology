@@ -64,7 +64,7 @@
                               </VBox>
                          </HBox>
 
-                         <VBox spacing="5">
+                         <VBox fx:id="therapistBox" spacing="5">
                              <Label style="-fx-font-weight: bold;" text="Thérapeute" />
                              <ComboBox fx:id="therapistCombo" prefWidth="300.0" promptText="Sélectionner le thérapeute" styleClass="form-control" />
                          </VBox>

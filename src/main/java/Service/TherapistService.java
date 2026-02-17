@@ -2,6 +2,7 @@ package Service;
 
 import Database.dbconnect;
 import Entities.Therapistis;
+import Entities.User;
 import interfaces.Iservice;
 
 import java.sql.*;
@@ -24,6 +25,15 @@ public class TherapistService implements Iservice<Therapistis> {
         ps.setString(8, therapist.getConsultationType());
         ps.setString(9, therapist.getStatus());
         ps.executeUpdate();
+        User user = new User();
+        user.setFirstName(therapist.getFirstName());
+        user.setLastName(therapist.getLastName());
+        user.setEmail(therapist.getEmail());
+        user.setPassword(therapist.getPassword());
+        user.setRole("therapist");
+        UserService userService = new UserService();
+        userService.create(user);
+
         System.out.println("Therapist added successfully!");
     }
 
@@ -112,6 +122,30 @@ public class TherapistService implements Iservice<Therapistis> {
         ps.setString(2, email);
         ps.executeUpdate();
         System.out.println("Therapist password updated successfully!");
+    }
+
+    public Therapistis readByEmail(String email) throws SQLException {
+        String query = "SELECT * FROM therapists WHERE email=?";
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+        Therapistis t = null;
+        if (rs.next()) {
+            t = new Therapistis();
+            t.setId(rs.getInt("id"));
+            t.setFirstName(rs.getString("first_name"));
+            t.setLastName(rs.getString("last_name"));
+            t.setEmail(rs.getString("email"));
+            t.setPassword(rs.getString("password"));
+            t.setPhoneNumber(rs.getString("phone_number"));
+            t.setSpecialization(rs.getString("specialization"));
+            t.setDescription(rs.getString("description"));
+            t.setConsultationType(rs.getString("consultation_type"));
+            t.setStatus(rs.getString("status"));
+            t.setCreatedAt(rs.getTimestamp("created_at"));
+            t.setUpdatedAt(rs.getTimestamp("updated_at"));
+        }
+        return t;
     }
 
 }

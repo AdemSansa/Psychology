@@ -19,7 +19,11 @@
             <Insets top="30" right="30" bottom="30" left="30"/>
         </padding>
 
-        <Label text="Available Quizzes" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c1a12;"/>
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="Available Quizzes" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c1a12;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="View Past Results" onAction="#handleViewResults" styleClass="btn-secondary" style="-fx-font-size: 14px; -fx-padding: 10 20;"/>
+        </HBox>
 
         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent;">
             <content>

@@ -105,4 +105,25 @@ public class AvailabilityService implements Iservice<Availabilities> {
         }
         return list;
     }
+
+    public boolean isOverlap(Availabilities a) throws SQLException {
+        // Query to find any availability for the same therapist on the same day that
+        // overlaps
+        // (StartA < EndB) AND (EndA > StartB)
+        String query = "SELECT COUNT(*) FROM availabilities WHERE therapist_id = ? AND day = ? AND id != ? " +
+                "AND ((start_time < ?) AND (end_time > ?))";
+
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
+        ps.setInt(1, a.getTherapistId());
+        ps.setString(2, a.getDay().name());
+        ps.setInt(3, a.getId()); // Exclude current record if updating
+        ps.setTime(4, a.getEndTime());
+        ps.setTime(5, a.getStartTime());
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        return false;
+    }
 }
