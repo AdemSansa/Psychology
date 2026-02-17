@@ -2,6 +2,7 @@ package Service;
 
 import Database.dbconnect;
 import Entities.Therapistis;
+import Entities.User;
 import interfaces.Iservice;
 
 import java.sql.*;
@@ -24,6 +25,16 @@ public class TherapistService implements Iservice<Therapistis> {
         ps.setString(8, therapist.getConsultationType());
         ps.setString(9, therapist.getStatus());
         ps.executeUpdate();
+        User user = new User();
+        user.setFirstName(therapist.getFirstName());
+        user.setLastName(therapist.getLastName());
+        user.setEmail(therapist.getEmail());
+        user.setPassword(therapist.getPassword());
+        user.setRole("THERAPIST");
+        UserService userService = new UserService();
+        userService.create(user);
+
+
         System.out.println("Therapist added successfully!");
     }
 

@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox; // Import VBox just in case, though we expect VBox/AnchorPane root
+import util.SceneManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,5 +55,14 @@ public class QuizHomePageController implements Initializable {
             e.printStackTrace();
             System.err.println("Error fetching quizzes: " + e.getMessage());
         }
+    }
+
+    /**
+     * Handle View Past Results button - navigate to results history
+     */
+    @FXML
+    private void handleViewResults() {
+        SceneManager.loadPage( "/com/example/psy/QuizResults/QuizResultsHistory.fxml");
+
     }
 }
