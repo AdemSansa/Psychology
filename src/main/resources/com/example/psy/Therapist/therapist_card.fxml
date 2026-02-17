@@ -30,7 +30,7 @@
         <VBox spacing="8.0">
             <children>
                 <Label fx:id="emailLabel" text="sophie.dubois@email.com" styleClass="therapist-detail" graphicTextGap="10" />
-                <Label fx:id="phoneLabel" text="+33 6 12 34 56 78" styleClass="therapist-detail" graphicTextGap="10" />
+                <Label fx:id="phoneLabel" text="+216 99222999" styleClass="therapist-detail" graphicTextGap="10" />
                 <Label fx:id="addressLabel" text="12 Rue de la Paix, 75002 Paris" styleClass="therapist-detail" graphicTextGap="10" />
             </children>
         </VBox>

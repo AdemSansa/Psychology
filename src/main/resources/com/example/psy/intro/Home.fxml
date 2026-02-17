@@ -63,9 +63,15 @@
         <VBox spacing="0">
 
             <!-- TOP HEADER -->
-            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #f7f5f0; -fx-padding: 10 20;" spacing="15">
-                <Label text="Welcome back, Admin" style="-fx-text-fill: #2c3e50; -fx-font-size: 14px;"/>
-                <Circle radius="18" fill="#ecf0f1" stroke="#bdc3c7"/>
+            <HBox alignment="CENTER_RIGHT" styleClass="top-header" spacing="15">
+                <VBox alignment="CENTER_RIGHT">
+                    <Label fx:id="welcomeLabel" text="Bienvenue, Admin" styleClass="welcome-text-elegant"/>
+                    <Label text="Heureux de vous revoir" style="-fx-text-fill: #95a5a6; -fx-font-size: 10px;"/>
+                </VBox>
+                <StackPane>
+                    <Circle radius="20" fill="linear-gradient(to bottom right, #6f4e37, #d2b48c)"/>
+                    <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                </StackPane>
             </HBox>
 
             <!-- CONTENT AREA -->
