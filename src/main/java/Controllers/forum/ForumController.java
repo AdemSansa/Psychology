@@ -63,6 +63,11 @@ public class ForumController implements Initializable {
         }
 
         try {
+            if (reviewService.isExist(content)) {
+                showAlert(Alert.AlertType.WARNING, "Validation Error", "Review already exists!");
+                return;
+            }
+            else {
             Review review = new Review();
             review.setContent(content);
             review.setIdUser(currentUserId);
@@ -74,6 +79,7 @@ public class ForumController implements Initializable {
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "Review added successfully!");
 
+        }
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to add review.");
