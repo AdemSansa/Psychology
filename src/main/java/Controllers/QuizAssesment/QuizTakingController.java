@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import util.Session;
 
 import java.io.IOException;
 
@@ -98,7 +99,7 @@ public class QuizTakingController {
         if (currentQuestionIndex < questions.size()) {
             Question q = questions.get(currentQuestionIndex);
 
-            // Update UI
+            // Update UI with question data
             questionTextLabel.setText(q.getQuestionText());
 
             // Image handling (if applicable)
@@ -198,8 +199,7 @@ public class QuizTakingController {
             result.setMood(mood);
 
             // Mock User for now - In real app, get from Session/AuthService
-            User user = new User();
-            user.setId(6); // Placeholder ID
+            User user = Session.getInstance().getUser();
             result.setUser(user);
 
             quizResultService.create(result);

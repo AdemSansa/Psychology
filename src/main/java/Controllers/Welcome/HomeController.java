@@ -20,6 +20,9 @@ public class HomeController {
     private javafx.scene.control.Label welcomeLabel;
 
     @FXML
+    private javafx.scene.control.Label RoleLabel;
+
+    @FXML
     private javafx.scene.control.Button btnDashboard;
     @FXML
     private javafx.scene.control.Button btnUsers;
@@ -47,13 +50,17 @@ public class HomeController {
             updateSidebarVisibility(user.getRole());
 
             // Update welcome label
-            String displayName = user.getFullName();
+            String displayName = Session.getInstance().getUser().getFullName();
+
             if (displayName == null || displayName.trim().isEmpty()) {
                 displayName = user.getRole();
             }
             if (welcomeLabel != null) {
                 welcomeLabel.setText("Bienvenue, " + displayName);
             }
+                if (RoleLabel != null) {
+                    RoleLabel.setText(user.getRole());
+                }
 
         } else {
             System.out.println("No user logged in session.");
@@ -102,6 +109,7 @@ public class HomeController {
                 setButtonVisible(btnForum, true);
                 setButtonVisible(btnEvents, true);
                 setButtonVisible(btnTherapists, true);
+                setButtonVisible(btnQuizAssessment, true);
                 break;
             default:
                 // Unknown role, minimal access

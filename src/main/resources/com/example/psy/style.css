@@ -442,3 +442,45 @@
 .therapist-detail {
     -fx-text-fill: black;
 }
+
+
+
+.top-header {
+    -fx-padding: 15 25;
+    -fx-background-color: linear-gradient(to right, #88603c, #60402c);
+    -fx-border-color: rgba(255,255,255,0.05);
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Role */
+.role-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1px;
+}
+
+/* Welcome */
+.welcome-text {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* Small subtitle */
+.subtitle-text {
+    -fx-text-fill: #bdc3c7;
+    -fx-font-size: 11px;
+}
+
+/* Avatar */
+.avatar-circle {
+    -fx-fill: linear-gradient(to bottom right, #6f4e37, #d2b48c);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+.avatar-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}

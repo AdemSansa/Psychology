@@ -62,18 +62,39 @@
     <center>
         <VBox spacing="0">
 
-            <!-- TOP HEADER -->
-            <HBox alignment="CENTER_RIGHT" styleClass="top-header" spacing="15">
-                <VBox alignment="CENTER_RIGHT">
-                    <Label fx:id="welcomeLabel" text="Bienvenue, Admin" styleClass="welcome-text-elegant"/>
-                    <Label text="Heureux de vous revoir" style="-fx-text-fill: #95a5a6; -fx-font-size: 10px;"/>
-                </VBox>
-                <StackPane>
-                    <Circle radius="20" fill="linear-gradient(to bottom right, #6f4e37, #d2b48c)"/>
-                    <Label text="A" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
-                </StackPane>
-            </HBox>
+            <HBox alignment="CENTER_LEFT"
+                  spacing="20"
+                  prefHeight="70"
+                  styleClass="top-header">
 
+                <!-- LEFT : ROLE -->
+                <VBox alignment="CENTER_LEFT" spacing="2">
+                    <Label fx:id="RoleLabel"
+                           text="ADMIN"
+                           styleClass="role-text"/>
+                    <Label text="Your access level"
+                           styleClass="subtitle-text"/>
+                </VBox>
+
+                <!-- SPACER -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- RIGHT : WELCOME -->
+                <VBox alignment="CENTER_RIGHT" spacing="2">
+                    <Label fx:id="welcomeLabel"
+                           text="Welcome, Adem"
+                           styleClass="welcome-text"/>
+                    <Label text="Glad to see you again 👋"
+                           styleClass="subtitle-text"/>
+                </VBox>
+
+                <!-- AVATAR -->
+                <StackPane>
+                    <Circle radius="22" styleClass="avatar-circle"/>
+                    <Label text="A" styleClass="avatar-text"/>
+                </StackPane>
+
+            </HBox>
             <!-- CONTENT AREA -->
             <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS"/>
         </VBox>

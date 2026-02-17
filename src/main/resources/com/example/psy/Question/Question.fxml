@@ -36,7 +36,6 @@
                 </columnResizePolicy>
                 <columns>
                     <TableColumn fx:id="idColumn" text="ID" prefWidth="50" minWidth="50" maxWidth="50"/>
-                    <TableColumn fx:id="quizIdColumn" text="Quiz ID" prefWidth="80"/>
                     <TableColumn fx:id="questionTextColumn" text="Question Text"/>
                     <TableColumn fx:id="requiredColumn" text="Required" prefWidth="70"/>
                 </columns>
