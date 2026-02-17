@@ -4,15 +4,17 @@ import Entities.Review;
 import Entities.ReviewReply;
 import Service.ReviewService;
 import Service.Reply_ReviewService;
+import util.Session;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ForumController implements Initializable {
@@ -21,67 +23,57 @@ public class ForumController implements Initializable {
     private VBox reviewContainer;
 
     @FXML
-    private TextArea contentField;
+    private TextArea contentField; // Liaison avec le FXML
 
     private final ReviewService reviewService = new ReviewService();
     private final Reply_ReviewService replyService = new Reply_ReviewService();
 
-    private final int currentUserId = 13;
-    private final int therapistId = 2;
+    private int currentUserId;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        styleAddBox();
-        loadReviews();
-    }
+        if (Session.getInstance().getUser() != null) {
+            currentUserId = Session.getInstance().getUser().getId();
+        }
 
-    // ================= STYLE ADD SECTION =================
-    private void styleAddBox() {
-        contentField.setStyle(
-                "-fx-background-color:#F5F5DC;" +
-                        "-fx-background-radius:15;" +
-                        "-fx-border-color:#C8E6C9;" +
-                        "-fx-border-radius:15;" +
-                        "-fx-padding:10;"
-        );
+        loadReviews();
     }
 
     // ================= ADD REVIEW =================
     @FXML
-    private void addReview() {
-
+    private void addReview(ActionEvent event) {
         String content = contentField.getText().trim();
 
-
+        // Validation : non vide et minimum 10 caractères
         if (content.isEmpty()) {
-            showWarning("Missing Content",
-                    "Please write something meaningful before submitting.");
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Content cannot be empty!");
             return;
         }
-
-
         if (content.length() < 10) {
-            showWarning("Too Short",
-                    "Your review must contain at least 10 characters.");
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Content must be at least 10 characters!");
             return;
         }
 
         try {
-            Review review = new Review(content, currentUserId);
+            Review review = new Review();
+            review.setContent(content);
+            review.setIdUser(currentUserId);
+
             reviewService.create(review);
 
-            contentField.clear();
-            loadReviews();
-            showSuccess("Review added successfully!");
+            contentField.clear(); // vide le champ
+            loadReviews();        // recharge les reviews
+
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Review added successfully!");
 
         } catch (SQLException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to add review.");
         }
     }
 
     // ================= LOAD REVIEWS =================
     private void loadReviews() {
-
         reviewContainer.getChildren().clear();
 
         try {
@@ -89,16 +81,7 @@ public class ForumController implements Initializable {
             List<ReviewReply> replies = replyService.list();
 
             for (Review review : reviews) {
-
-                VBox card = createReviewCard(review);
-
-                for (ReviewReply r : replies) {
-                    if (r.getReviewId().equals(review.getIdReview())) {
-                        VBox replyBox = createReplyBox(r);
-                        card.getChildren().add(replyBox);
-                    }
-                }
-
+                VBox card = createReviewCard(review, replies);
                 reviewContainer.getChildren().add(card);
             }
 
@@ -108,8 +91,7 @@ public class ForumController implements Initializable {
     }
 
     // ================= REVIEW CARD =================
-    private VBox createReviewCard(Review review) {
-
+    private VBox createReviewCard(Review review, List<ReviewReply> replies) {
         VBox card = new VBox(10);
         card.setStyle(
                 "-fx-background-color:#F5F5DC;" +
@@ -126,129 +108,37 @@ public class ForumController implements Initializable {
         content.setWrapText(true);
         content.setStyle("-fx-font-size:14px; -fx-text-fill:#2E7D32;");
 
-        HBox buttons = new HBox(10);
+        card.getChildren().addAll(date, content);
 
-        Button replyBtn = styledGreenButton("Reply");
-        Button editBtn = styledYellowButton("Edit");
-        Button deleteBtn = styledRedButton("Delete");
+        // Ajouter les boutons Edit/Delete uniquement si c'est le client connecté
+        if (review.getIdUser() == currentUserId) {
+            HBox buttonBox = new HBox(10);
 
-        // DELETE REVIEW
-        deleteBtn.setOnAction(e -> {
-            if (confirmAction("Delete Message",
-                    "Are you sure you want to delete this message?")) {
-                try {
-                    reviewService.delete(review.getIdReview());
-                    loadReviews();
-                    showSuccess("Review deleted successfully!");
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+            Button editButton = new Button("Edit");
+            editButton.setStyle("-fx-background-color:#FFF176; -fx-text-fill:#000;");
+            editButton.setOnAction(e -> editReview(review));
+
+            Button deleteButton = new Button("Delete");
+            deleteButton.setStyle("-fx-background-color:#EF5350; -fx-text-fill:#fff;");
+            deleteButton.setOnAction(e -> deleteReview(review));
+
+            buttonBox.getChildren().addAll(editButton, deleteButton);
+            card.getChildren().add(buttonBox);
+        }
+
+        // Ajouter les replies
+        for (ReviewReply r : replies) {
+            if (r.getReviewId().equals(review.getIdReview())) {
+                VBox replyBox = createReplyBox(r);
+                card.getChildren().add(replyBox);
             }
-        });
-
-        // EDIT REVIEW
-        editBtn.setOnAction(e -> {
-            if (confirmAction("Edit Message",
-                    "Do you really want to modify this message?")) {
-
-                TextInputDialog dialog =
-                        new TextInputDialog(review.getContent());
-                dialog.setHeaderText("✏ Edit your message");
-
-                dialog.showAndWait().ifPresent(newText -> {
-
-                    String updatedText = newText.trim();
-
-                    if (updatedText.isEmpty()) {
-                        showWarning("Empty Content",
-                                "Message cannot be empty.");
-                        return;
-                    }
-
-                    if (updatedText.length() < 10) {
-                        showWarning("Too Short",
-                                "Message must contain at least 10 characters.");
-                        return;
-                    }
-
-                    try {
-                        review.setContent(updatedText);
-                        reviewService.update(review);
-                        loadReviews();
-                        showSuccess("Review updated successfully!");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            }
-        });
-
-        replyBtn.setOnAction(e -> showReplyInput(card, review));
-
-        buttons.getChildren().addAll(replyBtn, editBtn, deleteBtn);
-        card.getChildren().addAll(date, content, buttons);
+        }
 
         return card;
     }
 
-    // ================= REPLY INPUT =================
-    private void showReplyInput(VBox card, Review review) {
-
-        VBox replyInputBox = new VBox(8);
-        replyInputBox.setStyle(
-                "-fx-background-color:#E8F5E9;" +
-                        "-fx-padding:10;" +
-                        "-fx-background-radius:12;"
-        );
-
-        TextArea replyArea = new TextArea();
-        replyArea.setPromptText("Write a thoughtful reply...");
-        replyArea.setStyle("-fx-background-radius:10;");
-
-        Button sendReply = styledGreenButton("Send Reply");
-
-        sendReply.setOnAction(ev -> {
-
-            String replyText = replyArea.getText().trim();
-
-            if (replyText.isEmpty()) {
-                showWarning("Empty Reply",
-                        "Reply cannot be empty.");
-                return;
-            }
-
-            if (replyText.length() < 10) {
-                showWarning("Too Short",
-                        "Reply must contain at least 10 characters.");
-                return;
-            }
-
-            try {
-                ReviewReply reply = new ReviewReply(
-                        replyText,
-                        review.getIdReview(),
-                        therapistId
-                );
-
-                replyService.create(reply);
-                loadReviews();
-                showSuccess("Reply added successfully!");
-
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        replyInputBox.getChildren().addAll(replyArea, sendReply);
-
-        if (!card.getChildren().contains(replyInputBox)) {
-            card.getChildren().add(replyInputBox);
-        }
-    }
-
     // ================= REPLY BOX =================
     private VBox createReplyBox(ReviewReply r) {
-
         VBox replyBox = new VBox(5);
         replyBox.setStyle(
                 "-fx-background-color:#FAF3E0;" +
@@ -258,128 +148,71 @@ public class ForumController implements Initializable {
                         "-fx-border-radius:12;"
         );
 
-        Label replyContent =
-                new Label("Therapist: " + r.getContent());
+        Label replyContent = new Label("Therapist: " + r.getContent());
         replyContent.setWrapText(true);
         replyContent.setStyle("-fx-text-fill:#2E7D32;");
 
-        Label replyDate =
-                new Label(r.getCreatedAt().toString());
+        Label replyDate = new Label(r.getCreatedAt().toString());
         replyDate.setStyle("-fx-font-size:10px; -fx-text-fill:gray;");
 
-        HBox buttons = new HBox(10);
+        replyBox.getChildren().addAll(replyContent, replyDate);
+        return replyBox;
+    }
 
-        Button editReply = styledYellowButton("Edit");
-        Button deleteReply = styledRedButton("Delete");
+    // ================= EDIT REVIEW =================
+    private void editReview(Review review) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Edit Review");
+        confirm.setHeaderText("Do you really want to edit this review?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                TextInputDialog dialog = new TextInputDialog(review.getContent());
+                dialog.setTitle("Edit Review");
+                dialog.setHeaderText("Edit your review");
+                dialog.setContentText("New content:");
 
-        // EDIT REPLY
-        editReply.setOnAction(ev -> {
-            if (confirmAction("Edit Reply",
-                    "Do you really want to modify this reply?")) {
-
-                TextInputDialog dialog =
-                        new TextInputDialog(r.getContent());
-                dialog.setHeaderText("✏ Edit your reply");
-
-                dialog.showAndWait().ifPresent(newText -> {
-
-                    String updatedReply = newText.trim();
-
-                    if (updatedReply.isEmpty()) {
-                        showWarning("Empty Reply",
-                                "Reply cannot be empty.");
+                dialog.showAndWait().ifPresent(newContent -> {
+                    if (newContent.trim().isEmpty() || newContent.trim().length() < 10) {
+                        showAlert(Alert.AlertType.WARNING, "Validation Error", "Content must be at least 10 characters!");
                         return;
                     }
-
-                    if (updatedReply.length() < 10) {
-                        showWarning("Too Short",
-                                "Reply must contain at least 10 characters.");
-                        return;
-                    }
-
                     try {
-                        r.setContent(updatedReply);
-                        replyService.update(r);
+                        review.setContent(newContent.trim());
+                        reviewService.update(review);
                         loadReviews();
-                        showSuccess("Reply updated successfully!");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        showAlert(Alert.AlertType.INFORMATION, "Success", "Review edited successfully!");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        showAlert(Alert.AlertType.ERROR, "Error", "Failed to edit review.");
                     }
                 });
             }
         });
+    }
 
-        // DELETE REPLY
-        deleteReply.setOnAction(ev -> {
-            if (confirmAction("Delete Reply",
-                    "Are you sure you want to delete this reply?")) {
+    // ================= DELETE REVIEW =================
+    private void deleteReview(Review review) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Review");
+        confirm.setHeaderText("Do you really want to delete this review?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
                 try {
-                    replyService.delete(r.getIdReply());
+                    reviewService.delete(review.getIdReview());
                     loadReviews();
-                    showSuccess("Reply deleted successfully!");
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "Review deleted successfully!");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete review.");
                 }
             }
         });
-
-        buttons.getChildren().addAll(editReply, deleteReply);
-        replyBox.getChildren().addAll(replyContent, replyDate, buttons);
-
-        return replyBox;
     }
 
-    // ================= STYLED BUTTONS =================
-    private Button styledGreenButton(String text) {
-        Button btn = new Button(text);
-        btn.setStyle(
-                "-fx-background-color:#81C784;" +
-                        "-fx-text-fill:white;" +
-                        "-fx-background-radius:15;"
-        );
-        return btn;
-    }
-
-    private Button styledYellowButton(String text) {
-        Button btn = new Button(text);
-        btn.setStyle(
-                "-fx-background-color:#FFF59D;" +
-                        "-fx-background-radius:15;"
-        );
-        return btn;
-    }
-
-    private Button styledRedButton(String text) {
-        Button btn = new Button(text);
-        btn.setStyle(
-                "-fx-background-color:#EF9A9A;" +
-                        "-fx-text-fill:white;" +
-                        "-fx-background-radius:15;"
-        );
-        return btn;
-    }
-
-    // ================= ALERTS =================
-    private boolean confirmAction(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    // ================= HELPER METHOD =================
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
-    }
-
-    private void showWarning(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showSuccess(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

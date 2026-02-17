@@ -34,7 +34,6 @@ public class TherapistService implements Iservice<Therapistis> {
         UserService userService = new UserService();
         userService.create(user);
 
-
         System.out.println("Therapist added successfully!");
     }
 

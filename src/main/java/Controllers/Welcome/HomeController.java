@@ -35,6 +35,11 @@ public class HomeController {
     @FXML
     private javafx.scene.control.Button btnForum;
     @FXML
+    private javafx.scene.control.Button btnForumtherapist ;
+    @FXML
+    private javafx.scene.control.Button btnForumUsr ;
+
+    @FXML
     private javafx.scene.control.Button btnQuestions;
     @FXML
     private javafx.scene.control.Button btnQuizzes;
@@ -82,6 +87,8 @@ public class HomeController {
         setButtonVisible(btnEvents, false);
         setButtonVisible(btnAppointments, false);
         setButtonVisible(btnForum, false);
+        setButtonVisible(btnForumtherapist, false);
+        setButtonVisible(btnForumUsr, false);
         setButtonVisible(btnQuestions, false);
         setButtonVisible(btnQuizzes, false);
         setButtonVisible(btnQuizAssessment, false);
@@ -101,12 +108,12 @@ public class HomeController {
             case "patient":
                 setButtonVisible(btnTherapists, true); // Patient views therapists
                 setButtonVisible(btnAppointments, true);
-                setButtonVisible(btnForum, true);
+                setButtonVisible(btnForumUsr, true);
                 setButtonVisible(btnQuizAssessment, true);
                 break;
             case "therapist":
                 setButtonVisible(btnAppointments, true);
-                setButtonVisible(btnForum, true);
+                setButtonVisible(btnForumtherapist, true);
                 setButtonVisible(btnEvents, true);
                 setButtonVisible(btnTherapists, true);
                 setButtonVisible(btnQuizAssessment, true);
@@ -159,6 +166,14 @@ public class HomeController {
     @FXML
     public void gotoReview() {
         SceneManager.loadPage("/com/example/psy/forum/forum.fxml");
+    }
+    @FXML
+    public void gotoReviewtherapist() {
+        SceneManager.loadPage("/com/example/psy/forum/forumtherapist.fxml");
+    }
+    @FXML
+    public void gotoReviewadmin() {
+        SceneManager.loadPage("/com/example/psy/forum/forumadmin.fxml");
     }
 
     public void gotoQuiz() {

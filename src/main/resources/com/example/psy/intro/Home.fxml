@@ -41,7 +41,9 @@
                 <Button fx:id="btnTherapists" text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
                 <Button fx:id="btnEvents" text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
                 <Button fx:id="btnAppointments" text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
-                  <Button fx:id="btnForum" onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
+                <Button fx:id="btnForum" onAction="#gotoReviewadmin" styleClass="sidebar-btn"  text="forumadmin" />
+                <Button fx:id="btnForumtherapist" onAction="#gotoReviewtherapist" styleClass="sidebar-btn"  text="forum" />
+                <Button fx:id="btnForumUsr" onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
                 <Button fx:id="btnQuestions" text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizzes" text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizAssessment" text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
