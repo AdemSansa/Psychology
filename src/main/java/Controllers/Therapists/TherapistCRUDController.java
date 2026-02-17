@@ -69,7 +69,6 @@ public class TherapistCRUDController implements Initializable {
         service = new TherapistService();
         therapistList = FXCollections.observableArrayList();
         consultationTypeBox.setItems(FXCollections.observableArrayList("ONLINE", "IN_PERSON", "BOTH"));
-
         loadTherapists();
         updateVisibility(user.getRole());
     }
