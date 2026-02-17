@@ -47,12 +47,54 @@ public class RegisterController {
 
     @FXML
     private void handleRegister() {
+        // Reset styles and message
+        fullNameField.getStyleClass().remove("form-error");
+        emailField.getStyleClass().remove("form-error");
+        passwordField.getStyleClass().remove("form-error");
+        phoneField.getStyleClass().remove("form-error");
+        specializationField.getStyleClass().remove("form-error");
+        messageLabel.setText("");
+
         try {
+            boolean hasError = false;
+            StringBuilder errorMsg = new StringBuilder();
+
             String accountType = accountTypeBox.getValue();
             String fullName = fullNameField.getText();
 
             if (fullName == null || fullName.trim().isEmpty()) {
-                throw new Exception("Full name is required.");
+                fullNameField.getStyleClass().add("form-error");
+                errorMsg.append("Full name is required. ");
+                hasError = true;
+            }
+
+            if (emailField.getText() == null || !emailField.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                emailField.getStyleClass().add("form-error");
+                errorMsg.append("Invalid email address. ");
+                hasError = true;
+            }
+
+            if (passwordField.getText() == null || passwordField.getText().length() < 4) {
+                passwordField.getStyleClass().add("form-error");
+                errorMsg.append("Password too short (min 4). ");
+                hasError = true;
+            }
+
+            if ("Therapist".equals(accountType)) {
+                if (phoneField.getText() == null || !phoneField.getText().matches("^[24579]\\d{7}$")) {
+                    phoneField.getStyleClass().add("form-error");
+                    errorMsg.append("Invalid Tunisian phone (8 digits). ");
+                    hasError = true;
+                }
+                if (specializationField.getText() == null || specializationField.getText().trim().isEmpty()) {
+                    specializationField.getStyleClass().add("form-error");
+                    errorMsg.append("Specialization is required. ");
+                    hasError = true;
+                }
+            }
+
+            if (hasError) {
+                throw new Exception(errorMsg.toString().trim());
             }
 
             String[] names = fullName.trim().split(" ", 2);
