@@ -484,3 +484,111 @@
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
+.reserved-entry {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+}
+
+/* Pending appointment */
+.pending-entry {
+    -fx-background-color: #f4c430;
+}
+/* Top container */
+.top-container {
+    -fx-background-color: linear-gradient(to right, #1e1e1e, #252525);
+    -fx-border-color: #333;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Title */
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Subtitle */
+.page-subtitle {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+/* Field label */
+.field-label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Modern ComboBox */
+.combo-modern {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-border-color: #3a3a3a;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 4 8 4 8;
+}
+
+/* Refresh Button */
+.btn-refresh {
+    -fx-background-color: #3a86ff;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 14 6 14;
+    -fx-font-weight: bold;
+}
+
+.btn-refresh:hover {
+    -fx-background-color: #2f6fd1;
+}
+.btn-success {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+}
+
+.btn-danger {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.btn-secondary {
+    -fx-background-color: #7f8c8d;
+    -fx-text-fill: white;
+}
+
+.badge-status {
+    -fx-font-weight: bold;
+}
+.pending-entry {
+    -fx-background-color: yellow;
+}
+.reserved-entry {
+    -fx-background-color: orange;
+}
+.entry.pending-entry {
+    -fx-background-color: gold;
+}
+
+.entry.outside-hours-entry {
+    -fx-background-color: #555555;
+}
+
+.entry.default-entry {
+    -fx-background-color: #4caf50;
+}
+/* Make selected ComboBox text white */
+.combo-modern .combo-box-popup .list-cell:selected,
+.combo-modern .combo-box-button {
+    -fx-text-fill: white;
+}
+
+/* Optional: white text in the editor area if editable */
+.combo-modern .text-field {
+    -fx-text-fill: white;
+}
+
+/* Optional: change prompt text color */
+.combo-modern .prompt-text {
+    -fx-fill: gray;
+}

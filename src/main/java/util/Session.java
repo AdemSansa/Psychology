@@ -2,6 +2,9 @@ package util;
 
 import Entities.Therapistis;
 import Entities.User;
+import Service.TherapistService;
+
+import java.sql.SQLException;
 
 public class Session {
 
@@ -43,5 +46,80 @@ public class Session {
     public void clear() {
         currentUser = null;
       //  currentTherapist = null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public Integer getConnectedTherapistId() {
+        if (currentUser == null) return null;
+
+        TherapistService therapistService = new TherapistService();
+        try {
+            Therapistis therapist = therapistService.readByEmail(currentUser.getEmail());
+            if (therapist != null) {
+                return therapist.getId();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

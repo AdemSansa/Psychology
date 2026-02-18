@@ -34,6 +34,11 @@ public class Therapistis {
         this.status = "ACTIVE";
     }
 
+    @Override
+    public String toString() {
+        return firstName + ' '
+                + lastName;
+    }
 
     public int getId() {
         return id;

@@ -2,35 +2,57 @@
 
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="Controllers.Appointment.AppointmentCalendarController"
             stylesheets="@../style.css"
             styleClass="root">
 
+    <!-- TOP SECTION -->
     <top>
-        <VBox spacing="10" style="-fx-padding: 15;">
-            <Label text="Appointment Management" styleClass="section-title"/>
+        <VBox fx:id="topContainer" spacing="12" styleClass="top-container">
 
-            <ComboBox fx:id="therapistComboBox"
-                      promptText="Select Therapist"
-                      styleClass="form-control"/>
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
 
-            <Button text="Refresh"
-                    fx:id="refreshBtn"
-                    onAction="#refreshCalendar"
-                    styleClass="btn-secondary"/>
-        </VBox>
-    </top>
+            <!-- Page Title -->
+            <Label text="Appointment Management"
+                   styleClass="page-title"/>
 
+            <!-- Subtitle -->
+            <Label fx:id="subtitleLabel"
+                   text="Select a therapist to view available slots"
+                   styleClass="page-subtitle"/>
+
+            <!-- Therapist Controls Row -->
+            <HBox fx:id="therapistControlsRow" spacing="10" alignment="CENTER_LEFT">
+
+                <Label text="Therapist:" styleClass="field-label"/>
+
+                <ComboBox fx:id="therapistComboBox"
+                          promptText="Choose therapist"
+                          styleClass="combo-modern"/>
+
+    <!--<Button text="Refresh"
+            onAction="#refreshCalendar"
+            styleClass="btn-refresh"/>-->
+
+</HBox>
+
+</VBox>
+</top>
+
+<!-- CENTER SECTION: Calendar -->
     <center>
         <VBox fx:id="calendarContainer"
               style="-fx-padding: 10;"
               VBox.vgrow="ALWAYS">
-            <!-- CalendarView will be added programmatically -->
         </VBox>
     </center>
 
