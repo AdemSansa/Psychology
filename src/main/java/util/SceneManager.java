@@ -60,6 +60,25 @@ public class SceneManager {
             e.printStackTrace();
         }
     }
+
+    public static <T> T loadPageWithController(String fxmlPath) {
+        try {
+            if (contentArea == null) {
+                throw new IllegalStateException("ContentArea not set!");
+            }
+
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
+            Node page = loader.load();
+
+            contentArea.getChildren().setAll(page);
+
+            return loader.getController();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public static void goBack() {
     }
 }
