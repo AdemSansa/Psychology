@@ -16,6 +16,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import util.SceneManager;
+import util.Session;
+import Entities.User;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -33,6 +35,8 @@ public class EventListController implements Initializable {
     @FXML private TextField searchField;
     @FXML private FlowPane cardContainer;
     @FXML private Label totalEventsLabel;
+    @FXML private Button registrationsBtn;
+    @FXML private Button addEventBtn;
 
     private final EventService eventService = new EventService();
 
@@ -46,6 +50,14 @@ public class EventListController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         loadEventsFromDB();
 
+        String role = Session.getInstance().getUser().getRole();
+        boolean canManage = "therapist".equals(role) || "admin".equals(role);
+        
+        registrationsBtn.setVisible(canManage);
+        registrationsBtn.setManaged(canManage);
+        addEventBtn.setVisible(canManage);
+        addEventBtn.setManaged(canManage);
+
         searchField.textProperty().addListener((obs, oldVal, newVal) -> handleSearch());
 
         // ===== FIX SCROLL =====
@@ -57,7 +69,13 @@ public class EventListController implements Initializable {
     // ================= LOAD =================
     private void loadEventsFromDB() {
         try {
-            events.setAll(eventService.list());
+            Session session = Session.getInstance();
+            if ("therapist".equals(session.getUser().getRole())) {
+                events.setAll(eventService.listByOrganizer(session.getUser().getId()));
+            } else {
+                // Admin or Guest/Patient (Guests see all published events usually)
+                events.setAll(eventService.list());
+            }
             filteredEvents.setAll(events);
             renderCards();
             updateTotalLabel();
@@ -83,25 +101,43 @@ public class EventListController implements Initializable {
         else {
             countdownLabel.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
         }
+        // Allow Admin OR Therapist to edit/delete (back office)
+        String role2 = Session.getInstance().getUser().getRole();
+        boolean isAdminOrTherapist = "admin".equals(role2) || "therapist".equals(role2);
+        
+        Button editBtn = new Button("Edit");
+        Button deleteBtn = new Button("Delete");
+
+        editBtn.getStyleClass().add("btn-primary");
+        deleteBtn.getStyleClass().add("btn-danger");
+
+        // ONLY Admin or Therapist can See Edit/Delete
+        editBtn.setVisible(isAdminOrTherapist);
+        editBtn.setManaged(isAdminOrTherapist);
+        deleteBtn.setVisible(isAdminOrTherapist);
+        deleteBtn.setManaged(isAdminOrTherapist);
+
 
 
         // ===== IMAGE =====
         StackPane imageContainer = new StackPane();
-        imageContainer.setPrefSize(300, 170);
+        imageContainer.setPrefSize(290, 170);
 
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(300);
+        imageView.setFitWidth(290);
         imageView.setFitHeight(170);
         imageView.setPreserveRatio(false);
 
-        Rectangle clip = new Rectangle(300, 170);
+        Rectangle clip = new Rectangle(290, 170);
         clip.setArcWidth(20);
         clip.setArcHeight(20);
         imageView.setClip(clip);
 
         if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
             try {
-                imageView.setImage(new Image(event.getImageUrl(), true));
+                String imageUrl = event.getImageUrl();
+                String finalUrl = imageUrl.startsWith("http") ? imageUrl : new java.io.File(imageUrl).toURI().toString();
+                imageView.setImage(new Image(finalUrl, true));
                 imageContainer.getChildren().add(imageView);
             } catch (Exception e) {
                 imageContainer.getChildren().add(createImagePlaceholder());
@@ -190,36 +226,32 @@ public class EventListController implements Initializable {
         """);
 
         // ===== BUTTONS =====
-        Button editBtn = new Button("Edit");
+
         editBtn.getStyleClass().add("btn-primary");
         editBtn.setOnAction(e -> handleEdit(event));
         Button registerBtn = new Button("Register");
         registerBtn.getStyleClass().add("btn-primary");
 
-// 🚫 Désactiver si FULL
+        // 🚫 Hide for Therapist (they manage)
+        boolean isTherapist = "therapist".equals(role2);
+        if (isTherapist) {
+            registerBtn.setVisible(false);
+            registerBtn.setManaged(false);
+        }
+
+        // 🚫 Disable if FULL
         if (dispo <= 0) {
             registerBtn.setDisable(true);
             registerBtn.setText("FULL");
         }
 
-        registerBtn.setOnAction(e -> {
-            RegistrationController controller =
-                    (RegistrationController) SceneManager.switchSceneWithController(
-                            "/com/example/psy/Event/registration.fxml"
-                    );
-
-            if (controller != null) {
-                controller.setEventId(event.getIdEvent());
-            }
-
-        });
 
         registerBtn.getStyleClass().add("btn-primary");
         registerBtn.setOnAction(e -> {
 
             RegistrationController controller =
-                    (RegistrationController) SceneManager.switchSceneWithController(
-                            "/com/example/psy/Event/registration.fxml"
+                    (RegistrationController) SceneManager.loadPageWithController(
+                            "/com/example/psy/Event/registration_list.fxml"
                     );
 
             if (controller != null) {
@@ -229,7 +261,7 @@ public class EventListController implements Initializable {
 
 
 
-        Button deleteBtn = new Button("Delete");
+
         deleteBtn.getStyleClass().add("btn-primary");
         deleteBtn.setOnAction(e -> {
             try {
@@ -249,8 +281,9 @@ public class EventListController implements Initializable {
 
 
         // ===== CARD =====
-        VBox card = new VBox(12);
-        card.setPrefWidth(300);
+        VBox card = new VBox(15); // Increased spacing
+        card.setPrefWidth(350);
+        card.setStyle("-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);");
         card.getStyleClass().add("event-card");
 
         card.getChildren().addAll(
@@ -275,18 +308,6 @@ public class EventListController implements Initializable {
             card.getStyleClass().add("event-card-selected");
 
         });
-// ===== SELECTION CARD (bordure marron) =====
-        card.setOnMouseClicked(e -> {
-
-            // retirer ancienne sélection
-            if (selectedCard != null) {
-                selectedCard.getStyleClass().remove("event-card-selected");
-            }
-
-            // nouvelle sélection
-            selectedCard = card;
-            card.getStyleClass().add("event-card-selected");
-        });
 
 
 
@@ -295,7 +316,7 @@ public class EventListController implements Initializable {
     }
 
     private StackPane createImagePlaceholder() {
-        Rectangle bg = new Rectangle(300, 170);
+        Rectangle bg = new Rectangle(290, 170);
         bg.setFill(Color.LIGHTGRAY);
         return new StackPane(bg, new Label("No Image"));
     }
@@ -323,12 +344,17 @@ public class EventListController implements Initializable {
     // ================= NAVIGATION =================
     @FXML
     private void handleBack() {
-        SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
+        SceneManager.loadPage("/com/example/psy/intro/dashboard.fxml");
     }
 
     @FXML
     private void handleAddEvent() {
-        SceneManager.switchScene("/com/example/psy/Event/eventAdd.fxml");
+        SceneManager.loadPage("/com/example/psy/Event/eventAdd.fxml");
+    }
+
+    @FXML
+    private void handleViewRegistrations() {
+        SceneManager.loadPage("/com/example/psy/Event/registration.fxml");
     }
 
     private void handleEdit(Event event) {

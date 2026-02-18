@@ -2,47 +2,75 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.Event.RegistrationController"
+            fx:controller="Controllers.Event.RegistrationListController"
             stylesheets="@../style.css"
             styleClass="background-gradient">
 
     <top>
-        <HBox spacing="20" style="-fx-padding:20; -fx-background-color:white;">
-            <Button text="←" onAction="#handleBack" styleClass="btn-secondary"/>
-            <Label fx:id="eventInfoLabel" styleClass="section-title"/>
-        </HBox>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="40" bottom="20" left="40"/>
+            </padding>
+
+            <!-- Header Row -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button text="←" onAction="#handleBack" styleClass="btn-secondary" 
+                        style="-fx-background-radius: 50; -fx-min-width: 40; -fx-min-height: 40; -fx-font-size: 18;"/>
+                
+                <VBox spacing="2" HBox.hgrow="ALWAYS">
+                    <Label text="Registration Management" styleClass="section-title" style="-fx-font-size: 24;"/>
+                    <Label text="Monitor and manage patient arrivals and status" styleClass="subtitle" style="-fx-font-size: 14;"/>
+                </VBox>
+
+                <Button text="🔄 Refresh" onAction="#loadRegistrations" styleClass="btn-secondary" 
+                        style="-fx-padding: 8 20; -fx-background-radius: 20;"/>
+            </HBox>
+
+            <!-- Stats Row -->
+            <HBox spacing="20" alignment="CENTER">
+                <VBox styleClass="stat-card-view, stat-total" HBox.hgrow="ALWAYS">
+                    <Label text="Total" styleClass="stat-label"/>
+                    <Label fx:id="totalCountLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+                <VBox styleClass="stat-card-view, stat-registered" HBox.hgrow="ALWAYS">
+                    <Label text="Registered" styleClass="stat-label"/>
+                    <Label fx:id="registeredCountLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+                <VBox styleClass="stat-card-view, stat-attended" HBox.hgrow="ALWAYS">
+                    <Label text="Attended" styleClass="stat-label"/>
+                    <Label fx:id="attendedCountLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+                <VBox styleClass="stat-card-view, stat-cancelled" HBox.hgrow="ALWAYS">
+                    <Label text="Cancelled" styleClass="stat-label"/>
+                    <Label fx:id="cancelledCountLabel" text="0" styleClass="stat-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Filters Row -->
+            <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+                <TextField fx:id="searchField"
+                           promptText="🔍 Search name or email..."
+                           styleClass="form-control"
+                           prefWidth="300"/>
+                
+                <Label text="Status:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="statusFilter" promptText="All Statuses" styleClass="form-control" prefWidth="150"/>
+                
+                <Label text="Event:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="eventFilter" promptText="All Events" styleClass="form-control" prefWidth="250"/>
+            </HBox>
+        </VBox>
     </top>
 
     <center>
-        <VBox spacing="25" alignment="CENTER" style="-fx-padding:30;">
-            <TextField fx:id="searchField"
-                       promptText="🔍 Search participant..."
-                       styleClass="form-control"
-                       prefWidth="260"/>
-
-
-            <TextField fx:id="nameField"
-                       promptText="Participant name"
-                       styleClass="form-control"
-                       prefWidth="300"/>
-
-            <ComboBox fx:id="statusBox"
-                      styleClass="form-control"
-                      prefWidth="300"/>
-
-            <Button text="Add / Update"
-                    onAction="#handleRegister"
-                    styleClass="btn-primary"/>
-
-            <ScrollPane fitToWidth="true">
-                <FlowPane fx:id="cardContainer"
-                          hgap="20" vgap="20"
-                          style="-fx-padding:20;"/>
-            </ScrollPane>
-
-        </VBox>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <FlowPane fx:id="cardContainer"
+                      hgap="25" vgap="25"
+                      style="-fx-padding: 30;"/>
+        </ScrollPane>
     </center>
 
 </BorderPane>

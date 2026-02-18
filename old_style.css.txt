@@ -1,0 +1,75 @@
+/* Background */
+.background {
+    -fx-background-color: linear-gradient(
+            to bottom right,
+            #d9f2ef,
+            #eef7f6
+    );
+}
+
+/* Login card */
+.login-card {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-background-radius: 18;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 20, 0, 0, 6);
+}
+
+/* App title */
+.app-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2b7a78;
+}
+
+/* Subtitle */
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #5f7f7f;
+}
+
+/* Inputs */
+.input {
+    -fx-pref-width: 260;
+    -fx-pref-height: 40;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #b2dfdb;
+    -fx-background-color: #ffffff;
+    -fx-padding: 0 12 0 12;
+    -fx-font-size: 13px;
+}
+
+/* Button */
+.login-button {
+    -fx-pref-width: 260;
+    -fx-pref-height: 42;
+    -fx-background-radius: 12;
+    -fx-background-color: #3aa6a0;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.login-button:hover {
+    -fx-background-color: #2f8f8b;
+}
+
+/* Messages */
+.message {
+    -fx-text-fill: #d32f2f;
+    -fx-font-size: 12px;
+}
+
+/* Footer */
+.footer-text {
+    -fx-text-fill: #7a9a9a;
+    -fx-font-size: 11px;
+}
+.link-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #3aa6a0;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}

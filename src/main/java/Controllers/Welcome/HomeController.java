@@ -38,6 +38,8 @@ public class HomeController {
     private javafx.scene.control.Button btnForumtherapist ;
     @FXML
     private javafx.scene.control.Button btnForumUsr ;
+    @FXML
+    private javafx.scene.control.Button btnRegistrations;
 
     @FXML
     private javafx.scene.control.Button btnQuestions;
@@ -89,6 +91,7 @@ public class HomeController {
         setButtonVisible(btnForum, false);
         setButtonVisible(btnForumtherapist, false);
         setButtonVisible(btnForumUsr, false);
+        setButtonVisible(btnRegistrations, false);
         setButtonVisible(btnQuestions, false);
         setButtonVisible(btnQuizzes, false);
         setButtonVisible(btnQuizAssessment, false);
@@ -102,21 +105,29 @@ public class HomeController {
                 setButtonVisible(btnTherapists, true); // Admin manages therapists
                 setButtonVisible(btnEvents, true);
                 setButtonVisible(btnForum, true); // Admin moderates forum
+                setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnQuestions, true);
                 setButtonVisible(btnQuizzes, true);
+                setButtonVisible(btnEvents , true);
                 break;
             case "patient":
                 setButtonVisible(btnTherapists, true); // Patient views therapists
                 setButtonVisible(btnAppointments, true);
                 setButtonVisible(btnForumUsr, true);
+                setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnQuizAssessment, true);
+                setButtonVisible(btnEvents , true);
+
                 break;
             case "therapist":
                 setButtonVisible(btnAppointments, true);
                 setButtonVisible(btnForumtherapist, true);
                 setButtonVisible(btnEvents, true);
+                setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnTherapists, true);
                 setButtonVisible(btnQuizAssessment, true);
+                setButtonVisible(btnEvents , true);
+
                 break;
             default:
                 // Unknown role, minimal access
@@ -150,6 +161,11 @@ public class HomeController {
     @FXML
     public void gotoTherapists() {
         SceneManager.loadPage("/com/example/psy/Therapist/therapist_crud.fxml");
+    }
+
+    @FXML
+    public void gotoRegistrations() {
+        SceneManager.loadPage("/com/example/psy/Event/registration.fxml");
     }
 
     @FXML
