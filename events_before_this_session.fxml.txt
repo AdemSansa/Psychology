@@ -40,16 +40,9 @@
                            prefWidth="200"/>
 
                 <!-- ADD -->
-                <Button fx:id="addEventBtn"
-                        text="+ Add Event"
+                <Button text="+ Add Event"
                         styleClass="btn-primary"
                         onAction="#handleAddEvent"/>
-                
-                <!-- REGISTRATIONS (Added for usability across roles) -->
-                <Button fx:id="registrationsBtn" 
-                        text="📋 Registrations" 
-                        styleClass="btn-secondary" 
-                        onAction="#handleViewRegistrations"/>
             </HBox>
         </VBox>
     </top>
@@ -60,7 +53,7 @@
                     fitToWidth="true"
                     hbarPolicy="NEVER"
                     vbarPolicy="AS_NEEDED"
-                    style="-fx-background: transparent; -fx-background-color: transparent;">
+                    style="-fx-background: transparent;">
 
             <content>
                 <FlowPane fx:id="cardContainer"
