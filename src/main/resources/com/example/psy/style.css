@@ -529,6 +529,23 @@
     -fx-translate-y: -1;
 }
 
+.btn-lang {
+    -fx-background-color: white;
+    -fx-border-color: #d2b48c;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-text-fill: #6f4e37;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 10;
+    -fx-cursor: hand;
+}
+
+.btn-lang:hover {
+    -fx-background-color: #f5efe6;
+    -fx-border-color: #6f4e37;
+}
+
 still green
 
 /* =============================== MARRON & BEIGE MODERN PALETTE =============================== */
