@@ -39,8 +39,18 @@
                     <!-- Question Text -->
                     <Label text="Question Text:" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.valignment="TOP"/>
                     <VBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="1">
-                        <TextArea fx:id="txtQuestionText" styleClass="form-control" promptText="Enter question text here..." prefRowCount="4" wrapText="true"/>
-                        <Button fx:id="btnSuggest" text="✨ Get AI Suggestions" onAction="#handleSuggest" styleClass="btn-suggest"/>
+                        <StackPane alignment="TOP_RIGHT">
+                           <TextArea fx:id="txtQuestionText" styleClass="form-control" promptText="Enter question text here..." prefRowCount="4" wrapText="true"/>
+                           <Button fx:id="btnRecord" onAction="#handleToggleRecord" styleClass="btn-record" text="🎤">
+                               <StackPane.margin>
+                                   <Insets top="5" right="5"/>
+                               </StackPane.margin>
+                           </Button>
+                        </StackPane>
+                        <HBox spacing="10">
+                            <Button fx:id="btnSuggest" text="✨ Get AI Suggestions" onAction="#handleSuggest" styleClass="btn-suggest"/>
+                            <Label fx:id="lblRecordStatus" text="" styleClass="record-status" visible="false"/>
+                        </HBox>
                     </VBox>
 
                     <!-- Image Path -->
