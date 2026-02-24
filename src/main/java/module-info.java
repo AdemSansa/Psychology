@@ -3,6 +3,8 @@ module com.example.psy {
     requires jbcrypt;
     requires com.calendarfx.view;
     requires mysql.connector.j;
+    requires javafx.controls;
+    requires javafx.web;
     requires jdk.jdi;
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
