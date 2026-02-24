@@ -1,12 +1,16 @@
 module com.example.psy {
     requires javafx.fxml;
-    requires java.sql;
     requires jbcrypt;
-    requires java.desktop;
     requires com.calendarfx.view;
     requires mysql.connector.j;
     requires javafx.controls;
     requires javafx.web;
+    requires jdk.jdi;
+    requires java.net.http;
+    requires com.fasterxml.jackson.databind;
+    requires java.sql;
+    requires java.desktop;
+
 
     opens com.example.psy to javafx.fxml;
     exports application;
