@@ -7,7 +7,9 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 
 public class VideoCallController {
 
@@ -50,6 +52,15 @@ public class VideoCallController {
     public void close() {
         if (stage != null) {
             stage.close();
+        }
+    }
+    public static void openMeetingInBrowser(String meetingLink) {
+        try {
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(new URI(meetingLink));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

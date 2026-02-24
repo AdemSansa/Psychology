@@ -323,23 +323,31 @@ public class AppointmentCalendarController {
     }
     private void openVideoCall(Appointment appointment) {
         try {
+            // generate meeting link
             String meetingLink = Service.VideoCallService.generateMeetingLink(appointment.getId());
+
+            // open in system browser
+            Service.VideoCallService.openMeetingInBrowser(meetingLink);
+
+            // mark appointment in-progress
             appointment.setStatus("in-progress");
             appointmentService.update(appointment);
 
-            // open video call
-            Controllers.Appointment.VideoCallController controller = VideoCallController.openVideoCall(meetingLink);
-
-            // close automatically after 90 minutes
+            // schedule completion
             Duration duration = Duration.between(
-                    java.time.LocalDateTime.now(),
+                    LocalDateTime.now(),
                     appointment.getAppointmentDate().atTime(appointment.getEndTime())
             );
 
             new Timer(true).schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(controller::close);
+                    try {
+                        appointment.setStatus("completed");
+                        appointmentService.update(appointment);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
             }, duration.toMillis());
 
