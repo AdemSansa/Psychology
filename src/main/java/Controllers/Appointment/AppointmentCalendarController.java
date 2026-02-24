@@ -237,8 +237,8 @@ public class AppointmentCalendarController {
 
     private void addEntryListeners(Entry<Appointment> entry) {
         entry.intervalProperty().addListener((obs, oldInterval, newInterval) -> {
-            Appointment a = entry.getUserObject();
-            if (a == null) return;
+            Appointment currentAppointment = entry.getUserObject();
+            if (currentAppointment == null) return;
 
             ZonedDateTime start = newInterval.getStartZonedDateTime();
             ZonedDateTime end = newInterval.getEndZonedDateTime();
@@ -247,22 +247,39 @@ public class AppointmentCalendarController {
             LocalTime endTime = end.toLocalTime();
 
             try {
-                boolean available = appointmentService.isSlotAvailable(a.getTherapistId(), date, startTime, endTime, a.getId());
-                boolean withinHours = appointmentService.isWithinAvailability(a.getTherapistId(), date, startTime, endTime);
+                // Pass current appointment ID to ignore itself
+                boolean available = appointmentService.isSlotAvailable(
+                        currentAppointment.getTherapistId(),
+                        date, startTime, endTime,
+                        currentAppointment.getId() // ignore self
+                );
+                boolean withinHours = appointmentService.isWithinAvailability(
+                        currentAppointment.getTherapistId(),
+                        date, startTime, endTime
+                );
 
                 if (!available || !withinHours) {
-                    javafx.application.Platform.runLater(() -> {
+                    // Find and log conflicting appointments
+
+
+                    // Revert the drag
+                    Platform.runLater(() -> {
                         entry.setInterval(
-                                a.getAppointmentDate().atTime(a.getStartTime()).atZone(ZoneId.systemDefault()),
-                                a.getAppointmentDate().atTime(a.getEndTime()).atZone(ZoneId.systemDefault())
+                                currentAppointment.getAppointmentDate()
+                                        .atTime(currentAppointment.getStartTime())
+                                        .atZone(ZoneId.systemDefault()),
+                                currentAppointment.getAppointmentDate()
+                                        .atTime(currentAppointment.getEndTime())
+                                        .atZone(ZoneId.systemDefault())
                         );
-                        showAlert(!available ? " This slot is booked." : "Outside business hours.");
+                        showAlert(!available ? "This slot is already booked." : "Outside business hours.");
                     });
                 } else {
-                    a.setAppointmentDate(date);
-                    a.setStartTime(startTime);
-                    a.setEndTime(endTime);
-                    appointmentService.update(a);
+                    // Everything okay, update the appointment
+                    currentAppointment.setAppointmentDate(date);
+                    currentAppointment.setStartTime(startTime);
+                    currentAppointment.setEndTime(endTime);
+                    appointmentService.update(currentAppointment);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
