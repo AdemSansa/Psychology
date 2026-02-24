@@ -8,8 +8,12 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import util.Session;
 
 import javafx.concurrent.Task;
@@ -20,11 +24,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AppointmentCalendarController {
 
@@ -42,6 +45,7 @@ public class AppointmentCalendarController {
     private Calendar appointmentsCalendar;
     private AppointmentService appointmentService = new AppointmentService();
     private TherapistService therapistService = new TherapistService();
+    private Timer videoCallTimer;
 
     private static final int APPOINTMENT_DURATION_MIN = 90;
 
@@ -87,6 +91,7 @@ public class AppointmentCalendarController {
         });
         loadAppointments();
         setupInteractions();
+        startAutoVideoCallChecker();
     }
 
     private boolean isTherapist() {
@@ -274,5 +279,72 @@ public class AppointmentCalendarController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private void startAutoVideoCallChecker() {
+        videoCallTimer = new Timer(true); // daemon thread
+        videoCallTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    List<Appointment> list;
+                    if (isTherapist()) {
+                        Integer therapistId = Session.getInstance().getConnectedTherapistId();
+                        list = appointmentService.listByTherapist(therapistId);
+                    } else {
+                        Therapistis selected = therapistComboBox.getValue();
+                        if (selected == null) return;
+                        list = appointmentService.listByTherapist(selected.getId());
+                    }
+
+                    for (Appointment a : list) {
+                        LocalDateTime now = LocalDateTime.now();
+                        LocalDateTime start = a.getAppointmentDate().atTime(a.getStartTime());
+                        LocalDateTime end = a.getAppointmentDate().atTime(a.getEndTime());
+
+                        // Start call automatically if now is at start
+                        if ("confirmed".equalsIgnoreCase(a.getStatus()) &&
+                                now.isAfter(start.minusSeconds(1)) && now.isBefore(start.plusSeconds(59))) {
+
+                            Platform.runLater(() -> openVideoCall(a));
+                        }
+
+                        // Close call automatically after 90 min
+                        if (now.isAfter(end) && "in-progress".equalsIgnoreCase(a.getStatus())) {
+                            a.setStatus("completed");
+                            appointmentService.update(a);
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, 30_000); // check every 30 seconds
+    }
+    private void openVideoCall(Appointment appointment) {
+        try {
+            String meetingLink = Service.VideoCallService.generateMeetingLink(appointment.getId());
+            appointment.setStatus("in-progress");
+            appointmentService.update(appointment);
+
+            // open video call
+            Controllers.Appointment.VideoCallController controller = VideoCallController.openVideoCall(meetingLink);
+
+            // close automatically after 90 minutes
+            Duration duration = Duration.between(
+                    java.time.LocalDateTime.now(),
+                    appointment.getAppointmentDate().atTime(appointment.getEndTime())
+            );
+
+            new Timer(true).schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(controller::close);
+                }
+            }, duration.toMillis());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -297,4 +297,5 @@ UPDATE appointment
 
         throw new SQLException("Failed to retrieve generated ID");
     }
+
 }
