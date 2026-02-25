@@ -167,9 +167,9 @@ public class AppointmentCalendarController {
 
                 // ✅ Set title based on user role
                 if (isTherapist()) {
-                    entry.setTitle(appointmentService.getPatientName(a.getPatientId()) + " - " + a.getType());
+                    entry.setTitle(appointmentService.getPatientName(a.getPatientId()) + " - [" + a.getType() + "]");
                 } else {
-                    entry.setTitle("Reserved");
+                    entry.setTitle("Reserved - [" + a.getType() + "]");
                 }
 
                 appointmentsCalendar.addEntry(entry);

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class AISummaryService {
 
     // You will need to set this environment variable or replace this placeholder
-    private static final String API_KEY ="AIzaSyDPGUe2rP9XUd9fN3Gt9Y4Y-nMCL--kJZo";
+    private static final String API_KEY = "AIzaSyDPGUe2rP9XUd9fN3Gt9Y4Y-nMCL--kJZo";
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
 
     public String generateSummary(String patientNote) {
@@ -26,6 +26,8 @@ public class AISummaryService {
                 "1. Key Topics\n" +
                 "2. Action Items\n" +
                 "3. Patient Concerns\n\n" +
+                "When creating the summary, factor in the reported mood for each note to understand the patient's emotional state, but DO NOT create a separate section for mood.\n"
+                +
                 "Keep it concise, professional, and do not include any conversational filler. Here is the note:\n\n\"\"\""
                 + patientNote + "\"\"\"";
 

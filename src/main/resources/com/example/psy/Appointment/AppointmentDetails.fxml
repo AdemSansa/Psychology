@@ -9,60 +9,61 @@
 <?import javafx.scene.layout.Region?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="Controllers.Appointment.AppointmentDetailsController"
-      spacing="18"
+      spacing="20"
       alignment="TOP_CENTER"
       stylesheets="@../style.css"
-      styleClass="root"
-      prefWidth="400"
-      prefHeight="600">
+      styleClass="futuristic-modal"
+      style="-fx-background-color: #0f172a; -fx-padding: 30; -fx-background-radius: 15; -fx-border-color: #38bdf8; -fx-border-radius: 15; -fx-border-width: 1;"
+      prefWidth="450"
+      prefHeight="650">
 
     <!-- Section Title -->
-    <Label text="Appointment Details" styleClass="section-title"/>
+    <Label text="SESSION DETAILS" style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #38bdf8; -fx-font-family: 'Segoe UI', sans-serif; -fx-effect: dropshadow(gaussian, #0ea5e9, 5, 0.4, 0, 0);"/>
 
     <!-- Appointment Info -->
-    <VBox spacing="8" alignment="CENTER">
-        <Label fx:id="dateLabel" styleClass="text-soft"/>
-        <Label fx:id="timeLabel" styleClass="text-soft"/>
-        <Label fx:id="statusLabel" styleClass="badge-status"/>
+    <VBox spacing="10" alignment="CENTER" style="-fx-background-color: rgba(30, 41, 59, 0.7); -fx-padding: 15; -fx-background-radius: 10;">
+        <Label fx:id="dateLabel" style="-fx-text-fill: #e2e8f0; -fx-font-size: 14px;"/>
+        <Label fx:id="timeLabel" style="-fx-text-fill: #94a3b8; -fx-font-size: 14px;"/>
+        <Label fx:id="statusLabel" styleClass="badge-status-neon"/>
     </VBox>
 
     <!-- Action Buttons -->
-    <HBox spacing="10" alignment="CENTER">
+    <HBox spacing="15" alignment="CENTER">
         <Button fx:id="confirmBtn"
                 text="Confirm"
                 onAction="#confirmAppointment"
-                styleClass="btn-success"
+                styleClass="btn-neon-success"
                 visible="false"
                 managed="false"/>
         <Button fx:id="cancelBtn"
                 text="Cancel Appointment"
                 onAction="#cancelAppointment"
-                styleClass="btn-danger"/>
+                styleClass="btn-neon-danger"/>
     </HBox>
 
     <!-- Notes Section -->
-    <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 10; -fx-border-color: gray; -fx-border-width: 1; -fx-background-color: #ffffff;">
+    <VBox spacing="15" alignment="TOP_CENTER" style="-fx-padding: 20; -fx-border-color: #475569; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 10;">
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Notes" styleClass="section-title"/>
+            <Label text="CLINICAL NOTES" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #e2e8f0;"/>
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="addNoteBtn"
                     text="Add Note"
                     onAction="#addNote"
-                    styleClass="btn-success"
+                    styleClass="btn-neon-primary"
                     visible="false"
                     managed="false"/>
             <Button fx:id="aiSummaryBtn"
-                    text="✨ Generate AI Summary"
+                    text="✨ AI Summary"
                     onAction="#generateAISummary"
-                    styleClass="btn-secondary"
+                    styleClass="btn-neon-purple"
                     visible="false"
                     managed="false"/>
         </HBox>
 
-        <ScrollPane fitToWidth="true" prefHeight="200">
-            <VBox fx:id="notesContainer" spacing="8">
+        <ScrollPane fitToWidth="true" prefHeight="220" styleClass="dark-scroll-pane">
+            <VBox fx:id="notesContainer" spacing="10" style="-fx-background-color: #0f172a;">
                 <padding>
-                    <Insets top="5" right="5" bottom="5" left="5"/>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
             </VBox>
         </ScrollPane>
@@ -71,5 +72,5 @@
     <!-- Close Button -->
     <Button text="Close"
             onAction="#closeWindow"
-            styleClass="btn-secondary"/>
+            styleClass="btn-neon-secondary"/>
 </VBox>
