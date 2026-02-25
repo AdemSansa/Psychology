@@ -258,8 +258,12 @@ public class AppointmentDetailsController {
 
                 if (isTherapist) {
                     Button editBtn = new Button("Edit");
+                    editBtn.setStyle(
+                            "-fx-font-size: 14px; -fx-padding: 8px 15px; -fx-font-weight: bold; -fx-background-color: #0d6efd; -fx-text-fill: white;");
                     editBtn.setOnAction(e -> editNoteDialog(note));
                     Button deleteBtn = new Button("Delete");
+                    deleteBtn.setStyle(
+                            "-fx-font-size: 14px; -fx-padding: 8px 15px; -fx-font-weight: bold; -fx-background-color: #dc3545; -fx-text-fill: white;");
                     deleteBtn.setOnAction(e -> deleteNoteConfirm(note));
                     noteBox.getChildren().addAll(editBtn, deleteBtn);
                 }

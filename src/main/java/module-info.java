@@ -10,7 +10,7 @@ module com.example.psy {
     requires com.fasterxml.jackson.databind;
     requires java.sql;
     requires java.desktop;
-    requires java.mail;
+    requires jakarta.mail;
 
     opens com.example.psy to javafx.fxml;
 

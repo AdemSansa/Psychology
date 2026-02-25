@@ -88,7 +88,6 @@ public class AppointmentCalendarController {
                     setText(null);
                 } else {
                     setText(item.toString());
-                    setStyle("-fx-text-fill: white;");
                 }
             }
         });

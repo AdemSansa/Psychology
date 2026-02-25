@@ -11,13 +11,11 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="Controllers.Appointment.AppointmentCalendarController"
-            stylesheets="@../style.css"
-            styleClass="futuristic-root"
-            style="-fx-background-color: #0f172a;">
+            stylesheets="@../style.css">
 
     <!-- TOP SECTION -->
     <top>
-        <VBox fx:id="topContainer" spacing="15" styleClass="glass-panel" style="-fx-background-color: rgba(30, 41, 59, 0.7); -fx-background-radius: 0 0 15 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 5);">
+        <VBox fx:id="topContainer" spacing="15" style="-fx-padding: 20;">
             <padding>
                 <Insets top="15" right="25" bottom="20" left="25"/>
             </padding>
@@ -26,21 +24,20 @@
             <HBox alignment="CENTER_LEFT" spacing="20">
                 <VBox spacing="5">
                     <Label text="ORBITAL CALENDAR"
-                           style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-text-fill: #38bdf8; -fx-font-family: 'Segoe UI', sans-serif; -fx-effect: dropshadow(gaussian, #0ea5e9, 5, 0.4, 0, 0);"/>
+                           style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-font-family: 'Segoe UI', sans-serif;"/>
                     
                     <Label fx:id="subtitleLabel"
                            text="Synchronize with your therapist across the network"
-                           style="-fx-font-size: 14px; -fx-text-fill: #94a3b8;"/>
+                           style="-fx-font-size: 14px;"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS" />
             </HBox>
 
             <!-- Therapist Controls Row -->
             <HBox fx:id="therapistControlsRow" spacing="15" alignment="CENTER_LEFT">
-                <Label text="SELECT THERAPIST NODE:" style="-fx-text-fill: #e2e8f0; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+                <Label text="SELECT THERAPIST NODE:" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
                 <ComboBox fx:id="therapistComboBox"
-                          promptText="Establishing connection..."
-                          styleClass="futuristic-combo"/>
+                          promptText="Establishing connection..."/>
             </HBox>
         </VBox>
     </top>
