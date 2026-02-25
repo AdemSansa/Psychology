@@ -44,10 +44,17 @@
     <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 10; -fx-border-color: gray; -fx-border-width: 1; -fx-background-color: #ffffff;">
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label text="Notes" styleClass="section-title"/>
+            <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="addNoteBtn"
                     text="Add Note"
                     onAction="#addNote"
                     styleClass="btn-success"
+                    visible="false"
+                    managed="false"/>
+            <Button fx:id="aiSummaryBtn"
+                    text="✨ Generate AI Summary"
+                    onAction="#generateAISummary"
+                    styleClass="btn-secondary"
                     visible="false"
                     managed="false"/>
         </HBox>

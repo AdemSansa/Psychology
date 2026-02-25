@@ -19,15 +19,24 @@ import java.util.Optional;
 
 public class AppointmentDetailsController {
 
-    @FXML private Label dateLabel;
-    @FXML private Label timeLabel;
-    @FXML private Label statusLabel;
+    @FXML
+    private Label dateLabel;
+    @FXML
+    private Label timeLabel;
+    @FXML
+    private Label statusLabel;
 
-    @FXML private Button confirmBtn;
-    @FXML private Button cancelBtn;
+    @FXML
+    private Button confirmBtn;
+    @FXML
+    private Button cancelBtn;
 
-    @FXML private VBox notesContainer;
-    @FXML private Button addNoteBtn;
+    @FXML
+    private VBox notesContainer;
+    @FXML
+    private Button addNoteBtn;
+    @FXML
+    private Button aiSummaryBtn;
 
     private Appointment appointment;
     private final AppointmentService appointmentService = new AppointmentService();
@@ -87,7 +96,63 @@ public class AppointmentDetailsController {
         loadNotes();
     }
 
+    @FXML
+    private void generateAISummary() {
+        try {
+            var notes = noteService.listByAppointment(appointment.getId());
+            if (notes.isEmpty()) {
+                showAlert("No notes available", "There are no notes to summarize for this session.",
+                        Alert.AlertType.INFORMATION);
+                return;
+            }
 
+            // Combine all notes into one for the AI to summarize
+            StringBuilder allNotesData = new StringBuilder();
+            for (Note n : notes) {
+                allNotesData.append("Note: ").append(n.getContent()).append(" (Mood: ").append(n.getMood())
+                        .append(")\n");
+            }
+
+            Alert thinkingAlert = new Alert(Alert.AlertType.INFORMATION);
+            thinkingAlert.setTitle("Generating AI Summary");
+            thinkingAlert.setHeaderText("Connecting to AI...");
+            thinkingAlert.setContentText("Please wait while the session notes are being summarized.");
+            thinkingAlert.show();
+
+            // Run API call in a background thread to keep UI responsive
+            new Thread(() -> {
+                Service.AISummaryService summaryService = new Service.AISummaryService();
+                String summary = summaryService.generateSummary(allNotesData.toString());
+
+                javafx.application.Platform.runLater(() -> {
+                    thinkingAlert.close();
+
+                    Dialog<String> summaryDialog = new Dialog<>();
+                    summaryDialog.setTitle("✨ AI Session Summary");
+
+                    TextArea textArea = new TextArea(summary);
+                    textArea.setWrapText(true);
+                    textArea.setEditable(false);
+                    textArea.setPrefSize(400, 300);
+
+                    summaryDialog.getDialogPane().setContent(textArea);
+                    summaryDialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                    summaryDialog.showAndWait();
+                });
+            }).start();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not load notes for summary.", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
     @FXML
     private void confirmAppointment() {
@@ -103,7 +168,6 @@ public class AppointmentDetailsController {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     private void cancelAppointment() {
@@ -131,7 +195,6 @@ public class AppointmentDetailsController {
             }
         }
     }
-
 
     @FXML
     private void addNote() {
@@ -212,6 +275,11 @@ public class AppointmentDetailsController {
                 confirmBtn.setManaged(false);
                 appointment.setStatus("completed");
                 appointmentService.update(appointment);
+
+                if (isTherapist) {
+                    aiSummaryBtn.setVisible(true);
+                    aiSummaryBtn.setManaged(true);
+                }
             }
 
         } catch (SQLException e) {
@@ -265,21 +333,17 @@ public class AppointmentDetailsController {
         });
     }
 
-
     @FXML
     private void closeWindow() {
         Stage stage = (Stage) dateLabel.getScene().getWindow();
         stage.close();
     }
 
-
     public static AppointmentDetailsController openDetails(Appointment appointment) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     AppointmentDetailsController.class.getResource(
-                            "/com/example/psy/Appointment/AppointmentDetails.fxml"
-                    )
-            );
+                            "/com/example/psy/Appointment/AppointmentDetails.fxml"));
 
             Stage stage = new Stage();
             stage.setScene(new Scene(loader.load()));
