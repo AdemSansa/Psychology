@@ -13,7 +13,7 @@ public class TherapistService implements Iservice<Therapistis> {
 
     @Override
     public void create(Therapistis therapist) throws SQLException {
-        String query = "INSERT INTO therapists (first_name, last_name, email, password, phone_number, specialization, description, consultation_type, status, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,NOW(),NOW())";
+        String query = "INSERT INTO therapists (first_name, last_name, email, password, phone_number, specialization, description, consultation_type, status, photo_url, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,NOW(),NOW())";
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
         ps.setString(1, therapist.getFirstName());
         ps.setString(2, therapist.getLastName());
@@ -24,6 +24,7 @@ public class TherapistService implements Iservice<Therapistis> {
         ps.setString(7, therapist.getDescription());
         ps.setString(8, therapist.getConsultationType());
         ps.setString(9, therapist.getStatus());
+        ps.setString(10, therapist.getPhotoUrl());
         ps.executeUpdate();
         User user = new User();
         user.setFirstName(therapist.getFirstName());
@@ -56,6 +57,7 @@ public class TherapistService implements Iservice<Therapistis> {
             t.setDescription(rs.getString("description"));
             t.setConsultationType(rs.getString("consultation_type"));
             t.setStatus(rs.getString("status"));
+            t.setPhotoUrl(safeGetString(rs, "photo_url"));
             t.setCreatedAt(rs.getTimestamp("created_at"));
             t.setUpdatedAt(rs.getTimestamp("updated_at"));
             list.add(t);
@@ -82,6 +84,7 @@ public class TherapistService implements Iservice<Therapistis> {
             t.setDescription(rs.getString("description"));
             t.setConsultationType(rs.getString("consultation_type"));
             t.setStatus(rs.getString("status"));
+            t.setPhotoUrl(safeGetString(rs, "photo_url"));
             t.setCreatedAt(rs.getTimestamp("created_at"));
             t.setUpdatedAt(rs.getTimestamp("updated_at"));
         }
@@ -90,7 +93,7 @@ public class TherapistService implements Iservice<Therapistis> {
 
     @Override
     public void update(Therapistis therapist) throws SQLException {
-        String query = "UPDATE therapists SET first_name=?, last_name=?, email=?, password=?, phone_number=?, specialization=?, description=?, consultation_type=?, status=?, updated_at=NOW() WHERE id=?";
+        String query = "UPDATE therapists SET first_name=?, last_name=?, email=?, password=?, phone_number=?, specialization=?, description=?, consultation_type=?, status=?, photo_url=?, updated_at=NOW() WHERE id=?";
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
         ps.setString(1, therapist.getFirstName());
         ps.setString(2, therapist.getLastName());
@@ -101,7 +104,8 @@ public class TherapistService implements Iservice<Therapistis> {
         ps.setString(7, therapist.getDescription());
         ps.setString(8, therapist.getConsultationType());
         ps.setString(9, therapist.getStatus());
-        ps.setInt(10, therapist.getId());
+        ps.setString(10, therapist.getPhotoUrl());
+        ps.setInt(11, therapist.getId());
         ps.executeUpdate();
         System.out.println("Therapist updated successfully!");
     }
@@ -142,10 +146,34 @@ public class TherapistService implements Iservice<Therapistis> {
             t.setDescription(rs.getString("description"));
             t.setConsultationType(rs.getString("consultation_type"));
             t.setStatus(rs.getString("status"));
+            t.setPhotoUrl(safeGetString(rs, "photo_url"));
             t.setCreatedAt(rs.getTimestamp("created_at"));
             t.setUpdatedAt(rs.getTimestamp("updated_at"));
         }
         return t;
+    }
+
+    /**
+     * Reads a column from a ResultSet without crashing if the column does not
+     * exist yet (e.g. before the ALTER TABLE migration has been run).
+     */
+    private String safeGetString(ResultSet rs, String column) {
+        try {
+            return rs.getString(column);
+        } catch (SQLException e) {
+            return null; // column not yet present in DB
+        }
+    }
+
+    public List<String> getDistinctSpecializations() throws SQLException {
+        String query = "SELECT DISTINCT specialization FROM therapists WHERE specialization IS NOT NULL AND specialization != '' ORDER BY specialization";
+        List<String> list = new ArrayList<>();
+        PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(rs.getString("specialization"));
+        }
+        return list;
     }
 
 }
