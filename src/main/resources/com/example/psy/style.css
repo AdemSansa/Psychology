@@ -315,6 +315,29 @@
 
 }
 
+/* ===== APPOINTMENT CALENDAR ENTRIES ===== */
+.pending-entry {
+    -fx-background-color: #f1c40f; /* Yellow */
+}
+
+.in-progress-entry {
+    -fx-background-color: #9b59b6; /* Purple */
+}
+
+.confirmed-entry {
+    -fx-background-color: #2ecc71; /* Green */
+}
+
+.completed-entry {
+    -fx-background-color: #3498db; /* Blue */
+    -fx-opacity: 0.7;
+}
+
+.outside-hours-entry {
+    -fx-background-color: #7f8c8d; /* Grey */
+    -fx-opacity: 0.5;
+}
+
 .booked-entry {
     -fx-background-color: #6f4e37;
 }
@@ -335,10 +358,6 @@
     /* MARRON */
     -fx-border-width: 3;
     -fx-border-radius: 18;
-}
-
-.booked-entry {
-    -fx-background-color: #6f4e37;
 }
 
 /* ===============================

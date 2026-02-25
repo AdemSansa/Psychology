@@ -8,7 +8,7 @@ import java.util.UUID;
 public class VideoCallService {
 
     public static String generateMeetingLink(int appointmentId) {
-        String roomId = "session-" + appointmentId + "-" + UUID.randomUUID().toString().substring(0, 8);
+        String roomId = "session-" + appointmentId;
         return "https://meet.jit.si/" + roomId;
     }
 

@@ -26,6 +26,8 @@ import javafx.scene.layout.VBox;
 import java.sql.SQLException;
 import java.time.*;
 import java.util.List;
+import java.util.Optional;
+import javafx.scene.control.ChoiceDialog;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,10 +61,11 @@ public class AppointmentCalendarController {
         calendarView.setMaxHeight(Double.MAX_VALUE);
 
         calendarView.getCalendarSources().add(
-                new com.calendarfx.model.CalendarSource("My Calendars") {{
-                    getCalendars().add(appointmentsCalendar);
-                }}
-        );
+                new com.calendarfx.model.CalendarSource("My Calendars") {
+                    {
+                        getCalendars().add(appointmentsCalendar);
+                    }
+                });
 
         calendarContainer.getChildren().add(calendarView);
 
@@ -121,7 +124,8 @@ public class AppointmentCalendarController {
                 list = appointmentService.listByTherapist(therapistId);
             } else {
                 Therapistis selected = therapistComboBox.getValue();
-                if (selected == null) return;
+                if (selected == null)
+                    return;
                 list = appointmentService.listByTherapist(selected.getId());
             }
 
@@ -143,12 +147,18 @@ public class AppointmentCalendarController {
                     entry.getStyleClass().add("outside-hours-entry"); // dark
                 } else if ("pending".equalsIgnoreCase(a.getStatus())) {
                     entry.getStyleClass().add("pending-entry"); // yellow
+                } else if ("in-progress".equalsIgnoreCase(a.getStatus())) {
+                    entry.getStyleClass().add("in-progress-entry"); // purple
+                } else if ("confirmed".equalsIgnoreCase(a.getStatus())) {
+                    entry.getStyleClass().add("confirmed-entry"); // green
+                } else if ("completed".equalsIgnoreCase(a.getStatus())) {
+                    entry.getStyleClass().add("completed-entry"); // blue
                 } else {
-                    entry.getStyleClass().add("default-entry"); // green
+                    entry.getStyleClass().add("default-entry");
                 }
 
                 if (isTherapist()) {
-                    entry.setTitle(appointmentService.getPatientName(a.getPatientId()));
+                    entry.setTitle(appointmentService.getPatientName(a.getPatientId()) + " - " + a.getType());
                 } else {
                     entry.setTitle("Reserved");
                 }
@@ -168,17 +178,19 @@ public class AppointmentCalendarController {
 
         // Entry creation
         calendarView.setEntryFactory(param -> {
-            if (isTherapist()) return null;
+            if (isTherapist())
+                return null;
 
             ZonedDateTime start = param.getZonedDateTime();
             ZonedDateTime end = start.plusMinutes(APPOINTMENT_DURATION_MIN);
 
             Therapistis therapist = therapistComboBox.getValue();
-            if (therapist == null) return null;
+            if (therapist == null)
+                return null;
 
             try {
                 if (!appointmentService.isSlotAvailable(therapist.getId(),
-                        start.toLocalDate(), start.toLocalTime(), end.toLocalTime(),null)) {
+                        start.toLocalDate(), start.toLocalTime(), end.toLocalTime(), null)) {
                     showAlert("This slot is already booked.");
                     return null;
                 }
@@ -192,7 +204,20 @@ public class AppointmentCalendarController {
                 return null;
             }
 
-            Entry<Appointment> entry = new Entry<>("Pending");
+            // Prompt user for appointment type
+            List<String> choices = List.of("Presential", "Video Call");
+            ChoiceDialog<String> dialog = new ChoiceDialog<>("Presential", choices);
+            dialog.setTitle("Appointment Type");
+            dialog.setHeaderText("Choose how you want to attend this appointment");
+            dialog.setContentText("Type:");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isEmpty()) {
+                return null; // User cancelled
+            }
+            String selectedType = result.get();
+
+            Entry<Appointment> entry = new Entry<>("Pending - " + selectedType);
             entry.setInterval(start, end);
             entry.setMinimumDuration(java.time.Duration.ofMinutes(APPOINTMENT_DURATION_MIN));
             entry.getStyleClass().add("pending-entry");
@@ -202,9 +227,9 @@ public class AppointmentCalendarController {
                 protected Appointment call() throws Exception {
                     Appointment a = new Appointment(
                             start.toLocalDate(), start.toLocalTime(), end.toLocalTime(),
-                            therapist.getId(), Session.getInstance().getUser().getId()
-                    );
+                            therapist.getId(), Session.getInstance().getUser().getId());
                     a.setStatus("pending");
+                    a.setType(selectedType);
                     appointmentService.create(a);
                     return a;
                 }
@@ -238,7 +263,8 @@ public class AppointmentCalendarController {
     private void addEntryListeners(Entry<Appointment> entry) {
         entry.intervalProperty().addListener((obs, oldInterval, newInterval) -> {
             Appointment currentAppointment = entry.getUserObject();
-            if (currentAppointment == null) return;
+            if (currentAppointment == null)
+                return;
 
             ZonedDateTime start = newInterval.getStartZonedDateTime();
             ZonedDateTime end = newInterval.getEndZonedDateTime();
@@ -255,12 +281,10 @@ public class AppointmentCalendarController {
                 );
                 boolean withinHours = appointmentService.isWithinAvailability(
                         currentAppointment.getTherapistId(),
-                        date, startTime, endTime
-                );
+                        date, startTime, endTime);
 
                 if (!available || !withinHours) {
                     // Find and log conflicting appointments
-
 
                     // Revert the drag
                     Platform.runLater(() -> {
@@ -270,8 +294,7 @@ public class AppointmentCalendarController {
                                         .atZone(ZoneId.systemDefault()),
                                 currentAppointment.getAppointmentDate()
                                         .atTime(currentAppointment.getEndTime())
-                                        .atZone(ZoneId.systemDefault())
-                        );
+                                        .atZone(ZoneId.systemDefault()));
                         showAlert(!available ? "This slot is already booked." : "Outside business hours.");
                     });
                 } else {
@@ -286,10 +309,12 @@ public class AppointmentCalendarController {
             }
         });
     }
+
     @FXML
     public void refreshCalendar() {
         loadAppointments();
     }
+
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Invalid Appointment");
@@ -297,6 +322,7 @@ public class AppointmentCalendarController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     private void startAutoVideoCallChecker() {
         videoCallTimer = new Timer(true); // daemon thread
         videoCallTimer.scheduleAtFixedRate(new TimerTask() {
@@ -309,7 +335,8 @@ public class AppointmentCalendarController {
                         list = appointmentService.listByTherapist(therapistId);
                     } else {
                         Therapistis selected = therapistComboBox.getValue();
-                        if (selected == null) return;
+                        if (selected == null)
+                            return;
                         list = appointmentService.listByTherapist(selected.getId());
                     }
 
@@ -320,6 +347,7 @@ public class AppointmentCalendarController {
 
                         // Start call automatically if now is at start
                         if ("confirmed".equalsIgnoreCase(a.getStatus()) &&
+                                "Video Call".equalsIgnoreCase(a.getType()) &&
                                 now.isAfter(start.minusSeconds(1)) && now.isBefore(start.plusSeconds(59))) {
 
                             Platform.runLater(() -> openVideoCall(a));
@@ -338,6 +366,7 @@ public class AppointmentCalendarController {
             }
         }, 0, 30_000); // check every 30 seconds
     }
+
     private void openVideoCall(Appointment appointment) {
         try {
             // generate meeting link
@@ -353,8 +382,7 @@ public class AppointmentCalendarController {
             // schedule completion
             Duration duration = Duration.between(
                     LocalDateTime.now(),
-                    appointment.getAppointmentDate().atTime(appointment.getEndTime())
-            );
+                    appointment.getAppointmentDate().atTime(appointment.getEndTime()));
 
             new Timer(true).schedule(new TimerTask() {
                 @Override

@@ -19,7 +19,6 @@ public class AppointmentService {
         cnx = dbconnect.getInstance().getConnection();
     }
 
-
     public void create(Appointment appointment) throws SQLException {
 
         LocalTime start = appointment.getStartTime();
@@ -30,8 +29,7 @@ public class AppointmentService {
                 appointment.getTherapistId(),
                 appointment.getAppointmentDate(),
                 start,
-                end
-        )) {
+                end)) {
             throw new SQLException("Slot outside therapist availability");
         }
 
@@ -47,8 +45,8 @@ public class AppointmentService {
 
         String sql = """
                 INSERT INTO appointment
-                (appointment_date, start_time, end_time, status, therapist_id, patient_id)
-                VALUES (?,?,?,?,?,?)
+                (appointment_date, start_time, end_time, status, type, therapist_id, patient_id)
+                VALUES (?,?,?,?,?,?,?)
                 """;
 
         PreparedStatement ps = cnx.prepareStatement(sql);
@@ -57,8 +55,9 @@ public class AppointmentService {
         ps.setTime(2, Time.valueOf(start));
         ps.setTime(3, Time.valueOf(end));
         ps.setString(4, appointment.getStatus());
-        ps.setInt(5, appointment.getTherapistId());
-        ps.setInt(6, appointment.getPatientId());
+        ps.setString(5, appointment.getType());
+        ps.setInt(6, appointment.getTherapistId());
+        ps.setInt(7, appointment.getPatientId());
 
         ps.executeUpdate();
 
@@ -82,15 +81,15 @@ public class AppointmentService {
     public void update(Appointment appointment) throws SQLException {
 
         String sql = """
-UPDATE appointment
-                SET appointment_date = ?,
-                    start_time = ?,
-                    end_time = ?,
-                    status = ?,
-                    therapist_id = ?,
-                    patient_id = ?
-                WHERE id = ?
-                """;
+                UPDATE appointment
+                                SET appointment_date = ?,
+                                    start_time = ?,
+                                    end_time = ?,
+                                    status = ?,
+                                    therapist_id = ?,
+                                    patient_id = ?
+                                WHERE id = ?
+                                """;
 
         PreparedStatement ps = cnx.prepareStatement(sql);
 
@@ -118,7 +117,6 @@ UPDATE appointment
         System.out.println("✅ Appointment deleted!");
     }
 
-
     public List<Appointment> listByTherapist(int therapistId) throws SQLException {
 
         String sql = "SELECT * FROM appointment WHERE therapist_id=?";
@@ -135,8 +133,8 @@ UPDATE appointment
         return list;
     }
 
-
-    public boolean isSlotAvailable(int therapistId, LocalDate date, LocalTime start, LocalTime end, Integer ignoreAppointmentId) throws SQLException {
+    public boolean isSlotAvailable(int therapistId, LocalDate date, LocalTime start, LocalTime end,
+            Integer ignoreAppointmentId) throws SQLException {
         List<Appointment> list = listByTherapist(therapistId);
         for (Appointment a : list) {
             if (ignoreAppointmentId != null && a.getId() == ignoreAppointmentId) {
@@ -150,10 +148,8 @@ UPDATE appointment
         return true;
     }
 
-
-
     public boolean isWithinAvailability(int therapistId, LocalDate date,
-                                        LocalTime start, LocalTime end) throws SQLException {
+            LocalTime start, LocalTime end) throws SQLException {
 
         Day day = Day.valueOf(date.getDayOfWeek().name());
 
@@ -203,9 +199,8 @@ UPDATE appointment
         return "Patient";
     }
 
-
     public boolean isSlotValid(int therapistId, LocalDate date,
-                               LocalTime start, LocalTime end, Integer excludeAppointmentId) throws SQLException {
+            LocalTime start, LocalTime end, Integer excludeAppointmentId) throws SQLException {
 
         String sql = """
                 SELECT * FROM appointment
@@ -230,16 +225,17 @@ UPDATE appointment
 
             // 🚨 Overlap check
             boolean overlap = start.isBefore(existingEnd) && end.isAfter(existingStart);
-            if (overlap) return false;
+            if (overlap)
+                return false;
 
             // 🚨 90-minute gap rule
             long minutesBetween = Math.abs(Duration.between(existingStart, start).toMinutes());
-            if (minutesBetween < 90) return false;
+            if (minutesBetween < 90)
+                return false;
         }
 
         return true;
     }
-
 
     private Appointment map(ResultSet rs) throws SQLException {
 
@@ -250,6 +246,7 @@ UPDATE appointment
         a.setStartTime(rs.getTime("start_time").toLocalTime());
         a.setEndTime(rs.getTime("end_time").toLocalTime());
         a.setStatus(rs.getString("status"));
+        a.setType(rs.getString("type"));
         a.setTherapistId(rs.getInt("therapist_id"));
         a.setPatientId(rs.getInt("patient_id"));
 
@@ -265,8 +262,7 @@ UPDATE appointment
                 appointment.getTherapistId(),
                 appointment.getAppointmentDate(),
                 start,
-                end
-        )) {
+                end)) {
             throw new SQLException("Slot outside therapist availability");
         }
 
@@ -275,16 +271,15 @@ UPDATE appointment
                 appointment.getAppointmentDate(),
                 start,
                 end,
-                null
-        )) {
+                null)) {
             throw new SQLException("Overlap or gap violation");
         }
 
         String sql = """
-            INSERT INTO appointment
-            (appointment_date, start_time, end_time, status, therapist_id, patient_id)
-            VALUES (?,?,?,?,?,?)
-            """;
+                INSERT INTO appointment
+                (appointment_date, start_time, end_time, status, type, therapist_id, patient_id)
+                VALUES (?,?,?,?,?,?,?)
+                """;
 
         PreparedStatement ps = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -292,8 +287,9 @@ UPDATE appointment
         ps.setTime(2, Time.valueOf(start));
         ps.setTime(3, Time.valueOf(end));
         ps.setString(4, appointment.getStatus());
-        ps.setInt(5, appointment.getTherapistId());
-        ps.setInt(6, appointment.getPatientId());
+        ps.setString(5, appointment.getType());
+        ps.setInt(6, appointment.getTherapistId());
+        ps.setInt(7, appointment.getPatientId());
 
         ps.executeUpdate();
 
