@@ -34,7 +34,7 @@ public class Main extends Application {
 
         // Compute initial delay to run at 8 AM
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime nextRun = now.withHour(12).withMinute(7).withSecond(0).withNano(0);
+        LocalDateTime nextRun = now.withHour(12).withMinute(48).withSecond(38).withNano(0);
         if (now.compareTo(nextRun) >= 0) {
             nextRun = nextRun.plusDays(1); // schedule for tomorrow if past 8 AM
         }

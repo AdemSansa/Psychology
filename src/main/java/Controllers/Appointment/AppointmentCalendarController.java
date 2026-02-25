@@ -168,7 +168,12 @@ public class AppointmentCalendarController {
                 if (isTherapist()) {
                     entry.setTitle(appointmentService.getPatientName(a.getPatientId()) + " - [" + a.getType() + "]");
                 } else {
-                    entry.setTitle("Reserved - [" + a.getType() + "]");
+                    if (Session.getInstance().getUser() != null
+                            && a.getPatientId() == Session.getInstance().getUser().getId()) {
+                        entry.setTitle("My Appointment - [" + a.getType() + "]");
+                    } else {
+                        entry.setTitle("Reserved"); // Hide type and details from other patients
+                    }
                 }
 
                 appointmentsCalendar.addEntry(entry);
@@ -269,6 +274,12 @@ public class AppointmentCalendarController {
         calendarView.setEntryDetailsCallback(param -> {
             Appointment appointment = (Appointment) param.getEntry().getUserObject();
             if (appointment != null) {
+                // Prevent patients from viewing details of other patients' appointments
+                if (!isTherapist() && Session.getInstance().getUser() != null &&
+                        appointment.getPatientId() != Session.getInstance().getUser().getId()) {
+                    return false;
+                }
+
                 AppointmentDetailsController controller = AppointmentDetailsController.openDetails(appointment);
                 controller.setCalendarController(this);
             }

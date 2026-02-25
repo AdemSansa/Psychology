@@ -19,8 +19,8 @@ import java.util.Properties;
 
 public class EmailReminderService {
 
-    private static final String SENDER_EMAIL = "slimenify.app@gmail.com";
-    private static final String APP_PASSWORD = "your_app_password_here"; // use Gmail App Password
+    private static final String SENDER_EMAIL = "slimenify.team@gmail.com";
+    private static final String APP_PASSWORD = "qxcj jdrk ojii jemg"; // use Gmail App Password
 
     private UserService userService = new UserService();
 
@@ -99,7 +99,7 @@ public class EmailReminderService {
      */
     private List<Appointment> getAppointmentsForDate(LocalDate date) {
         List<Appointment> appointments = new ArrayList<>();
-        String query = "SELECT * FROM appointment WHERE appointment_date >= ? AND appointment_date < ? AND status = 'scheduled'";
+        String query = "SELECT * FROM appointment WHERE appointment_date >= ? AND appointment_date < ? AND status = 'confirmed'";
 
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime startOfNextDay = date.plusDays(1).atStartOfDay();

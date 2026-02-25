@@ -11,6 +11,7 @@ module com.example.psy {
     requires java.sql;
     requires java.desktop;
     requires jakarta.mail;
+    requires org.eclipse.angus.mail;
 
     opens com.example.psy to javafx.fxml;
 
