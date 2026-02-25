@@ -25,6 +25,14 @@ public class AppointmentService {
         LocalTime end = start.plusMinutes(90);
         appointment.setEndTime(end);
 
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        if (appointment.getAppointmentDate().isBefore(today) ||
+                (appointment.getAppointmentDate().equals(today) && start.isBefore(now))) {
+            throw new SQLException("Cannot book appointments in the past");
+        }
+
         if (!isWithinAvailability(
                 appointment.getTherapistId(),
                 appointment.getAppointmentDate(),
@@ -122,6 +130,22 @@ public class AppointmentService {
         String sql = "SELECT * FROM appointment WHERE therapist_id=?";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setInt(1, therapistId);
+
+        ResultSet rs = ps.executeQuery();
+        List<Appointment> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(map(rs));
+        }
+
+        return list;
+    }
+
+    public List<Appointment> listByPatient(int patientId) throws SQLException {
+
+        String sql = "SELECT * FROM appointment WHERE patient_id=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, patientId);
 
         ResultSet rs = ps.executeQuery();
         List<Appointment> list = new ArrayList<>();
@@ -257,6 +281,14 @@ public class AppointmentService {
         LocalTime start = appointment.getStartTime();
         LocalTime end = start.plusMinutes(90);
         appointment.setEndTime(end);
+
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        if (appointment.getAppointmentDate().isBefore(today) ||
+                (appointment.getAppointmentDate().equals(today) && start.isBefore(now))) {
+            throw new SQLException("Cannot book appointments in the past");
+        }
 
         if (!isWithinAvailability(
                 appointment.getTherapistId(),

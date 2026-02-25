@@ -142,9 +142,12 @@ public class AppointmentCalendarController {
                 LocalTime startTime = start.toLocalTime();
                 LocalTime endTime = end.toLocalTime();
 
-                // ✅ Set style based on status and availability
+                // ✅ Clear default style classes first!
+                entry.getStyleClass().clear();
+
+                // ✅ Set style based on status
                 if (!appointmentService.isWithinAvailability(a.getTherapistId(), date, startTime, endTime)) {
-                    entry.getStyleClass().add("outside-hours-entry"); // dark
+                    entry.getStyleClass().add("outside-hours-entry"); // dark gray
                 } else if ("pending".equalsIgnoreCase(a.getStatus())) {
                     entry.getStyleClass().add("pending-entry"); // yellow
                 } else if ("in-progress".equalsIgnoreCase(a.getStatus())) {
@@ -154,9 +157,15 @@ public class AppointmentCalendarController {
                 } else if ("completed".equalsIgnoreCase(a.getStatus())) {
                     entry.getStyleClass().add("completed-entry"); // blue
                 } else {
-                    entry.getStyleClass().add("default-entry");
+                    entry.getStyleClass().add("default-entry"); // fallback
                 }
 
+                // Optional: add extra class for video call appointments
+                if ("Video Call".equalsIgnoreCase(a.getType())) {
+                    entry.getStyleClass().add("video-call-entry"); // you can style in CSS
+                }
+
+                // ✅ Set title based on user role
                 if (isTherapist()) {
                     entry.setTitle(appointmentService.getPatientName(a.getPatientId()) + " - " + a.getType());
                 } else {
@@ -164,8 +173,6 @@ public class AppointmentCalendarController {
                 }
 
                 appointmentsCalendar.addEntry(entry);
-
-                // Listen for interval changes
                 addEntryListeners(entry);
             }
 
@@ -178,8 +185,9 @@ public class AppointmentCalendarController {
 
         // Entry creation
         calendarView.setEntryFactory(param -> {
-            if (isTherapist())
+            if (isTherapist()) {
                 return null;
+            }
 
             ZonedDateTime start = param.getZonedDateTime();
             ZonedDateTime end = start.plusMinutes(APPOINTMENT_DURATION_MIN);
