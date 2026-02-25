@@ -36,6 +36,7 @@
                 <Button fx:id="btnDashboard"
                         text="Dashboard"
                         styleClass="sidebar-btn "
+                        onAction="#gotoTherapistDashboard"
                         maxWidth="Infinity"/>
                 <Button fx:id="btnUsers" text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
                 <Button fx:id="btnTherapists" text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>

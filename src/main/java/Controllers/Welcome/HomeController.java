@@ -212,6 +212,10 @@ public class HomeController {
         SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml");
     }
 
+    public void gotoTherapistDashboard() {
+        SceneManager.loadPage("/com/example/psy/dashboards/TherapistDashboard.fxml");
+    }
+
     public void logout() {
         Session.getInstance().clear();
         SceneManager.switchScene("/com/example/psy/auth/login.fxml");

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class AISummaryService {
 
     // You will need to set this environment variable or replace this placeholder
-    private static final String API_KEY = System.getenv("AIzaSyAauKQQ-hOeo9UyQ9RRmgLKetbRaMOYOJk");
+    private static final String API_KEY ="AIzaSyDPGUe2rP9XUd9fN3Gt9Y4Y-nMCL--kJZo";
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
 
     public String generateSummary(String patientNote) {

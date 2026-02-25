@@ -32,7 +32,7 @@ module com.example.psy {
     opens Controllers.Question  to javafx.fxml;
     opens Controllers.Quiz to javafx.fxml;
     opens Controllers.Appointment to javafx.fxml;
-
+opens Controllers.dashboards to javafx.fxml;
 
 
     opens Controllers.QuizAssesment to javafx.fxml;
