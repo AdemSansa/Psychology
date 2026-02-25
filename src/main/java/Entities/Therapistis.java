@@ -14,6 +14,7 @@ public class Therapistis {
     private String consultationType; // ONLINE, IN_PERSON, BOTH
     private String status; // ACTIVE, INACTIVE
     private String password;
+    private String photoUrl; // URL de la photo du thérapeute
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -118,6 +119,14 @@ public class Therapistis {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public Timestamp getCreatedAt() {
