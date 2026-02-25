@@ -449,32 +449,52 @@
 }
 
 /* -------------------------------
-   APPOINTMENT CALENDAR ENTRIES
+   APPOINTMENT CALENDAR ENTRIES (Overrides for CalendarFX)
    ------------------------------- */
-.pending-entry {
+.calendar.STYLE1 .entry {
+    /* Style 1 is what the calendar is set to */
+}
+
+.calendar .entry.pending-entry {
     -fx-background-color: #f4c430;
+    -fx-opacity: 0.9;
+}
+
+.calendar .entry.pending-entry .title {
     -fx-text-fill: #3e2c23;
 }
 
-.confirmed-entry {
+.calendar .entry.confirmed-entry {
     -fx-background-color: #2ecc71;
+}
+
+.calendar .entry.confirmed-entry .title {
     -fx-text-fill: white;
 }
 
-.in-progress-entry {
+.calendar .entry.in-progress-entry {
     -fx-background-color: #9b59b6;
+}
+
+.calendar .entry.in-progress-entry .title {
     -fx-text-fill: white;
 }
 
-.completed-entry {
+.calendar .entry.completed-entry {
     -fx-background-color: #3498db;
-    -fx-text-fill: white;
     -fx-opacity: 0.7;
 }
 
-.outside-hours-entry {
+.calendar .entry.completed-entry .title {
+    -fx-text-fill: white;
+}
+
+.calendar .entry.outside-hours-entry {
     -fx-background-color: #7f8c8d;
     -fx-opacity: 0.5;
+}
+
+.calendar .entry.outside-hours-entry .title {
     -fx-text-fill: white;
 }
 
@@ -556,12 +576,4 @@
 
 .badge-status {
     -fx-font-weight: bold;
-}
-
-.pending-entry {
-    -fx-background-color: yellow;
-}
-
-.reserved-entry {
-    -fx-background-color: orange;
 }
