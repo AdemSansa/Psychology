@@ -1,15 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.dashboards.TherapistDashboardController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.dashboards.TherapistDashboardController">
     <children>
-        <VBox alignment="CENTER" layoutX="200.0" layoutY="100.0" spacing="20.0">
-            <Label text="Welcome Therapist!" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-            <Button text="Logout" onAction="#handleLogout" />
+        <VBox spacing="20.0" AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="20.0">
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label text="ORBITAL DASHBOARD" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-font-family: 'Segoe UI', sans-serif; " />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Logout" onAction="#handleLogout" />
+            </HBox>
+
+            <!-- Stat Cards -->
+            <HBox spacing="30.0" alignment="CENTER_LEFT">
+                <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5;">
+                    <Label text="TOTAL PATIENTS" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+                    <Label fx:id="totalPatientsLabel" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5;">
+                    <Label text="LIFETIME SESSIONS" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+                    <Label fx:id="totalSessionsLabel" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5;">
+                    <Label text="SESSION ATTENDANCE" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+                    <Label fx:id="attendanceRateLabel" text="0%" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+                </VBox>
+            </HBox>
+
+            <!-- Charts Area -->
+            <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                <!-- Mood Trend (Line Chart) -->
+                <VBox HBox.hgrow="ALWAYS" spacing="10.0" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5;">
+                    <Label text="PATIENT MOOD MATRIX" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+                    <LineChart fx:id="moodTrendChart" legendVisible="false" VBox.vgrow="ALWAYS">
+                        <xAxis><CategoryAxis label="Date / Session" /></xAxis>
+                        <yAxis><NumberAxis label="Mood Matrix" lowerBound="0" upperBound="4" tickUnit="1" autoRanging="false" /></yAxis>
+                    </LineChart>
+                </VBox>
+
+                <!-- Attendance Rate (Pie Chart) -->
+                <VBox HBox.hgrow="ALWAYS" spacing="10.0" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5;">
+                    <Label text="ATTENDANCE RATIO" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+                    <PieChart fx:id="attendanceChart" VBox.vgrow="ALWAYS" />
+                </VBox>
+            </HBox>
         </VBox>
     </children>
 </AnchorPane>
