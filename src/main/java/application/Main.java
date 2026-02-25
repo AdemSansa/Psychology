@@ -1,15 +1,17 @@
 package application;
 
 import Database.dbconnect;
+import Service.EmailReminderService;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import util.SceneManager;
 
-import java.sql.Connection;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import Service.EmailReminderService;
 
 public class Main extends Application {
 
@@ -18,18 +20,28 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        // Initialize JavaFX
         SceneManager.setStage(stage);
         SceneManager.switchScene("/com/example/psy/auth/login.fxml");
-
         stage.setTitle("Slimenify");
         stage.show();
 
-        Connection conn = dbconnect.getInstance().getConnection();
+        // Initialize DB connection once (just for testing, optional)
+        dbconnect.getInstance().getConnection();
 
-        // Start background email reminder timer
+        // Start background email reminder scheduler
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        // Delay of 0 means the emails send immediately upon opening the app
-        // The 1 TimeUnit.DAYS means it runs every 24 hours while the app is open
+
+        // Compute initial delay to run at 8 AM
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nextRun = now.withHour(12).withMinute(7).withSecond(0).withNano(0);
+        if (now.compareTo(nextRun) >= 0) {
+            nextRun = nextRun.plusDays(1); // schedule for tomorrow if past 8 AM
+        }
+        long initialDelay = Duration.between(now, nextRun).toSeconds();
+
+        long period = 24 * 60 * 60; // 24 hours in seconds
+
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 System.out.println("Running background email reminder check...");
@@ -37,7 +49,8 @@ public class Main extends Application {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 1, TimeUnit.DAYS);
+        }, initialDelay, period, TimeUnit.SECONDS);
+
     }
 
     @Override

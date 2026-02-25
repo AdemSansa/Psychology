@@ -3,26 +3,30 @@ package Service;
 import Database.dbconnect;
 import Entities.Appointment;
 import Entities.User;
-
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 public class EmailReminderService {
 
-    // Replace with actual email credentials
     private static final String SENDER_EMAIL = "slimenify.app@gmail.com";
-    private static final String APP_PASSWORD = "your_app_password_here";
+    private static final String APP_PASSWORD = "your_app_password_here"; // use Gmail App Password
+
     private UserService userService = new UserService();
 
+    /**
+     * Send reminder emails for appointments scheduled tomorrow
+     */
     public void sendRemindersForTomorrow() {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         List<Appointment> upcomingAppointments = getAppointmentsForDate(tomorrow);
@@ -32,6 +36,7 @@ public class EmailReminderService {
             return;
         }
 
+        // Gmail SMTP properties
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -45,6 +50,7 @@ public class EmailReminderService {
             }
         });
 
+        // Send email to each patient
         for (Appointment appt : upcomingAppointments) {
             try {
                 User patient = userService.read(appt.getPatientId());
@@ -53,8 +59,8 @@ public class EmailReminderService {
                 if (patient != null && patient.getEmail() != null) {
                     sendEmail(session, patient, therapist, appt);
                 }
-            } catch (SQLException e) {
-                System.err.println("Database error retrieving users for appointment " + appt.getId());
+            } catch (Exception e) {
+                System.err.println("Error sending email for appointment ID " + appt.getId());
                 e.printStackTrace();
             }
         }
@@ -78,6 +84,7 @@ public class EmailReminderService {
 
             message.setText(content);
             Transport.send(message);
+
             System.out.println("Sent reminder email to: " + patient.getEmail());
 
         } catch (MessagingException e) {
@@ -86,17 +93,24 @@ public class EmailReminderService {
         }
     }
 
-    // Helper methods to get data directly for the job
+    /**
+     * Get appointments for a given date
+     * Works for DATE or DATETIME columns
+     */
     private List<Appointment> getAppointmentsForDate(LocalDate date) {
         List<Appointment> appointments = new ArrayList<>();
-        String query = "SELECT * FROM appointment WHERE appointment_date = ? AND status = 'scheduled'";
+        String query = "SELECT * FROM appointment WHERE appointment_date >= ? AND appointment_date < ? AND status = 'scheduled'";
+
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime startOfNextDay = date.plusDays(1).atStartOfDay();
 
         try (Connection conn = dbconnect.getInstance().getConnection();
-                PreparedStatement stmt = conn.prepareStatement(query)) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setDate(1, java.sql.Date.valueOf(date));
+            stmt.setObject(1, startOfDay);
+            stmt.setObject(2, startOfNextDay);
+
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
                 Appointment a = new Appointment();
                 a.setId(rs.getInt("id"));
@@ -109,9 +123,11 @@ public class EmailReminderService {
                 a.setPatientId(rs.getInt("patient_id"));
                 appointments.add(a);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return appointments;
     }
 
