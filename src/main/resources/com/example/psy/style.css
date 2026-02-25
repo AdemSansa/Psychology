@@ -456,46 +456,46 @@
 }
 
 .calendar .entry.pending-entry {
-    -fx-background-color: #f4c430;
-    -fx-opacity: 0.9;
+    -fx-background-color: #f4c430 !important;
+    -fx-opacity: 0.9 !important;
 }
 
 .calendar .entry.pending-entry .title {
-    -fx-text-fill: #3e2c23;
+    -fx-text-fill: #3e2c23 !important;
 }
 
 .calendar .entry.confirmed-entry {
-    -fx-background-color: #2ecc71;
+    -fx-background-color: #2ecc71 !important;
 }
 
 .calendar .entry.confirmed-entry .title {
-    -fx-text-fill: white;
+    -fx-text-fill: white !important;
 }
 
 .calendar .entry.in-progress-entry {
-    -fx-background-color: #9b59b6;
+    -fx-background-color: #9b59b6 !important;
 }
 
 .calendar .entry.in-progress-entry .title {
-    -fx-text-fill: white;
+    -fx-text-fill: white !important;
 }
 
 .calendar .entry.completed-entry {
-    -fx-background-color: #3498db;
-    -fx-opacity: 0.7;
+    -fx-background-color: #3498db !important;
+    -fx-opacity: 0.7 !important;
 }
 
 .calendar .entry.completed-entry .title {
-    -fx-text-fill: white;
+    -fx-text-fill: white !important;
 }
 
 .calendar .entry.outside-hours-entry {
-    -fx-background-color: #7f8c8d;
-    -fx-opacity: 0.5;
+    -fx-background-color: #7f8c8d !important;
+    -fx-opacity: 0.5 !important;
 }
 
 .calendar .entry.outside-hours-entry .title {
-    -fx-text-fill: white;
+    -fx-text-fill: white !important;
 }
 
 .booked-entry {

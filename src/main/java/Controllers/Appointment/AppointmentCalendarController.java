@@ -142,8 +142,8 @@ public class AppointmentCalendarController {
                 LocalTime startTime = start.toLocalTime();
                 LocalTime endTime = end.toLocalTime();
 
-                // ✅ Clear default style classes first!
-                entry.getStyleClass().clear();
+                // ✅ Do NOT clear default style classes, as CalendarFX needs them for rendering!
+                // entry.getStyleClass().clear();
 
                 // ✅ Set style based on status
                 if (!appointmentService.isWithinAvailability(a.getTherapistId(), date, startTime, endTime)) {
@@ -197,6 +197,15 @@ public class AppointmentCalendarController {
                 return null;
 
             try {
+                LocalDate today = LocalDate.now();
+                LocalTime now = LocalTime.now();
+
+                if (start.toLocalDate().isBefore(today) ||
+                        (start.toLocalDate().equals(today) && start.toLocalTime().isBefore(now))) {
+                    showAlert("Cannot book appointments in the past.");
+                    return null;
+                }
+
                 if (!appointmentService.isSlotAvailable(therapist.getId(),
                         start.toLocalDate(), start.toLocalTime(), end.toLocalTime(), null)) {
                     showAlert("This slot is already booked.");
