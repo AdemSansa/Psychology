@@ -44,8 +44,7 @@ public class ReviewService implements Iservice<Review> {
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_usr")
-            );
+                    rs.getInt("id_usr"));
             reviews.add(r);
         }
 
@@ -66,8 +65,7 @@ public class ReviewService implements Iservice<Review> {
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_usr")
-            );
+                    rs.getInt("id_usr"));
         }
         return null;
     }
@@ -99,13 +97,14 @@ public class ReviewService implements Iservice<Review> {
 
         System.out.println("Review deleted successfully!");
     }
-    public boolean isExist(String  content ) throws SQLException {
+
+    public boolean isExist(String content) throws SQLException {
         String sql = "SELECT * FROM review WHERE content = ?";
-        PreparedStatement  ps = cnx.prepareStatement(sql);
+        PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, content);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-        return true;
+            return true;
         }
         return false;
 

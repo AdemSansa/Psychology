@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -32,6 +33,7 @@
                         <TableView fx:id="availTable" styleClass="table-view" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
+                                <TableColumn fx:id="dateColumn" prefWidth="100.0" text="Date" />
                                 <TableColumn fx:id="dayColumn" prefWidth="100.0" text="Jour" />
                                 <TableColumn fx:id="startColumn" prefWidth="100.0" text="Début" />
                                 <TableColumn fx:id="endColumn" prefWidth="100.0" text="Fin" />
@@ -49,6 +51,9 @@
                          <Label style="-fx-font-size: 18px;" styleClass="section-title" text="Détails" />
                          
                          <VBox spacing="5">
+                             <Label style="-fx-font-weight: bold;" text="Vérifier une date (Optionnel)" />
+                             <DatePicker fx:id="datePicker" prefWidth="300.0" promptText="Sélectionner une date pour vérif" styleClass="form-control" />
+                             
                              <Label style="-fx-font-weight: bold;" text="Jour de la semaine" />
                              <ComboBox fx:id="dayCombo" prefWidth="300.0" promptText="Sélectionner le jour" styleClass="form-control" />
                          </VBox>

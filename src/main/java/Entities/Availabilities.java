@@ -10,33 +10,74 @@ public class Availabilities {
     private Time endTime;
     private boolean isAvailable;
     private int therapistId;
+    private java.sql.Date specificDate;
 
+    public Availabilities() {
+    }
 
-    public Availabilities() {}
-
-    public Availabilities(String day, Time startTime, Time endTime, boolean isAvailable, int therapistId) {
+    public Availabilities(String day, Time startTime, Time endTime, boolean isAvailable, int therapistId,
+            java.sql.Date specificDate) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.isAvailable = isAvailable;
         this.therapistId = therapistId;
+        this.specificDate = specificDate;
     }
 
     // Getters & Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public Day getDay() { return day; }
-    public void setDay(Day day) { this.day = day; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public Time getStartTime() { return startTime; }
-    public void setStartTime(Time startTime) { this.startTime = startTime; }
+    public Day getDay() {
+        return day;
+    }
 
-    public Time getEndTime() { return endTime; }
-    public void setEndTime(Time endTime) { this.endTime = endTime; }
+    public void setDay(Day day) {
+        this.day = day;
+    }
 
-    public boolean isAvailable() { return isAvailable; }
-    public void setAvailable(boolean isAvailable) { this.isAvailable = isAvailable; }
+    public Time getStartTime() {
+        return startTime;
+    }
 
-    public int getTherapistId() { return therapistId; }
-    public void setTherapistId(int therapistId) { this.therapistId = therapistId; }
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
+    public int getTherapistId() {
+        return therapistId;
+    }
+
+    public void setTherapistId(int therapistId) {
+        this.therapistId = therapistId;
+    }
+
+    public java.sql.Date getSpecificDate() {
+        return specificDate;
+    }
+
+    public void setSpecificDate(java.sql.Date specificDate) {
+        this.specificDate = specificDate;
+    }
 }

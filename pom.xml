@@ -86,6 +86,12 @@
             <version>2.16.1</version>
         </dependency>
 
+        <!-- Apache PDFBox: extract text from PDF diplomas -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.2</version>
+        </dependency>
 
     </dependencies>
 

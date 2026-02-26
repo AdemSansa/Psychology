@@ -38,7 +38,7 @@ public class Reply_ReviewService implements Iservice<ReviewReply> {
         String sql = "SELECT * FROM review_reply";
 
         try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+                ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
                 replies.add(new ReviewReply(
@@ -46,8 +46,7 @@ public class Reply_ReviewService implements Iservice<ReviewReply> {
                         rs.getString("content"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getInt("id_review"),
-                        rs.getInt("id_therapist")
-                ));
+                        rs.getInt("id_therapist")));
             }
         }
 
@@ -69,8 +68,7 @@ public class Reply_ReviewService implements Iservice<ReviewReply> {
                         rs.getString("content"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getInt("id_review"),
-                        rs.getInt("id_therapist")
-                );
+                        rs.getInt("id_therapist"));
             }
         }
         return null;

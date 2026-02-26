@@ -12,6 +12,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.TableCell;
 import javafx.util.StringConverter;
 import Entities.User;
 import util.SceneManager;
@@ -22,12 +24,20 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.HttpURLConnection;
+import java.io.InputStream;
+import javafx.application.Platform;
+
 public class AvailabilityCRUDController implements Initializable {
 
     @FXML
     private TableView<Availabilities> availTable;
     @FXML
     private TableColumn<Availabilities, Integer> idColumn;
+    @FXML
+    private TableColumn<Availabilities, java.sql.Date> dateColumn;
     @FXML
     private TableColumn<Availabilities, Day> dayColumn;
     @FXML
@@ -40,6 +50,8 @@ public class AvailabilityCRUDController implements Initializable {
     private TableColumn<Availabilities, Integer> therapistIdColumn;
     @FXML
     private ComboBox<Day> dayCombo;
+    @FXML
+    private DatePicker datePicker;
     @FXML
     private TextField startTimeField;
     @FXML
@@ -59,6 +71,28 @@ public class AvailabilityCRUDController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("specificDate"));
+
+        // Colorer les dates passées en rouge
+        dateColumn.setCellFactory(column -> new TableCell<Availabilities, java.sql.Date>() {
+            @Override
+            protected void updateItem(java.sql.Date item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item.toString());
+                    java.time.LocalDate date = item.toLocalDate();
+                    if (date.isBefore(java.time.LocalDate.now())) {
+                        setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
+
         dayColumn.setCellValueFactory(new PropertyValueFactory<>("day"));
         startColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         endColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
@@ -105,6 +139,37 @@ public class AvailabilityCRUDController implements Initializable {
 
         availableCheck.setSelected(true);
 
+        if (datePicker != null) {
+            // Empêcher la sélection d'une date passée
+            datePicker.setDayCellFactory(picker -> new DateCell() {
+                @Override
+                public void updateItem(java.time.LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    if (empty || date == null) {
+                        setDisable(false);
+                    } else {
+                        setDisable(date.isBefore(java.time.LocalDate.now()));
+                    }
+                }
+            });
+
+            datePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    java.time.DayOfWeek dow = newVal.getDayOfWeek();
+                    switch (dow) {
+                        case MONDAY -> dayCombo.setValue(Day.MONDAY);
+                        case TUESDAY -> dayCombo.setValue(Day.TUESDAY);
+                        case WEDNESDAY -> dayCombo.setValue(Day.WEDNESDAY);
+                        case THURSDAY -> dayCombo.setValue(Day.THURSDAY);
+                        case FRIDAY -> dayCombo.setValue(Day.FRIDAY);
+                        case SATURDAY -> dayCombo.setValue(Day.SATURDAY);
+                        case SUNDAY -> dayCombo.setValue(Day.SUNDAY);
+                    }
+                    checkHoliday(newVal);
+                }
+            });
+        }
+
         User user = Session.getInstance().getUser();
         boolean isTherapist = "therapist".equals(user.getRole());
 
@@ -143,6 +208,11 @@ public class AvailabilityCRUDController implements Initializable {
     }
 
     private void populateForm(Availabilities a) {
+        if (a.getSpecificDate() != null) {
+            datePicker.setValue(a.getSpecificDate().toLocalDate());
+        } else {
+            datePicker.setValue(null);
+        }
         dayCombo.setValue(a.getDay());
         // Display Time as HH:mm (cut off seconds)
         startTimeField.setText(a.getStartTime().toString().substring(0, 5));
@@ -244,6 +314,11 @@ public class AvailabilityCRUDController implements Initializable {
     // ======================== Helpers ========================
 
     private void fillEntityFromForm(Availabilities a) {
+        if (datePicker != null && datePicker.getValue() != null) {
+            a.setSpecificDate(java.sql.Date.valueOf(datePicker.getValue()));
+        } else {
+            a.setSpecificDate(null);
+        }
         a.setDay(dayCombo.getValue());
         a.setStartTime(Time.valueOf(startTimeField.getText().trim() + ":00"));
         a.setEndTime(Time.valueOf(endTimeField.getText().trim() + ":00"));
@@ -270,11 +345,44 @@ public class AvailabilityCRUDController implements Initializable {
         startTimeField.getStyleClass().remove("form-error");
         endTimeField.getStyleClass().remove("form-error");
         therapistCombo.getStyleClass().remove("form-error");
+        if (datePicker != null)
+            datePicker.getStyleClass().remove("form-error");
 
         // Jour — obligatoire
         if (dayCombo.getValue() == null) {
             errors.append("• Le jour est obligatoire.\n");
             dayCombo.getStyleClass().add("form-error");
+        }
+
+        // Logique Disponibilité (sans date) vs Indisponibilité (avec date)
+        boolean isAvail = availableCheck.isSelected();
+        if (isAvail) {
+            if (datePicker != null && datePicker.getValue() != null) {
+                errors.append(
+                        "• Pour une disponibilité régulière (Disponible = oui), ne sélectionnez pas de date précise.\n");
+                datePicker.getStyleClass().add("form-error");
+            }
+        } else {
+            if (datePicker == null || datePicker.getValue() == null) {
+                errors.append(
+                        "• Pour une indisponibilité exceptionnelle (Disponible = non), veuillez choisir une date précise.\n");
+                if (datePicker != null)
+                    datePicker.getStyleClass().add("form-error");
+            }
+        }
+
+        // Vérification de la date spécifique
+        if (datePicker != null && datePicker.getValue() != null) {
+            java.time.LocalDate selectedDate = datePicker.getValue();
+            if (selectedDate.isBefore(java.time.LocalDate.now())) {
+                errors.append("• La date choisie ne peut pas être dans le passé.\n");
+                datePicker.getStyleClass().add("form-error");
+            }
+            if (dayCombo.getValue() != null && !selectedDate.getDayOfWeek().name().equals(dayCombo.getValue().name())) {
+                errors.append("• Le menu 'Jour' ne correspond pas à la date choisie.\n");
+                dayCombo.getStyleClass().add("form-error");
+                datePicker.getStyleClass().add("form-error");
+            }
         }
 
         // Heure début — obligatoire + format HH:mm
@@ -298,7 +406,7 @@ public class AvailabilityCRUDController implements Initializable {
             endTimeField.getStyleClass().add("form-error");
         }
 
-        // Heure début < Heure fin
+        // Heure début < Heure fin + Durée min 15 mins
         if (!startText.isEmpty() && !endText.isEmpty()
                 && startText.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")
                 && endText.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
@@ -306,6 +414,10 @@ public class AvailabilityCRUDController implements Initializable {
             Time end = Time.valueOf(endText + ":00");
             if (!start.before(end)) {
                 errors.append("• L'heure de début doit être avant l'heure de fin.\n");
+                startTimeField.getStyleClass().add("form-error");
+                endTimeField.getStyleClass().add("form-error");
+            } else if ((end.getTime() - start.getTime()) < (15 * 60 * 1000)) {
+                errors.append("• La durée de disponibilité doit être d'au moins 15 minutes.\n");
                 startTimeField.getStyleClass().add("form-error");
                 endTimeField.getStyleClass().add("form-error");
             } else {
@@ -358,6 +470,9 @@ public class AvailabilityCRUDController implements Initializable {
     }
 
     private void clearForm() {
+        if (datePicker != null) {
+            datePicker.setValue(null);
+        }
         dayCombo.getSelectionModel().clearSelection();
         startTimeField.clear();
         endTimeField.clear();
@@ -373,4 +488,45 @@ public class AvailabilityCRUDController implements Initializable {
         alert.showAndWait();
     }
 
+    private void checkHoliday(java.time.LocalDate date) {
+        int year = date.getYear();
+        String urlStr = "https://date.nager.at/api/v3/PublicHolidays/" + year + "/TN";
+        new Thread(() -> {
+            try {
+                URL url = new URL(urlStr);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                if (conn.getResponseCode() == 200) {
+                    try (InputStream is = conn.getInputStream()) {
+                        ObjectMapper mapper = new ObjectMapper();
+                        JsonNode root = mapper.readTree(is);
+                        boolean isHoliday = false;
+                        String holidayName = "";
+                        String targetDateStr = date.toString(); // YYYY-MM-DD
+
+                        for (JsonNode node : root) {
+                            String d = node.get("date").asText();
+                            if (d.equals(targetDateStr)) {
+                                isHoliday = true;
+                                holidayName = node.get("localName").asText();
+                                break;
+                            }
+                        }
+
+                        if (isHoliday) {
+                            final String hName = holidayName;
+                            Platform.runLater(() -> {
+                                availableCheck.setSelected(false);
+                                showAlert(Alert.AlertType.WARNING, "Jour férié",
+                                        "⚠️ Ce jour est un jour férié : " + hName
+                                                + ". Disponibilité marquée comme indisponible.");
+                            });
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 }
