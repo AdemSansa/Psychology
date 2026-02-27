@@ -1,26 +1,36 @@
-<?import javafx.scene.layout.VBox?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="Controllers.forum.forumadminController"
       spacing="20"
       style="-fx-padding:30; -fx-background-color:#F0F8F5;">
 
+    <!-- Titre -->
     <Label text="🌿 Forum Administration Panel"
-           style="-fx-font-size:22px;
-                  -fx-font-weight:bold;
-                  -fx-text-fill:#2E7D32;" />
+           style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#2E7D32;" />
 
-    <ScrollPane fitToWidth="true"
-                style="-fx-background:#F0F8F5;">
+    <!-- Statistiques et Refresh -->
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <Label fx:id="statsLabel"
+               text="📊 Statistiques : chargement..."
+               style="-fx-font-size:14px; -fx-text-fill:#4E342E;" />
+        <Button fx:id="btnRefresh"
+                text="🔄 Refresh"
+                style="-fx-background-color:#A5D6A7; -fx-text-fill:#1B5E20;
+                       -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:5 15;" />
+    </HBox>
 
+    <!-- Scroll pane pour avis et réponses -->
+    <ScrollPane fitToWidth="true" style="-fx-background:#F0F8F5;">
         <content>
-            <VBox fx:id="reviewContainer"
-                  spacing="20"
-                  style="-fx-padding:10;" />
+            <VBox fx:id="reviewContainer" spacing="15" style="-fx-padding:10;" />
         </content>
-
     </ScrollPane>
 
 </VBox>
