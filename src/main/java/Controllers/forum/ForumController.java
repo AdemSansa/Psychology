@@ -4,6 +4,8 @@ import Entities.Review;
 import Entities.ReviewReply;
 import Service.ReviewService;
 import Service.Reply_ReviewService;
+import Service.BadWordsApiService;
+import Service.TranslationApiService;
 import util.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,14 +28,22 @@ public class ForumController implements Initializable {
     @FXML
     private TextArea contentField;
 
+    @FXML
+    private Button btnTranslateEn;
+
+    @FXML
+    private Button btnTranslateAr;
+
     private final ReviewService reviewService = new ReviewService();
     private final Reply_ReviewService replyService = new Reply_ReviewService();
+
+    private final BadWordsApiService badWordsApiService = new BadWordsApiService();
+    private final TranslationApiService translationApiService = new TranslationApiService();
 
     private int currentUserId;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
 
         reviewContainer.setStyle("-fx-background-color:#F5F5DC;");
         reviewContainer.setSpacing(15);
@@ -43,9 +53,58 @@ public class ForumController implements Initializable {
             currentUserId = Session.getInstance().getUser().getId();
         }
 
+        // Initialiser boutons traduction
+        btnTranslateEn.setOnAction(e -> translateToEnglish(e));
+        btnTranslateAr.setOnAction(e -> translateToArabic(e));
+
         loadReviews();
     }
 
+    @FXML
+    private void translateToEnglish(ActionEvent event) {
+        translateContent("en");
+    }
+
+    @FXML
+    private void translateToArabic(ActionEvent event) {
+        translateContent("ar");
+    }
+
+    private void translateContent(String lang) {
+        String text = contentField.getText().trim();
+
+        if (text.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Empty Text", "Nothing to translate!");
+            return;
+        }
+
+        if (badWordsApiService.containsBadWords(text)) {
+            showAlert(Alert.AlertType.ERROR, "Forbidden Content",
+                    "Cannot translate inappropriate content ❌");
+            return;
+        }
+
+        // Traduction
+        String translated = translationApiService.translate(text, lang);
+
+        // Replace text directly without showing alert for professional look
+        if (!translated.startsWith("Translation failed")) {
+            contentField.setText(translated);
+            
+            // Optional: Show a subtle success indicator
+            contentField.setStyle("-fx-border-color: #4CAF50; -fx-border-width: 2px;");
+            // Reset border after 1.5 seconds using Timeline
+            javafx.animation.Timeline timeline = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(
+                    javafx.util.Duration.millis(1500),
+                    event -> contentField.setStyle("")
+                )
+            );
+            timeline.play();
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Translation Failed", translated);
+        }
+    }
 
     @FXML
     private void addReview(ActionEvent event) {
@@ -62,30 +121,33 @@ public class ForumController implements Initializable {
             return;
         }
 
+        if (badWordsApiService.containsBadWords(content)) {
+            showAlert(Alert.AlertType.ERROR, "Forbidden Content",
+                    "Your review contains inappropriate words ❌");
+            return;
+        }
+
         try {
             if (reviewService.isExist(content)) {
                 showAlert(Alert.AlertType.WARNING, "Validation Error", "Review already exists!");
                 return;
+            } else {
+                Review review = new Review();
+                review.setContent(content);
+                review.setIdUser(currentUserId);
+
+                reviewService.create(review);
+
+                contentField.clear();
+                loadReviews();
+
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Review added successfully!");
             }
-            else {
-            Review review = new Review();
-            review.setContent(content);
-            review.setIdUser(currentUserId);
-
-            reviewService.create(review);
-
-            contentField.clear();
-            loadReviews();
-
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Review added successfully!");
-
-        }
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to add review.");
         }
     }
-
 
     private void loadReviews() {
 
@@ -105,7 +167,6 @@ public class ForumController implements Initializable {
         }
     }
 
-
     private VBox createReviewCard(Review review, List<ReviewReply> replies) {
 
         VBox card = new VBox(10);
@@ -124,7 +185,6 @@ public class ForumController implements Initializable {
         content.setStyle("-fx-font-size:14px; -fx-text-fill:#4E342E;");
 
         card.getChildren().addAll(date, content);
-
 
         if (review.getIdUser() == currentUserId) {
 
@@ -152,7 +212,6 @@ public class ForumController implements Initializable {
             card.getChildren().add(buttonBox);
         }
 
-
         for (ReviewReply r : replies) {
             if (r.getReviewId().equals(review.getIdReview())) {
                 VBox replyBox = createReplyBox(r);
@@ -162,7 +221,6 @@ public class ForumController implements Initializable {
 
         return card;
     }
-
 
     private VBox createReplyBox(ReviewReply r) {
 
@@ -184,7 +242,6 @@ public class ForumController implements Initializable {
 
         return replyBox;
     }
-
 
     private void editReview(Review review) {
 
@@ -223,7 +280,6 @@ public class ForumController implements Initializable {
             }
         });
     }
-
 
     private void deleteReview(Review review) {
 

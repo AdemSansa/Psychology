@@ -5,6 +5,7 @@ module com.example.psy {
     requires java.desktop;
     requires com.calendarfx.view;
     requires mysql.connector.j;
+    requires org.json;
 
 
     opens com.example.psy to javafx.fxml;
