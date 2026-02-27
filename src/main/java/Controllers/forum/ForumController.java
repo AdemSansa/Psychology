@@ -34,7 +34,7 @@ public class ForumController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        // Background principal beige clair
+
         reviewContainer.setStyle("-fx-background-color:#F5F5DC;");
         reviewContainer.setSpacing(15);
         reviewContainer.setPadding(new Insets(20));
@@ -46,7 +46,7 @@ public class ForumController implements Initializable {
         loadReviews();
     }
 
-    // ================= ADD REVIEW =================
+
     @FXML
     private void addReview(ActionEvent event) {
 
@@ -86,7 +86,7 @@ public class ForumController implements Initializable {
         }
     }
 
-    // ================= LOAD REVIEWS =================
+
     private void loadReviews() {
 
         reviewContainer.getChildren().clear();
@@ -105,7 +105,7 @@ public class ForumController implements Initializable {
         }
     }
 
-    // ================= REVIEW CARD =================
+
     private VBox createReviewCard(Review review, List<ReviewReply> replies) {
 
         VBox card = new VBox(10);
@@ -125,7 +125,7 @@ public class ForumController implements Initializable {
 
         card.getChildren().addAll(date, content);
 
-        // Boutons Edit/Delete avec icônes
+
         if (review.getIdUser() == currentUserId) {
 
             HBox buttonBox = new HBox(10);
@@ -152,7 +152,7 @@ public class ForumController implements Initializable {
             card.getChildren().add(buttonBox);
         }
 
-        // Ajouter replies
+
         for (ReviewReply r : replies) {
             if (r.getReviewId().equals(review.getIdReview())) {
                 VBox replyBox = createReplyBox(r);
@@ -163,7 +163,7 @@ public class ForumController implements Initializable {
         return card;
     }
 
-    // ================= REPLY BOX =================
+
     private VBox createReplyBox(ReviewReply r) {
 
         VBox replyBox = new VBox(5);
@@ -185,7 +185,7 @@ public class ForumController implements Initializable {
         return replyBox;
     }
 
-    // ================= EDIT REVIEW =================
+
     private void editReview(Review review) {
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -224,7 +224,7 @@ public class ForumController implements Initializable {
         });
     }
 
-    // ================= DELETE REVIEW =================
+
     private void deleteReview(Review review) {
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);

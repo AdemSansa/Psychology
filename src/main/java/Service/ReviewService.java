@@ -16,7 +16,7 @@ public class ReviewService implements Iservice<Review> {
         cnx = dbconnect.getInstance().getConnection();
     }
 
-    // ================= CREATE =================
+
     @Override
     public void create(Review review) throws SQLException {
 
@@ -30,7 +30,7 @@ public class ReviewService implements Iservice<Review> {
         System.out.println("Review added successfully!");
     }
 
-    // ================= READ ALL =================
+
     @Override
     public List<Review> list() throws SQLException {
 
@@ -52,7 +52,7 @@ public class ReviewService implements Iservice<Review> {
         return reviews;
     }
 
-    // ================= READ BY ID =================
+
     @Override
     public Review read(int id) throws SQLException {
 
@@ -72,7 +72,7 @@ public class ReviewService implements Iservice<Review> {
         return null;
     }
 
-    // ================= UPDATE =================
+
     @Override
     public void update(Review review) throws SQLException {
 
@@ -88,7 +88,7 @@ public class ReviewService implements Iservice<Review> {
         System.out.println("Review updated successfully!");
     }
 
-    // ================= DELETE =================
+
     @Override
     public void delete(int id) throws SQLException {
 
