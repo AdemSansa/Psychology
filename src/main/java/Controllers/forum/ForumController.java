@@ -53,7 +53,6 @@ public class ForumController implements Initializable {
             currentUserId = Session.getInstance().getUser().getId();
         }
 
-        // Initialiser boutons traduction
         btnTranslateEn.setOnAction(e -> translateToEnglish(e));
         btnTranslateAr.setOnAction(e -> translateToArabic(e));
 
@@ -84,23 +83,10 @@ public class ForumController implements Initializable {
             return;
         }
 
-        // Traduction
         String translated = translationApiService.translate(text, lang);
 
-        // Replace text directly without showing alert for professional look
         if (!translated.startsWith("Translation failed")) {
             contentField.setText(translated);
-            
-            // Optional: Show a subtle success indicator
-            contentField.setStyle("-fx-border-color: #4CAF50; -fx-border-width: 2px;");
-            // Reset border after 1.5 seconds using Timeline
-            javafx.animation.Timeline timeline = new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(
-                    javafx.util.Duration.millis(1500),
-                    event -> contentField.setStyle("")
-                )
-            );
-            timeline.play();
         } else {
             showAlert(Alert.AlertType.ERROR, "Translation Failed", translated);
         }
@@ -173,8 +159,7 @@ public class ForumController implements Initializable {
         card.setStyle(
                 "-fx-background-color:#FAF3E0;" +
                         "-fx-padding:15;" +
-                        "-fx-background-radius:15;" +
-                        "-fx-border-radius:15;"
+                        "-fx-background-radius:15;"
         );
 
         Label date = new Label(review.getCreatedAt().toString());
@@ -184,26 +169,23 @@ public class ForumController implements Initializable {
         content.setWrapText(true);
         content.setStyle("-fx-font-size:14px; -fx-text-fill:#4E342E;");
 
-        card.getChildren().addAll(date, content);
+        // 🔹 Boutons traduction Review
+        Button enBtn = new Button("🌍 EN");
+        Button arBtn = new Button("🌍 AR");
+
+        enBtn.setOnAction(e -> translateLabel(content, "en"));
+        arBtn.setOnAction(e -> translateLabel(content, "ar"));
+
+        HBox translateBox = new HBox(5, enBtn, arBtn);
+
+        card.getChildren().addAll(date, content, translateBox);
 
         if (review.getIdUser() == currentUserId) {
 
             HBox buttonBox = new HBox(10);
 
             Button editButton = new Button("✏ Edit");
-            editButton.setStyle(
-                    "-fx-background-color:#FFE082;" +
-                            "-fx-background-radius:20;" +
-                            "-fx-padding:5 15 5 15;"
-            );
-
             Button deleteButton = new Button("🗑 Delete");
-            deleteButton.setStyle(
-                    "-fx-background-color:#EF9A9A;" +
-                            "-fx-text-fill:white;" +
-                            "-fx-background-radius:20;" +
-                            "-fx-padding:5 15 5 15;"
-            );
 
             editButton.setOnAction(e -> editReview(review));
             deleteButton.setOnAction(e -> deleteReview(review));
@@ -238,10 +220,35 @@ public class ForumController implements Initializable {
         Label replyDate = new Label(r.getCreatedAt().toString());
         replyDate.setStyle("-fx-font-size:10px; -fx-text-fill:gray;");
 
-        replyBox.getChildren().addAll(replyContent, replyDate);
+        // 🔹 Boutons traduction Reply
+        Button enBtn = new Button("🌍 EN");
+        Button arBtn = new Button("🌍 AR");
+
+        enBtn.setOnAction(e -> translateLabel(replyContent, "en"));
+        arBtn.setOnAction(e -> translateLabel(replyContent, "ar"));
+
+        HBox translateBox = new HBox(5, enBtn, arBtn);
+
+        replyBox.getChildren().addAll(replyContent, replyDate, translateBox);
 
         return replyBox;
     }
+
+    // ✅ Méthode ajoutée (sans toucher aux autres)
+    private void translateLabel(Label label, String lang) {
+
+        String text = label.getText();
+
+        if (badWordsApiService.containsBadWords(text)) return;
+
+        String translated = translationApiService.translate(text, lang);
+
+        if (!translated.startsWith("Translation failed")) {
+            label.setText(translated);
+        }
+    }
+
+
 
     private void editReview(Review review) {
 
