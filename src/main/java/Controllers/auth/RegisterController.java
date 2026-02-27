@@ -168,23 +168,39 @@ public class RegisterController {
     }
 
     private double[] fetchCoordinates(String locationName) throws Exception {
+        // Try exact match first
+        double[] result = performGeocoding(locationName);
+
+        // Fallback: append ", Tunisia" if country not specified to help Nominatim
+        if (result == null && !locationName.toLowerCase().contains("tunisi")) {
+            result = performGeocoding(locationName + ", Tunisia");
+        }
+
+        return result;
+    }
+
+    private double[] performGeocoding(String query) throws Exception {
         String urlStr = "https://nominatim.openstreetmap.org/search?q="
-                + URLEncoder.encode(locationName, StandardCharsets.UTF_8)
+                + URLEncoder.encode(query, StandardCharsets.UTF_8)
                 + "&format=json&limit=1";
 
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
-        conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+        // Nominatim requires a descriptive User-Agent
+        conn.setRequestProperty("User-Agent", "PsychologyApp/1.0 (Contact: psychiatric-app@esi.tn)");
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(5000);
 
         if (conn.getResponseCode() == 200) {
-            InputStream is = conn.getInputStream();
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(is);
-            if (root.isArray() && root.size() > 0) {
-                double lat = root.get(0).get("lat").asDouble();
-                double lon = root.get(0).get("lon").asDouble();
-                return new double[] { lat, lon };
+            try (InputStream is = conn.getInputStream()) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(is);
+                if (root.isArray() && root.size() > 0) {
+                    double lat = root.get(0).get("lat").asDouble();
+                    double lon = root.get(0).get("lon").asDouble();
+                    return new double[] { lat, lon };
+                }
             }
         }
         return null;

@@ -32,7 +32,7 @@
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label fx:id="nameLabel" text="Sophie Dubois" styleClass="therapist-name" />
-                        <Label fx:id="roleLabel" text="En ligne" styleClass="therapist-badge" />
+                        <Label fx:id="roleLabel" text="Online" styleClass="therapist-badge" />
                     </children>
                 </VBox>
             </children>
@@ -42,25 +42,25 @@
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                     <children>
-                        <Label text="📧 E-mail :" styleClass="therapist-label-prefix" />
+                        <Label text="📧 Email:" styleClass="therapist-label-prefix" />
                         <Label fx:id="emailLabel" text="sophie@email.com" styleClass="therapist-value" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                     <children>
-                        <Label text="📞 Tél :" styleClass="therapist-label-prefix" />
+                        <Label text="📞 Phone:" styleClass="therapist-label-prefix" />
                         <Label fx:id="phoneLabel" text="+216 99222999" styleClass="therapist-value" />
                     </children>
                 </HBox>
                 <HBox alignment="TOP_LEFT" spacing="5.0">
                     <children>
-                        <Label text="📝 Bio :" styleClass="therapist-label-prefix" />
-                        <Label fx:id="addressLabel" text="Description détaillée..." styleClass="therapist-value" wrapText="true" maxWidth="250" />
+                        <Label text="📝 Bio:" styleClass="therapist-label-prefix" />
+                        <Label fx:id="addressLabel" text="Detailed description..." styleClass="therapist-value" wrapText="true" maxWidth="250" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                     <children>
-                        <Label text="🎓 Spécialité :" styleClass="therapist-label-prefix" />
+                        <Label text="🎓 Specialty:" styleClass="therapist-label-prefix" />
                         <Label fx:id="specializationLabel" text="Psychologie" styleClass="therapist-value" wrapText="true" />
                     </children>
                 </HBox>
@@ -69,8 +69,8 @@
 
         <HBox alignment="CENTER_RIGHT" spacing="12.0" style="-fx-padding: 10 0 0 0;">
             <children>
-                <Button fx:id="editButton" mnemonicParsing="false" text="Modifier" styleClass="btn-secondary" />
-                <Button fx:id="deleteButton" mnemonicParsing="false" text="Supprimer" styleClass="btn-primary" style="-fx-background-color: #d2b48c;" />
+                <Button fx:id="editButton" mnemonicParsing="false" text="Edit" styleClass="btn-secondary" />
+                <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" styleClass="btn-primary" style="-fx-background-color: #63704f;" />
             </children>
         </HBox>
     </children>

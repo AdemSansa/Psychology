@@ -177,11 +177,11 @@ public class TherapistCRUDController implements Initializable {
 
         loadSpecialityFilter();
         consultTypeFilterBox.setItems(FXCollections.observableArrayList(
-                "Tous les modes", "🌐 En ligne", "🏥 En présentiel", "🌐🏥 Les deux"));
+                "All modes", "🌐 Online", "🏥 In person", "🌐🏥 Both"));
         consultTypeFilterBox.getSelectionModel().selectFirst();
 
         sortComboBox.setItems(FXCollections.observableArrayList(
-                "Par défaut", "📍 Plus proche", "🔤 Nom (A-Z)"));
+                "Default", "📍 Closest", "🔤 Name (A-Z)"));
         sortComboBox.getSelectionModel().selectFirst();
 
         // Listeners for auto-filtering
@@ -211,7 +211,7 @@ public class TherapistCRUDController implements Initializable {
     // ─── Speciality filter list ───────────────────────────────────────────────
     private void loadSpecialityFilter() {
         ObservableList<String> items = FXCollections.observableArrayList();
-        items.add("Toutes les spécialités");
+        items.add("All specialties");
         for (Specialization s : Specialization.values()) {
             items.add(s.getDisplayName());
         }
@@ -228,11 +228,11 @@ public class TherapistCRUDController implements Initializable {
             List<Therapistis> list = service.list();
             therapistList.setAll(list);
             if (totalTherapistsLabel != null)
-                totalTherapistsLabel.setText(list.size() + " médecin(s) enregistré(s)");
+                totalTherapistsLabel.setText(list.size() + " therapist(s) registered");
             renderCards(list);
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger les thérapeutes: " + e.getMessage());
+            showAlert("Error", "Unable to load therapists: " + e.getMessage());
         }
     }
 
@@ -243,8 +243,8 @@ public class TherapistCRUDController implements Initializable {
         String selectedMode = consultTypeFilterBox.getValue();
         String selectedSort = sortComboBox.getValue();
 
-        boolean allSpecs = selectedSpec == null || selectedSpec.equals("Toutes les spécialités");
-        boolean allModes = selectedMode == null || selectedMode.equals("Tous les modes");
+        boolean allSpecs = selectedSpec == null || selectedSpec.equals("All specialties");
+        boolean allModes = selectedMode == null || selectedMode.equals("All modes");
 
         List<Therapistis> filtered = therapistList.stream()
                 .filter(t -> {
@@ -281,7 +281,7 @@ public class TherapistCRUDController implements Initializable {
 
         // Apply Sorting
         if (selectedSort != null) {
-            if (selectedSort.contains("Plus proche")) {
+            if (selectedSort.contains("Closest")) {
                 filtered.sort((t1, t2) -> {
                     double d1 = calculateDistance(searchLat, searchLon, t1.getLatitude(), t1.getLongitude());
                     double d2 = calculateDistance(searchLat, searchLon, t2.getLatitude(), t2.getLongitude());
@@ -294,7 +294,7 @@ public class TherapistCRUDController implements Initializable {
 
                     return Double.compare(d1, d2);
                 });
-            } else if (selectedSort.contains("Nom (A-Z)")) {
+            } else if (selectedSort.contains("Name (A-Z)")) {
                 filtered.sort((t1, t2) -> (t1.getLastName() + t1.getFirstName())
                         .compareToIgnoreCase(t2.getLastName() + t2.getFirstName()));
             }
@@ -308,9 +308,9 @@ public class TherapistCRUDController implements Initializable {
 
         String resultText = "";
         if (activeFilters || hasLocation) {
-            resultText = filtered.size() + " résultat(s)";
+            resultText = filtered.size() + " result(s)";
             if (hasLocation) {
-                resultText += " (rayon 200km)";
+                resultText += " (200km radius)";
             }
         }
         searchResultLabel.setText(resultText);
@@ -334,19 +334,19 @@ public class TherapistCRUDController implements Initializable {
                     searchLat = coords[0];
                     searchLon = coords[1];
                     javafx.application.Platform.runLater(() -> {
-                        if (!"📍 Plus proche".equals(sortComboBox.getValue())) {
-                            sortComboBox.setValue("📍 Plus proche");
+                        if (!"📍 Closest".equals(sortComboBox.getValue())) {
+                            sortComboBox.setValue("📍 Closest");
                         }
                         filterTherapists();
                     });
                 } else {
                     javafx.application.Platform
-                            .runLater(() -> showAlert("Localisation", "Impossible de trouver le lieu : " + locName));
+                            .runLater(() -> showAlert("Location", "Unable to find location: " + locName));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 javafx.application.Platform
-                        .runLater(() -> showAlert("Erreur", "Erreur lors de la recherche de localisation."));
+                        .runLater(() -> showAlert("Error", "Error while searching for location."));
             }
         }).start();
     }
@@ -355,7 +355,7 @@ public class TherapistCRUDController implements Initializable {
     void handleModalLocationLookup(ActionEvent event) {
         String address = descriptionArea.getText();
         if (address == null || address.trim().isEmpty()) {
-            showAlert("Localisation", "Veuillez saisir une adresse dans la description pour le repérage.");
+            showAlert("Location", "Please enter an address in the description to locate the therapist.");
             return;
         }
 
@@ -370,7 +370,7 @@ public class TherapistCRUDController implements Initializable {
                 } else {
                     javafx.application.Platform
                             .runLater(
-                                    () -> showAlert("Localisation", "Lieu non trouvé dans la description: " + address));
+                                    () -> showAlert("Location", "Place not found in description: " + address));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -436,9 +436,9 @@ public class TherapistCRUDController implements Initializable {
         if (therapistType == null)
             return false;
         return switch (selectedLabel) {
-            case "🌐 En ligne" -> therapistType.equalsIgnoreCase("ONLINE");
-            case "🏥 En présentiel" -> therapistType.equalsIgnoreCase("IN_PERSON");
-            case "🌐🏥 Les deux" -> therapistType.equalsIgnoreCase("BOTH");
+            case "🌐 Online" -> therapistType.equalsIgnoreCase("ONLINE");
+            case "🏥 In person" -> therapistType.equalsIgnoreCase("IN_PERSON");
+            case "🌐🏥 Both" -> therapistType.equalsIgnoreCase("BOTH");
             default -> true;
         };
     }
@@ -527,7 +527,7 @@ public class TherapistCRUDController implements Initializable {
                     String specText = t.getSpecialization();
                     // If sorted by proximity, show distance
                     String selectedSort = sortComboBox.getValue();
-                    if (selectedSort != null && selectedSort.contains("Plus proche")) {
+                    if (selectedSort != null && selectedSort.contains("Closest")) {
                         double dist = calculateDistance(searchLat, searchLon, t.getLatitude(), t.getLongitude());
                         if (dist < Double.MAX_VALUE) {
                             String distStr = dist < 1 ? String.format("%.0f m", dist * 1000)
@@ -601,9 +601,9 @@ public class TherapistCRUDController implements Initializable {
         // Consultation type chip
         String consult = t.getConsultationType();
         String consultLabel = consult == null ? "—" : switch (consult) {
-            case "ONLINE" -> "🌐 En ligne";
-            case "IN_PERSON" -> "🏥 En présentiel";
-            case "BOTH" -> "🌐 En ligne & 🏥 Présentiel";
+            case "ONLINE" -> "🌐 Online";
+            case "IN_PERSON" -> "🏥 In person";
+            case "BOTH" -> "🌐 Online & 🏥 In person";
             default -> consult;
         };
         profileConsultTypeLabel.setText(consultLabel);
@@ -614,7 +614,7 @@ public class TherapistCRUDController implements Initializable {
                 java.util.Calendar cal = java.util.Calendar.getInstance();
                 cal.setTime(t.getCreatedAt());
                 int year = cal.get(java.util.Calendar.YEAR);
-                profileMemberSinceLabel.setText("Membre depuis " + year);
+                profileMemberSinceLabel.setText("Member since " + year);
             } else {
                 profileMemberSinceLabel.setText("");
             }
@@ -632,7 +632,7 @@ public class TherapistCRUDController implements Initializable {
         // Description
         profileDescLabel.setText(t.getDescription() != null && !t.getDescription().isBlank()
                 ? t.getDescription()
-                : "Aucune description disponible.");
+                : "No description available.");
 
         // Diploma button
         if (profileDiplomaBtn != null) {
@@ -693,13 +693,13 @@ public class TherapistCRUDController implements Initializable {
                     if (java.awt.Desktop.isDesktopSupported()) {
                         java.awt.Desktop.getDesktop().open(file);
                     } else {
-                        showAlert("Erreur", "L'ouverture de fichiers n'est pas supportée sur ce système.");
+                        showAlert("Error", "Opening files is not supported on this system.");
                     }
                 } else {
-                    showAlert("Erreur", "Le fichier du diplôme est introuvable au chemin spécifié.");
+                    showAlert("Error", "Diploma file not found at the specified path.");
                 }
             } catch (Exception e) {
-                showAlert("Erreur", "Impossible d'ouvrir le diplôme : " + e.getMessage());
+                showAlert("Error", "Unable to open diploma: " + e.getMessage());
             }
         }
     }
@@ -708,9 +708,9 @@ public class TherapistCRUDController implements Initializable {
     void handleCallAction(ActionEvent event) {
         if (selectedProfileTherapist != null) {
             String phone = selectedProfileTherapist.getPhoneNumber();
-            showAlert("Contacter le médecin",
-                    "Vous pouvez contacter le Dr. " + selectedProfileTherapist.getLastName() +
-                            " au numéro suivant :\n\n" + (phone != null ? phone : "Non renseigné"));
+            showAlert("Contact therapist",
+                    "You can contact Dr. " + selectedProfileTherapist.getLastName() +
+                            " at the following number:\n\n" + (phone != null ? phone : "Not provided"));
         }
     }
 
@@ -741,14 +741,14 @@ public class TherapistCRUDController implements Initializable {
     @FXML
     void openAddModal(ActionEvent event) {
         currentTherapist = null;
-        modalTitle.setText("Ajouter un médecin");
+        modalTitle.setText("Add therapist");
         clearForm();
         modalOverlay.setVisible(true);
     }
 
     private void openEditModal(Therapistis t) {
         currentTherapist = t;
-        modalTitle.setText("Modifier le médecin");
+        modalTitle.setText("Edit therapist");
         firstNameField.setText(t.getFirstName());
         lastNameField.setText(t.getLastName());
         emailField.setText(t.getEmail());
@@ -768,10 +768,10 @@ public class TherapistCRUDController implements Initializable {
             if (t.getDiplomaPath() != null && !t.getDiplomaPath().isEmpty()) {
                 File f = new File(t.getDiplomaPath());
                 diplomaFileLabel.setText(f.getName());
-                diplomaStatusLabel.setText("✔ Diplôme déjà présent");
+                diplomaStatusLabel.setText("✔ Diploma already uploaded");
                 diplomaStatusLabel.setStyle("-fx-text-fill: #2e7d32;");
             } else {
-                diplomaFileLabel.setText("Aucun fichier sélectionné");
+                diplomaFileLabel.setText("No file selected");
                 diplomaStatusLabel.setText("");
             }
         }
@@ -838,9 +838,9 @@ public class TherapistCRUDController implements Initializable {
 
     private void deleteTherapist(Therapistis t) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Supprimer le thérapeute ?");
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer " + t.getFirstName() + " " + t.getLastName() + " ?");
+        alert.setTitle("Delete confirmation");
+        alert.setHeaderText("Delete therapist?");
+        alert.setContentText("Are you sure you want to delete " + t.getFirstName() + " " + t.getLastName() + " ?");
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
                 service.delete(t.getId());
@@ -864,40 +864,40 @@ public class TherapistCRUDController implements Initializable {
         passwordField.getStyleClass().remove("form-error");
 
         if (firstNameField.getText() == null || firstNameField.getText().trim().isEmpty()) {
-            errorMsg.append("• Prénom requis\n");
+            errorMsg.append("• First name is required\n");
             firstNameField.getStyleClass().add("form-error");
         }
         if (lastNameField.getText() == null || lastNameField.getText().trim().isEmpty()) {
-            errorMsg.append("• Nom requis\n");
+            errorMsg.append("• Last name is required\n");
             lastNameField.getStyleClass().add("form-error");
         }
         if (emailField.getText() == null || !emailField.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            errorMsg.append("• Email invalide\n");
+            errorMsg.append("• Invalid email\n");
             emailField.getStyleClass().add("form-error");
         }
         if (phoneField.getText() == null || !phoneField.getText().matches("^[24579]\\d{7}$")) {
-            errorMsg.append("• Numéro tunisien invalide (8 chiffres requis)\n");
+            errorMsg.append("• Invalid Tunisian phone number (8 digits required)\n");
             phoneField.getStyleClass().add("form-error");
         }
         if (specializationField.getValue() == null || specializationField.getValue().trim().isEmpty()) {
-            errorMsg.append("• Spécialisation requise\n");
+            errorMsg.append("• Specialization is required\n");
             specializationField.getStyleClass().add("form-error");
         }
         if (passwordField.getText() == null || passwordField.getText().length() < 4) {
-            errorMsg.append("• Mot de passe requis (min 4 caractères)\n");
+            errorMsg.append("• Password is required (min 4 characters)\n");
             passwordField.getStyleClass().add("form-error");
         }
 
         // Diploma check only for NEW therapists
         if (currentTherapist == null && selectedDiplomaFile == null) {
-            errorMsg.append("• Veuillez uploader un diplôme ou certificat\n");
+            errorMsg.append("• Please upload a diploma or certificate\n");
         } else if (selectedDiplomaFile != null && !diplomaValid) {
-            errorMsg.append("• Le diplôme ne contient pas les mots-clés requis\n");
+            errorMsg.append("• The diploma does not contain the required keywords\n");
         }
 
         if (errorMsg.length() == 0)
             return true;
-        showAlert("Champs invalides", errorMsg.toString());
+        showAlert("Invalid fields", errorMsg.toString());
         return false;
     }
 
@@ -918,7 +918,7 @@ public class TherapistCRUDController implements Initializable {
         selectedDiplomaFile = null;
         diplomaValid = false;
         if (diplomaFileLabel != null)
-            diplomaFileLabel.setText("Aucun fichier sélectionné");
+            diplomaFileLabel.setText("No file selected");
         if (diplomaStatusLabel != null)
             diplomaStatusLabel.setText("");
     }
@@ -926,11 +926,11 @@ public class TherapistCRUDController implements Initializable {
     @FXML
     private void handleDiplomaUpload() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Sélectionner un diplôme ou certificat");
+        fileChooser.setTitle("Select diploma or certificate");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Fichiers supportés (PDF, TXT)", "*.pdf", "*.txt"),
-                new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"),
-                new FileChooser.ExtensionFilter("Fichiers Texte", "*.txt"));
+                new FileChooser.ExtensionFilter("Supported files (PDF, TXT)", "*.pdf", "*.txt"),
+                new FileChooser.ExtensionFilter("PDF files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Text files", "*.txt"));
 
         File file = fileChooser.showOpenDialog(modalOverlay.getScene().getWindow());
 
@@ -944,10 +944,10 @@ public class TherapistCRUDController implements Initializable {
             boolean valid = DiplomaValidator.validateDiploma(file);
             diplomaValid = valid;
             if (valid) {
-                diplomaStatusLabel.setText("✔ Diplôme valide — mots-clés détectés");
+                diplomaStatusLabel.setText("✔ Valid diploma — keywords detected");
                 diplomaStatusLabel.setStyle("-fx-text-fill: #2e7d32; -fx-font-weight: bold;");
             } else {
-                diplomaStatusLabel.setText("✘ Invalide — aucun mot-clé psychologie trouvé");
+                diplomaStatusLabel.setText("✘ Invalid — no psychology keywords found");
                 diplomaStatusLabel.setStyle("-fx-text-fill: #c62828; -fx-font-weight: bold;");
             }
         } catch (Exception e) {

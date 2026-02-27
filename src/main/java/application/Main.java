@@ -16,6 +16,7 @@ public class Main extends Application {
         SceneManager.switchScene("/com/example/psy/auth/login.fxml");
 
         stage.setTitle("Slimenify");
+        stage.setMaximized(true); // open application in full screen (maximized window)
         stage.show();
 
 
