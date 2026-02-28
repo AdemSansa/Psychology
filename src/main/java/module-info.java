@@ -10,6 +10,8 @@ module com.example.psy {
     requires com.fasterxml.jackson.databind;
     requires java.sql;
     requires java.desktop;
+    requires jakarta.mail;
+    requires org.eclipse.angus.mail;
     requires org.apache.pdfbox;
 
     opens com.example.psy to javafx.fxml;
@@ -43,6 +45,7 @@ module com.example.psy {
     opens Controllers.Question to javafx.fxml;
     opens Controllers.Quiz to javafx.fxml;
     opens Controllers.Appointment to javafx.fxml;
+    opens Controllers.dashboards to javafx.fxml;
 
     opens Controllers.QuizAssesment to javafx.fxml;
     opens Controllers.QuizResults to javafx.fxml;

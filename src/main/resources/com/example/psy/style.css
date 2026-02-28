@@ -1,3 +1,36 @@
+/* =============================== MARRON & BEIGE MODERN PALETTE =============================== */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #fdfaf5;
+    -fx-text-fill: #3e2c23;
+}
+
+.login-background {
+    -fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c, #6f4e37);
+}
+
+.glass-pane {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 30, 0.5, 0, 15);
+}
+
+/* =============================== BACKGROUND =============================== */
+.background-gradient {
+    -fx-background-color: linear-gradient(to bottom right, #f5efe6, #e8dccb);
+}
+
+/* =============================== SIDEBAR =============================== */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #6f4e37, #4e342e);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+}
+
+.logo-title {
+    -fx-text-fill: #f5efe6;
 /* ===============================
    SOFT SAGE & CHARCOAL PALETTE (based on #E8EACC)
    Main colors:
@@ -62,6 +95,7 @@
 
 .sidebar-btn {
     -fx-background-color: transparent;
+    -fx-text-fill: #f5efe6;
     -fx-text-fill: #F9FAF4;
     -fx-font-size: 13px;
     -fx-alignment: CENTER_LEFT;
@@ -73,6 +107,7 @@
 
 .sidebar-btn:hover {
     -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: #d2b48c;
     -fx-border-color: #E8EACC;
 }
 
@@ -91,6 +126,7 @@
     -fx-text-fill: white;
 }
 
+/* =============================== TOPBAR =============================== */
 /* ===============================
    TOPBAR
    =============================== */
@@ -99,6 +135,7 @@
     -fx-background-color: #ffffff;
     -fx-padding: 10 30;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 10, 0, 0, 4);
+    -fx-border-color: #f0e6d6;
     -fx-border-color: #E8EACC;
     -fx-border-width: 0 0 1 0;
 }
@@ -106,6 +143,10 @@
 .welcome-text-elegant {
     -fx-font-size: 16px;
     -fx-font-weight: 700;
+    -fx-text-fill: #3e2c23;
+}
+
+/* =============================== DASHBOARD =============================== */
     -fx-text-fill: #2B322E;
 }
 
@@ -120,6 +161,12 @@
 .section-title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #6f4e37, #d2b48c);
+}
+
+/* =============================== STAT CARDS =============================== */
+.stat-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
     -fx-text-fill: linear-gradient(to right, #7F8F69, #E8EACC);
     /* Sage to soft cream */
 }
@@ -139,6 +186,7 @@
 }
 
 .stat-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(111, 78, 55, 0.25), 15, 0, 0, 5);
     -fx-effect: dropshadow(three-pass-box, rgba(43, 50, 46, 0.25), 15, 0, 0, 5);
     -fx-translate-y: -2;
 }
@@ -146,12 +194,20 @@
 .card-title {
     -fx-font-size: 13px;
     -fx-font-weight: 600;
+    -fx-text-fill: #555555;
     -fx-text-fill: #444444;
 }
 
 .card-number {
     -fx-font-size: 30px;
     -fx-font-weight: 800;
+    -fx-text-fill: black;
+    /* ✅ TEXTE NOIR */
+}
+
+/* =============================== BUTTONS =============================== */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #6f4e37, #d2b48c);
     -fx-text-fill: #2B322E;
 }
 
@@ -169,11 +225,15 @@
 }
 
 .btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #5a3e2b, #c4a484);
     -fx-background-color: #5F6B4E; /* Darker sage */
 }
 
 .btn-secondary {
     -fx-background-color: #ffffff;
+    -fx-text-fill: #4e342e;
+    -fx-font-weight: bold;
+    -fx-border-color: #d2b48c;
     -fx-text-fill: #7F8F69; /* Sage */
     -fx-font-weight: bold;
     -fx-border-color: #E8EACC; /* Soft cream border */
@@ -183,6 +243,13 @@
 }
 
 .btn-secondary:hover {
+    -fx-background-color: #f2e8dc;
+}
+
+/* =============================== FORMS =============================== */
+.form-control {
+    -fx-background-color: white;
+    -fx-border-color: #d2b48c;
     -fx-background-color: #E8EACC;
 }
 
@@ -200,6 +267,11 @@
 }
 
 .form-control:focused {
+    -fx-border-color: #6f4e37;
+    -fx-effect: dropshadow(gaussian, rgba(111, 78, 55, 0.2), 5, 0, 0, 0);
+}
+
+/* =============================== VALIDATION ERROR =============================== */
     -fx-border-color: #7F8F69; /* Sage focus */
     -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.25), 5, 0, 0, 0);
 }
@@ -214,6 +286,7 @@
     -fx-background-color: #fff5f5 !important;
 }
 
+/* =============================== TABLE VIEW =============================== */
 /* ===============================
    TABLE VIEW
    =============================== */
@@ -224,6 +297,11 @@
 }
 
 .table-view .column-header-background {
+    -fx-background-color: linear-gradient(to right, #ffffff, #f2e8dc);
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #4e342e;
     -fx-background-color: linear-gradient(to right, #ffffff, #E8EACC);
 }
 
@@ -238,6 +316,34 @@
 }
 
 .table-row-cell:odd {
+    -fx-background-color: #faf6f0;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e8dccb;
+}
+
+/* =============================== THERAPIST CARD =============================== */
+.therapist-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
+    -fx-background-radius: 12;
+    -fx-border-color: #e0d6c8;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 15;
+}
+
+.therapist-card:hover {
+    -fx-border-color: #6f4e37;
+    -fx-effect: dropshadow(gaussian, rgba(111, 78, 55, 0.25), 15, 0, 0, 4);
+}
+
+.therapist-initials {
+    -fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c);
+    -fx-background-radius: 50;
+    -fx-min-width: 60;
+    -fx-min-height: 60;
+    -fx-alignment: center;
     -fx-background-color: #F3F4ED;
 }
 
@@ -439,6 +545,9 @@
 
 /* ACTIVE (SELECTED) BUTTON */
 .sidebar-btn.active {
+    -fx-background-color: #8B5E3C;
+    /* brown matching modern palette */
+    -fx-text-fill: white;
     -fx-background-color: #2B322E;
     /* Deep forest */
     -fx-text-fill: #F9FAF4;
@@ -460,6 +569,432 @@
     -fx-text-fill: #2B322E;
     -fx-font-weight: bold;
     -fx-font-size: 16px;
+    /* optionnel si tu veux plus visible */
+}
+
+.therapist-role {
+    -fx-text-fill: black;
+}
+
+.therapist-detail {
+    -fx-text-fill: black;
+}
+
+.top-header {
+    -fx-padding: 15 25;
+    -fx-background-color: linear-gradient(to right, #88603c, #60402c);
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Role */
+.role-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1px;
+}
+
+/* Welcome */
+.welcome-text {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* Small subtitle */
+.subtitle-text {
+    -fx-text-fill: #bdc3c7;
+    -fx-font-size: 11px;
+}
+
+/* Avatar */
+.avatar-circle {
+    -fx-fill: linear-gradient(to bottom right, #6f4e37, #d2b48c);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
+}
+
+.avatar-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.reserved-entry {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+}
+
+/* -------------------------------
+   APPOINTMENT CALENDAR ENTRIES (Overrides for CalendarFX)
+   ------------------------------- */
+.calendar.STYLE1 .entry {
+    /* Style 1 is what the calendar is set to */
+}
+
+.calendar .entry.pending-entry {
+    -fx-background-color: #f4c430 !important;
+    -fx-opacity: 0.9 !important;
+}
+
+.calendar .entry.pending-entry .title {
+    -fx-text-fill: #3e2c23 !important;
+}
+
+.calendar .entry.confirmed-entry {
+    -fx-background-color: #2ecc71 !important;
+}
+
+.calendar .entry.confirmed-entry .title {
+    -fx-text-fill: white !important;
+}
+
+.calendar .entry.in-progress-entry {
+    -fx-background-color: #9b59b6 !important;
+}
+
+.calendar .entry.in-progress-entry .title {
+    -fx-text-fill: white !important;
+}
+
+.calendar .entry.completed-entry {
+    -fx-background-color: #3498db !important;
+    -fx-opacity: 0.7 !important;
+}
+
+.calendar .entry.completed-entry .title {
+    -fx-text-fill: white !important;
+}
+
+.calendar .entry.outside-hours-entry {
+    -fx-background-color: #7f8c8d !important;
+    -fx-opacity: 0.5 !important;
+}
+
+.calendar .entry.outside-hours-entry .title {
+    -fx-text-fill: white !important;
+}
+
+.booked-entry {
+    -fx-background-color: #6f4e37;
+    -fx-text-fill: white;
+}
+
+.reserved-entry {
+    -fx-background-color: #d2b48c;
+    -fx-text-fill: #3e2c23;
+}
+
+
+/* Top container */
+.top-container {
+    -fx-background-color: linear-gradient(to right, #1e1e1e, #252525);
+    -fx-border-color: #333;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Title */
+.page-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Subtitle */
+.page-subtitle {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+/* Field label */
+.field-label {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Modern ComboBox */
+.combo-modern {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-border-color: #3a3a3a;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 4 8 4 8;
+}
+
+/* Refresh Button */
+.btn-refresh {
+    -fx-background-color: #3a86ff;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-padding: 6 14 6 14;
+    -fx-font-weight: bold;
+}
+
+.btn-refresh:hover {
+    -fx-background-color: #2f6fd1;
+}
+
+.btn-success {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+}
+
+.btn-danger {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.btn-secondary {
+    -fx-background-color: #7f8c8d;
+    -fx-text-fill: white;
+}
+
+.badge-status {
+    -fx-font-weight: bold;
+}
+
+/* ========================================================================= */
+/* FUTURISTIC ORBITAL THEME (For Appointments & Dashboard) */
+/* ========================================================================= */
+
+.futuristic-root {
+    -fx-background-color: #0f172a;
+}
+
+.glass-panel {
+    -fx-background-color: rgba(30, 41, 59, 0.7);
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 5);
+}
+
+.futuristic-modal {
+    -fx-background-color: #0f172a;
+    -fx-border-color: #38bdf8;
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+.futuristic-combo {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #e2e8f0;
+    -fx-border-color: #38bdf8;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+}
+
+.futuristic-combo .list-cell {
+    -fx-text-fill: #e2e8f0;
+}
+
+/* Neon Badges */
+.badge-status-neon {
+    -fx-padding: 6 12;
+    -fx-background-radius: 20;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0ea5e9;
+    -fx-background-color: rgba(14, 165, 233, 0.15);
+    -fx-border-color: rgba(14, 165, 233, 0.4);
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+/* Neon Buttons */
+.btn-neon-primary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #38bdf8;
+    -fx-border-color: #38bdf8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-neon-primary:hover {
+    -fx-background-color: rgba(56, 189, 248, 0.2);
+}
+
+.btn-neon-secondary {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #cbd5e1;
+    -fx-border-color: #475569;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.btn-neon-secondary:hover {
+    -fx-background-color: #334155;
+    -fx-text-fill: #ffffff;
+}
+
+.btn-neon-success {
+    -fx-background-color: transparent;
+    -fx-text-fill: #10b981;
+    -fx-border-color: #10b981;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-neon-success:hover {
+    -fx-background-color: rgba(16, 185, 129, 0.2);
+}
+
+.btn-neon-danger {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f43f5e;
+    -fx-border-color: #f43f5e;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-neon-danger:hover {
+    -fx-background-color: rgba(244, 63, 94, 0.2);
+}
+
+.btn-neon-purple {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d946ef;
+    -fx-border-color: #d946ef;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-neon-purple:hover {
+    -fx-background-color: rgba(217, 70, 239, 0.2);
+}
+
+/* Dark Scroll Pane */
+.dark-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.dark-scroll-pane>.viewport {
+    -fx-background-color: transparent;
+}
+
+.dark-scroll-pane>.scroll-bar:vertical {
+    -fx-background-color: #0f172a;
+}
+
+.dark-scroll-pane>.scroll-bar:vertical>.thumb {
+    -fx-background-color: #334155;
+    -fx-background-radius: 4;
+}
+
+/* Custom CalendarFX Entry Styling for Dark Theme */
+.calendar .entry-view {
+    -fx-opacity: 0.9;
+}
+
+.outside-hours-entry {
+    -fx-background-color: #1e293b;
+    -fx-border-color: #334155;
+}
+
+.pending-entry {
+    -fx-background-color: rgba(234, 179, 8, 0.2);
+    -fx-border-color: #eab308;
+}
+
+.in-progress-entry {
+    -fx-background-color: rgba(168, 85, 247, 0.2);
+    -fx-border-color: #a855f7;
+}
+
+.confirmed-entry {
+    -fx-background-color: rgba(16, 185, 129, 0.2);
+    -fx-border-color: #10b981;
+}
+
+.completed-entry {
+    -fx-background-color: rgba(56, 189, 248, 0.2);
+    -fx-border-color: #38bdf8;
+}
+
+/* Futuristic Dashboard Cards */
+.futuristic-card {
+    -fx-background-color: rgba(30, 41, 59, 0.8);
+    -fx-background-radius: 15;
+    -fx-padding: 25;
+    -fx-border-color: rgba(56, 189, 248, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 0, 5);
+}
+
+.futuristic-stat-value {
+    -fx-font-size: 36px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #38bdf8;
+    -fx-effect: dropshadow(gaussian, rgba(56, 189, 248, 0.5), 10, 0.5, 0, 0);
+}
+
+.futuristic-stat-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+    -fx-font-weight: bold;
+    -fx-text-transform: uppercase;
+}
+
+/* Futuristic Charts */
+.futuristic-chart {
+    -fx-background-color: transparent;
+}
+
+.futuristic-chart .chart-plot-background {
+    -fx-background-color: rgba(15, 23, 42, 0.4);
+}
+
+.futuristic-chart .axis {
+    -fx-tick-label-fill: #94a3b8;
+}
+
+.futuristic-chart .axis-tick-mark,
+.futuristic-chart .axis-minor-tick-mark {
+    -fx-stroke: transparent;
+}
+
+.futuristic-chart .chart-alternative-row-fill {
+    -fx-fill: transparent;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}
+
+.futuristic-chart .chart-vertical-grid-lines {
+    -fx-stroke: rgba(148, 163, 184, 0.1);
+}
+
+.futuristic-chart .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(148, 163, 184, 0.1);
+}
+
+.futuristic-chart .chart-series-line {
+    -fx-stroke: #38bdf8;
+    -fx-stroke-width: 3px;
+    -fx-effect: dropshadow(gaussian, rgba(56, 189, 248, 0.6), 8, 0.4, 0, 0);
+}
+
+.futuristic-chart .chart-line-symbol {
+    -fx-background-color: #0f172a, #38bdf8;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 4px;
+}
 }
 
 

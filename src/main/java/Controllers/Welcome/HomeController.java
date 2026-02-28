@@ -35,9 +35,9 @@ public class HomeController {
     @FXML
     private javafx.scene.control.Button btnForum;
     @FXML
-    private javafx.scene.control.Button btnForumtherapist ;
+    private javafx.scene.control.Button btnForumtherapist;
     @FXML
-    private javafx.scene.control.Button btnForumUsr ;
+    private javafx.scene.control.Button btnForumUsr;
     @FXML
     private javafx.scene.control.Button btnRegistrations;
 
@@ -65,9 +65,9 @@ public class HomeController {
             if (welcomeLabel != null) {
                 welcomeLabel.setText("Bienvenue, " + displayName);
             }
-                if (RoleLabel != null) {
-                    RoleLabel.setText(user.getRole());
-                }
+            if (RoleLabel != null) {
+                RoleLabel.setText(user.getRole());
+            }
 
         } else {
             System.out.println("No user logged in session.");
@@ -96,6 +96,8 @@ public class HomeController {
         setButtonVisible(btnQuizzes, false);
         setButtonVisible(btnQuizAssessment, false);
 
+        setButtonVisible(btnPastAppointments, false);
+
         if (role == null)
             return;
 
@@ -108,7 +110,7 @@ public class HomeController {
                 setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnQuestions, true);
                 setButtonVisible(btnQuizzes, true);
-                setButtonVisible(btnEvents , true);
+                setButtonVisible(btnEvents, true);
                 break;
             case "patient":
                 setButtonVisible(btnTherapists, true); // Patient views therapists
@@ -116,7 +118,8 @@ public class HomeController {
                 setButtonVisible(btnForumUsr, true);
                 setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnQuizAssessment, true);
-                setButtonVisible(btnEvents , true);
+                setButtonVisible(btnEvents, true);
+                setButtonVisible(btnPastAppointments, true);
 
                 break;
             case "therapist":
@@ -126,7 +129,7 @@ public class HomeController {
                 setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnTherapists, true);
                 setButtonVisible(btnQuizAssessment, true);
-                setButtonVisible(btnEvents , true);
+                setButtonVisible(btnEvents, true);
 
                 break;
             default:
@@ -174,7 +177,14 @@ public class HomeController {
     }
 
     @FXML
+    private javafx.scene.control.Button btnPastAppointments;
 
+    @FXML
+    public void gotoPastAppointments() {
+        SceneManager.loadPage("/com/example/psy/Appointment/past_appointments.fxml");
+    }
+
+    @FXML
     public void gotoQuestions() {
         SceneManager.loadPage("/com/example/psy/Question/Question.fxml");
     }
@@ -183,10 +193,12 @@ public class HomeController {
     public void gotoReview() {
         SceneManager.loadPage("/com/example/psy/forum/forum.fxml");
     }
+
     @FXML
     public void gotoReviewtherapist() {
         SceneManager.loadPage("/com/example/psy/forum/forumtherapist.fxml");
     }
+
     @FXML
     public void gotoReviewadmin() {
         SceneManager.loadPage("/com/example/psy/forum/forumadmin.fxml");
@@ -198,6 +210,10 @@ public class HomeController {
 
     public void gotoQuizAssesment() {
         SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml");
+    }
+
+    public void gotoTherapistDashboard() {
+        SceneManager.loadPage("/com/example/psy/dashboards/TherapistDashboard.fxml");
     }
 
     public void logout() {
