@@ -175,6 +175,31 @@ public class AppointmentService {
     public boolean isWithinAvailability(int therapistId, LocalDate date,
             LocalTime start, LocalTime end) throws SQLException {
 
+        // First, check for specific date exceptions
+        String specificSql = """
+                SELECT * FROM availabilities
+                WHERE therapist_id = ?
+                AND specific_date = ?
+                AND is_available = false
+                """;
+
+        PreparedStatement specificPs = cnx.prepareStatement(specificSql);
+        specificPs.setInt(1, therapistId);
+        specificPs.setDate(2, Date.valueOf(date));
+
+        ResultSet specificRs = specificPs.executeQuery();
+
+        while (specificRs.next()) {
+            LocalTime offStart = specificRs.getTime("start_time").toLocalTime();
+            LocalTime offEnd = specificRs.getTime("end_time").toLocalTime();
+
+            // If the proposed slot overlaps with an unavailability block
+            if (start.isBefore(offEnd) && end.isAfter(offStart)) {
+                return false; // Not available due to specific date exception
+            }
+        }
+
+        // Then check regular weekly availability
         Day day = Day.valueOf(date.getDayOfWeek().name());
 
         String sql = """
