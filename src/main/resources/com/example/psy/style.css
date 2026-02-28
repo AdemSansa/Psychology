@@ -11,8 +11,10 @@
 .root {
     -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
     -fx-font-size: 13px;
-    -fx-background-color: #F9FAF4; /* Light background */
-    -fx-text-fill: #111114;        /* Charcoal text */
+    -fx-background-color: #F9FAF4;
+    /* Light background */
+    -fx-text-fill: #111114;
+    /* Charcoal text */
 }
 
 .login-background {
@@ -23,14 +25,17 @@
     -fx-background-position: center center;
 
     /* Optional overlay color to keep text readable */
-    -fx-background-color: rgba(232, 234, 204, 0.75); /* Soft cream with transparency */
-    -fx-background-insets: 0, 0; /* image + color stacked */
+    -fx-background-color: rgba(232, 234, 204, 0.75);
+    /* Soft cream with transparency */
+    -fx-background-insets: 0, 0;
+    /* image + color stacked */
 }
 
 .glass-pane {
     -fx-background-color: rgba(255, 255, 255, 0.90);
     -fx-background-radius: 20;
-    -fx-border-color: rgba(127, 143, 105, 0.35); /* Sage border */
+    -fx-border-color: rgba(127, 143, 105, 0.35);
+    /* Sage border */
     -fx-border-width: 1.5;
     -fx-effect: dropshadow(three-pass-box, rgba(17, 17, 20, 0.10), 30, 0.5, 0, 15);
 }
@@ -160,7 +165,8 @@
    =============================== */
 
 .btn-primary {
-    -fx-background-color: #7F8F69; /* Sage */
+    -fx-background-color: #7F8F69;
+    /* Sage */
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 25;
@@ -176,7 +182,8 @@
     -fx-background-color: #ffffff;
     -fx-text-fill: #7F8F69; /* Sage */
     -fx-font-weight: bold;
-    -fx-border-color: #E8EACC; /* Soft cream border */
+    -fx-border-color: #E8EACC;
+    /* Soft cream border */
     -fx-border-radius: 25;
     -fx-background-radius: 25;
     -fx-padding: 8 20;
@@ -192,7 +199,8 @@
 
 .form-control {
     -fx-background-color: white;
-    -fx-border-color: #C6CBB9; /* Soft neutral */
+    -fx-border-color: #C6CBB9;
+    /* Soft neutral */
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 10;
@@ -527,46 +535,53 @@
 }
 
 .calendar .entry.pending-entry {
-    -fx-background-color: #f4c430 !important;
-    -fx-opacity: 0.9 !important;
+    -fx-background-color: #FEEFB3 !important;
+    -fx-border-color: #F2C94C !important;
+    -fx-border-width: 1 1 1 3 !important;
 }
 
 .calendar .entry.pending-entry .title {
-    -fx-text-fill: #3e2c23 !important;
+    -fx-text-fill: #9F6000 !important;
 }
 
 .calendar .entry.confirmed-entry {
-    -fx-background-color: #2ecc71 !important;
+    -fx-background-color: #DFF2BF !important;
+    -fx-border-color: #27AE60 !important;
+    -fx-border-width: 1 1 1 3 !important;
 }
 
 .calendar .entry.confirmed-entry .title {
-    -fx-text-fill: white !important;
+    -fx-text-fill: #4F8A10 !important;
 }
 
 .calendar .entry.in-progress-entry {
-    -fx-background-color: #9b59b6 !important;
+    -fx-background-color: #E2E3E5 !important;
+    -fx-border-color: #9B59B6 !important;
+    -fx-border-width: 1 1 1 3 !important;
 }
 
 .calendar .entry.in-progress-entry .title {
-    -fx-text-fill: white !important;
+    -fx-text-fill: #383D41 !important;
 }
 
 .calendar .entry.completed-entry {
-    -fx-background-color: #3498db !important;
-    -fx-opacity: 0.7 !important;
+    -fx-background-color: #BDE5F8 !important;
+    -fx-border-color: #2980B9 !important;
+    -fx-border-width: 1 1 1 3 !important;
 }
 
 .calendar .entry.completed-entry .title {
-    -fx-text-fill: white !important;
+    -fx-text-fill: #00529B !important;
 }
 
 .calendar .entry.outside-hours-entry {
-    -fx-background-color: #7f8c8d !important;
-    -fx-opacity: 0.5 !important;
+    -fx-background-color: #F2F2F2 !important;
+    -fx-border-color: #BDC3C7 !important;
+    -fx-border-width: 1 1 1 3 !important;
 }
 
 .calendar .entry.outside-hours-entry .title {
-    -fx-text-fill: white !important;
+    -fx-text-fill: #7F8C8D !important;
 }
 
 .booked-entry {
@@ -792,32 +807,38 @@
 
 /* Custom CalendarFX Entry Styling for Dark Theme */
 .calendar .entry-view {
-    -fx-opacity: 0.9;
+    -fx-opacity: 0.95;
+    -fx-background-radius: 4;
 }
 
 .outside-hours-entry {
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+    -fx-background-color: #f7f7f7;
+    -fx-border-color: #d1d1d1;
+    -fx-border-radius: 4;
 }
 
 .pending-entry {
-    -fx-background-color: rgba(234, 179, 8, 0.2);
-    -fx-border-color: #eab308;
+    -fx-background-color: #fffbdf;
+    -fx-border-color: #f1c40f;
+    -fx-border-radius: 4;
 }
 
 .in-progress-entry {
-    -fx-background-color: rgba(168, 85, 247, 0.2);
-    -fx-border-color: #a855f7;
+    -fx-background-color: #f5eeff;
+    -fx-border-color: #9b59b6;
+    -fx-border-radius: 4;
 }
 
 .confirmed-entry {
-    -fx-background-color: rgba(16, 185, 129, 0.2);
-    -fx-border-color: #10b981;
+    -fx-background-color: #e8f8f5;
+    -fx-border-color: #2ecc71;
+    -fx-border-radius: 4;
 }
 
 .completed-entry {
-    -fx-background-color: rgba(56, 189, 248, 0.2);
-    -fx-border-color: #38bdf8;
+    -fx-background-color: #ebf5fb;
+    -fx-border-color: #3498db;
+    -fx-border-radius: 4;
 }
 
 /* Futuristic Dashboard Cards */
@@ -889,6 +910,7 @@
     -fx-background-radius: 5px;
     -fx-padding: 4px;
 }
+
 
 
 

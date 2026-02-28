@@ -70,7 +70,45 @@ public class AppointmentCalendarController {
         calendarContainer.getChildren().add(calendarView);
 
         if (!isTherapist()) {
+            // Define visual formatting before loading data
+            therapistComboBox.setConverter(new javafx.util.StringConverter<>() {
+                @Override
+                public String toString(Therapistis object) {
+                    return object == null ? "" : object.toString();
+                }
+
+                @Override
+                public Therapistis fromString(String string) {
+                    return null;
+                }
+            });
+
+            therapistComboBox.setButtonCell(new javafx.scene.control.ListCell<>() {
+                @Override
+                protected void updateItem(Therapistis item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item.toString());
+                    }
+                }
+            });
+
             loadTherapists();
+
+            // Auto-select therapist if navigated from the directory
+            Therapistis preSelected = Session.getInstance().getSelectedTherapistForBooking();
+            if (preSelected != null) {
+                for (Therapistis t : therapistComboBox.getItems()) {
+                    if (t.getId() == preSelected.getId()) {
+                        therapistComboBox.setValue(t);
+                        break;
+                    }
+                }
+                Session.getInstance().setSelectedTherapistForBooking(null); // clear after use
+            }
+
             therapistComboBox.setOnAction(e -> loadAppointments());
         } else {
             therapistComboBox.setVisible(false);
@@ -80,17 +118,7 @@ public class AppointmentCalendarController {
             subtitleLabel.setVisible(false);
             subtitleLabel.setManaged(false);
         }
-        therapistComboBox.setButtonCell(new javafx.scene.control.ListCell<>() {
-            @Override
-            protected void updateItem(Therapistis item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.toString());
-                }
-            }
-        });
+
         loadAppointments();
         setupInteractions();
         startAutoVideoCallChecker();
@@ -225,20 +253,32 @@ public class AppointmentCalendarController {
                 return null;
             }
 
-            // Prompt user for appointment type
-            List<String> choices = List.of("Presential", "Video Call");
-            ChoiceDialog<String> dialog = new ChoiceDialog<>("Presential", choices);
-            dialog.setTitle("Appointment Type");
-            dialog.setHeaderText("Choose how you want to attend this appointment");
-            dialog.setContentText("Type:");
+            // Determine appointment type based on therapist's consultation mode
+            String therapistMode = therapist.getConsultationType();
+            String selectedType = "Presential"; // Default
 
-            Optional<String> result = dialog.showAndWait();
-            if (result.isEmpty()) {
-                return null; // User cancelled
+            if ("ONLINE".equalsIgnoreCase(therapistMode)) {
+                selectedType = "Video Call";
+            } else if ("IN_PERSON".equalsIgnoreCase(therapistMode)) {
+                selectedType = "Presential";
+            } else {
+                // "BOTH" or unknown layout, ask user
+                List<String> choices = List.of("Presential", "Video Call");
+                ChoiceDialog<String> dialog = new ChoiceDialog<>("Presential", choices);
+                dialog.setTitle("Appointment Type");
+                dialog.setHeaderText("Choose how you want to attend this appointment");
+                dialog.setContentText("Type:");
+
+                Optional<String> result = dialog.showAndWait();
+                if (result.isEmpty()) {
+                    return null; // User cancelled
+                }
+                selectedType = result.get();
             }
-            String selectedType = result.get();
 
-            Entry<Appointment> entry = new Entry<>("Pending - " + selectedType);
+            final String finalSelectedType = selectedType;
+            Entry<Appointment> entry = new Entry<>("Pending - " + finalSelectedType);
+
             entry.setInterval(start, end);
             entry.setMinimumDuration(java.time.Duration.ofMinutes(APPOINTMENT_DURATION_MIN));
             entry.getStyleClass().add("pending-entry");
@@ -250,7 +290,7 @@ public class AppointmentCalendarController {
                             start.toLocalDate(), start.toLocalTime(), end.toLocalTime(),
                             therapist.getId(), Session.getInstance().getUser().getId());
                     a.setStatus("pending");
-                    a.setType(selectedType);
+                    a.setType(finalSelectedType);
                     appointmentService.create(a);
                     return a;
                 }
