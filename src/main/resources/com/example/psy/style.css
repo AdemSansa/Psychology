@@ -1,36 +1,3 @@
-/* =============================== MARRON & BEIGE MODERN PALETTE =============================== */
-.root {
-    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
-    -fx-font-size: 13px;
-    -fx-background-color: #fdfaf5;
-    -fx-text-fill: #3e2c23;
-}
-
-.login-background {
-    -fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c, #6f4e37);
-}
-
-.glass-pane {
-    -fx-background-color: rgba(255, 255, 255, 0.7);
-    -fx-background-radius: 20;
-    -fx-border-color: rgba(255, 255, 255, 0.3);
-    -fx-border-width: 1.5;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 30, 0.5, 0, 15);
-}
-
-/* =============================== BACKGROUND =============================== */
-.background-gradient {
-    -fx-background-color: linear-gradient(to bottom right, #f5efe6, #e8dccb);
-}
-
-/* =============================== SIDEBAR =============================== */
-.sidebar {
-    -fx-background-color: linear-gradient(to bottom, #6f4e37, #4e342e);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
-}
-
-.logo-title {
-    -fx-text-fill: #f5efe6;
 /* ===============================
    SOFT SAGE & CHARCOAL PALETTE (based on #E8EACC)
    Main colors:
@@ -95,7 +62,6 @@
 
 .sidebar-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #f5efe6;
     -fx-text-fill: #F9FAF4;
     -fx-font-size: 13px;
     -fx-alignment: CENTER_LEFT;
@@ -107,7 +73,6 @@
 
 .sidebar-btn:hover {
     -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-border-color: #d2b48c;
     -fx-border-color: #E8EACC;
 }
 
@@ -126,7 +91,6 @@
     -fx-text-fill: white;
 }
 
-/* =============================== TOPBAR =============================== */
 /* ===============================
    TOPBAR
    =============================== */
@@ -135,7 +99,6 @@
     -fx-background-color: #ffffff;
     -fx-padding: 10 30;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 10, 0, 0, 4);
-    -fx-border-color: #f0e6d6;
     -fx-border-color: #E8EACC;
     -fx-border-width: 0 0 1 0;
 }
@@ -143,10 +106,6 @@
 .welcome-text-elegant {
     -fx-font-size: 16px;
     -fx-font-weight: 700;
-    -fx-text-fill: #3e2c23;
-}
-
-/* =============================== DASHBOARD =============================== */
     -fx-text-fill: #2B322E;
 }
 
@@ -161,12 +120,6 @@
 .section-title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: linear-gradient(to right, #6f4e37, #d2b48c);
-}
-
-/* =============================== STAT CARDS =============================== */
-.stat-card {
-    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
     -fx-text-fill: linear-gradient(to right, #7F8F69, #E8EACC);
     /* Sage to soft cream */
 }
@@ -186,7 +139,6 @@
 }
 
 .stat-card:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(111, 78, 55, 0.25), 15, 0, 0, 5);
     -fx-effect: dropshadow(three-pass-box, rgba(43, 50, 46, 0.25), 15, 0, 0, 5);
     -fx-translate-y: -2;
 }
@@ -194,20 +146,12 @@
 .card-title {
     -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-text-fill: #555555;
     -fx-text-fill: #444444;
 }
 
 .card-number {
     -fx-font-size: 30px;
     -fx-font-weight: 800;
-    -fx-text-fill: black;
-    /* ✅ TEXTE NOIR */
-}
-
-/* =============================== BUTTONS =============================== */
-.btn-primary {
-    -fx-background-color: linear-gradient(to right, #6f4e37, #d2b48c);
     -fx-text-fill: #2B322E;
 }
 
@@ -225,15 +169,11 @@
 }
 
 .btn-primary:hover {
-    -fx-background-color: linear-gradient(to right, #5a3e2b, #c4a484);
     -fx-background-color: #5F6B4E; /* Darker sage */
 }
 
 .btn-secondary {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #4e342e;
-    -fx-font-weight: bold;
-    -fx-border-color: #d2b48c;
     -fx-text-fill: #7F8F69; /* Sage */
     -fx-font-weight: bold;
     -fx-border-color: #E8EACC; /* Soft cream border */
@@ -243,13 +183,6 @@
 }
 
 .btn-secondary:hover {
-    -fx-background-color: #f2e8dc;
-}
-
-/* =============================== FORMS =============================== */
-.form-control {
-    -fx-background-color: white;
-    -fx-border-color: #d2b48c;
     -fx-background-color: #E8EACC;
 }
 
@@ -267,11 +200,6 @@
 }
 
 .form-control:focused {
-    -fx-border-color: #6f4e37;
-    -fx-effect: dropshadow(gaussian, rgba(111, 78, 55, 0.2), 5, 0, 0, 0);
-}
-
-/* =============================== VALIDATION ERROR =============================== */
     -fx-border-color: #7F8F69; /* Sage focus */
     -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.25), 5, 0, 0, 0);
 }
@@ -286,7 +214,6 @@
     -fx-background-color: #fff5f5 !important;
 }
 
-/* =============================== TABLE VIEW =============================== */
 /* ===============================
    TABLE VIEW
    =============================== */
@@ -297,11 +224,6 @@
 }
 
 .table-view .column-header-background {
-    -fx-background-color: linear-gradient(to right, #ffffff, #f2e8dc);
-}
-
-.table-view .column-header .label {
-    -fx-text-fill: #4e342e;
     -fx-background-color: linear-gradient(to right, #ffffff, #E8EACC);
 }
 
@@ -316,34 +238,6 @@
 }
 
 .table-row-cell:odd {
-    -fx-background-color: #faf6f0;
-}
-
-.table-row-cell:selected {
-    -fx-background-color: #e8dccb;
-}
-
-/* =============================== THERAPIST CARD =============================== */
-.therapist-card {
-    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f2e8dc);
-    -fx-background-radius: 12;
-    -fx-border-color: #e0d6c8;
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-padding: 15;
-}
-
-.therapist-card:hover {
-    -fx-border-color: #6f4e37;
-    -fx-effect: dropshadow(gaussian, rgba(111, 78, 55, 0.25), 15, 0, 0, 4);
-}
-
-.therapist-initials {
-    -fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c);
-    -fx-background-radius: 50;
-    -fx-min-width: 60;
-    -fx-min-height: 60;
-    -fx-alignment: center;
     -fx-background-color: #F3F4ED;
 }
 
@@ -995,7 +889,7 @@
     -fx-background-radius: 5px;
     -fx-padding: 4px;
 }
-}
+
 
 
 /* Cleaned up duplicate blocks end */
