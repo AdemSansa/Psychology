@@ -175,14 +175,12 @@
 }
 
 .btn-primary:hover {
-    -fx-background-color: #5F6B4E;
-    /* Darker sage */
+    -fx-background-color: #5F6B4E; /* Darker sage */
 }
 
 .btn-secondary {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #7F8F69;
-    /* Sage */
+    -fx-text-fill: #7F8F69; /* Sage */
     -fx-font-weight: bold;
     -fx-border-color: #E8EACC;
     /* Soft cream border */
@@ -210,8 +208,7 @@
 }
 
 .form-control:focused {
-    -fx-border-color: #7F8F69;
-    /* Sage focus */
+    -fx-border-color: #7F8F69; /* Sage focus */
     -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.25), 5, 0, 0, 0);
 }
 
@@ -913,6 +910,7 @@
     -fx-background-radius: 5px;
     -fx-padding: 4px;
 }
+
 
 
 
