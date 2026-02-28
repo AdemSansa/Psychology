@@ -70,6 +70,31 @@ public class AppointmentCalendarController {
         calendarContainer.getChildren().add(calendarView);
 
         if (!isTherapist()) {
+            // Define visual formatting before loading data
+            therapistComboBox.setConverter(new javafx.util.StringConverter<>() {
+                @Override
+                public String toString(Therapistis object) {
+                    return object == null ? "" : object.toString();
+                }
+
+                @Override
+                public Therapistis fromString(String string) {
+                    return null;
+                }
+            });
+
+            therapistComboBox.setButtonCell(new javafx.scene.control.ListCell<>() {
+                @Override
+                protected void updateItem(Therapistis item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item.toString());
+                    }
+                }
+            });
+
             loadTherapists();
 
             // Auto-select therapist if navigated from the directory
@@ -93,17 +118,7 @@ public class AppointmentCalendarController {
             subtitleLabel.setVisible(false);
             subtitleLabel.setManaged(false);
         }
-        therapistComboBox.setButtonCell(new javafx.scene.control.ListCell<>() {
-            @Override
-            protected void updateItem(Therapistis item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.toString());
-                }
-            }
-        });
+
         loadAppointments();
         setupInteractions();
         startAutoVideoCallChecker();

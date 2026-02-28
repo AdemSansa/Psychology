@@ -165,7 +165,7 @@ public class AppointmentService {
                 continue; // skip the appointment being moved
             }
             if (a.getAppointmentDate().equals(date) &&
-                    !(end.isBefore(a.getStartTime()) || start.isAfter(a.getEndTime()))) {
+                    (start.isBefore(a.getEndTime()) && end.isAfter(a.getStartTime()))) {
                 return false; // overlap detected
             }
         }
