@@ -20,6 +20,10 @@
         <Label fx:id="statsLabel"
                text="📊 Statistiques : chargement..."
                style="-fx-font-size:14px; -fx-text-fill:#4E342E;" />
+        <Button fx:id="btnStats"
+                text="📊 Statistiques"
+                style="-fx-background-color:#90CAF9; -fx-text-fill:#0D47A1;
+                       -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:5 15;" />
         <Button fx:id="btnRefresh"
                 text="🔄 Refresh"
                 style="-fx-background-color:#A5D6A7; -fx-text-fill:#1B5E20;

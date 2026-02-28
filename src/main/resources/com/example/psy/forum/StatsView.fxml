@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.forum.StatsController"
+      spacing="20"
+      style="-fx-padding:30; -fx-background-color:#F0F8F5;">
+
+    <PieChart fx:id="pieResponded"
+              title="% Avis répondus"
+              legendSide="RIGHT"
+              labelsVisible="true"
+              style="-fx-font-size:14px; -fx-font-weight:bold;"/>
+
+    <PieChart fx:id="pieFast"
+              title="% Réponses < 1h"
+              legendSide="RIGHT"
+              labelsVisible="true"
+              style="-fx-font-size:14px; -fx-font-weight:bold;"/>
+
+    <Button fx:id="btnBack"
+            text="⬅ Retour"
+            style="-fx-background-color:#90CAF9;
+                   -fx-text-fill:#0D47A1;
+                   -fx-font-weight:bold;
+                   -fx-background-radius:20;
+                   -fx-padding:8 20;
+                   -fx-cursor:hand;"/>
+</VBox>

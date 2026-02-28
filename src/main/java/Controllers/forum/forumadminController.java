@@ -5,62 +5,75 @@ import Entities.ReviewReply;
 import Service.ReviewService;
 import Service.Reply_ReviewService;
 import Service.TranslationApiService;
+import Service.SentimentAnalysisService;
+import util.SceneManager;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class forumadminController implements Initializable {
+public class forumadminController {
 
     @FXML
     private VBox reviewContainer;
 
     @FXML
-    private Label statsLabel;
+    private Button btnStats;
 
     @FXML
     private Button btnRefresh;
 
     private final ReviewService reviewService = new ReviewService();
     private final Reply_ReviewService replyService = new Reply_ReviewService();
-    private final TranslationApiService translationService = new TranslationApiService();
+    private final TranslationApiService translationApiService = new TranslationApiService();
+    private final SentimentAnalysisService sentimentService = new SentimentAnalysisService();
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-
-        // Action bouton refresh
-        btnRefresh.setOnAction(e -> loadReviews());
-
+    @FXML
+    public void initialize() {
         loadReviews();
+
+        btnStats.setOnAction(e -> {
+            try {
+                System.out.println("Loading statistics view...");
+                
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/psy/forum/StatsView.fxml"));
+                Stage statsStage = new Stage();
+                statsStage.setTitle("📊 Statistiques Forum");
+                statsStage.setScene(new Scene(loader.load()));
+                statsStage.show();
+                
+            } catch (Exception ex) {
+                System.err.println("Error loading stats view: " + ex.getMessage());
+                ex.printStackTrace();
+                showAlert("Error", "Failed to load statistics view: " + ex.getMessage());
+            }
+        });
+
+        btnRefresh.setOnAction(e -> loadReviews());
     }
 
     private void loadReviews() {
-
         reviewContainer.getChildren().clear();
-
         try {
             List<Review> reviews = reviewService.list();
             List<ReviewReply> replies = replyService.list();
 
-            // Trier les avis par date DESC (le plus récent en haut)
             reviews.sort(Comparator.comparing(Review::getCreatedAt).reversed());
 
-            // Statistiques
-            updateStatistics(reviews, replies);
-
             for (Review review : reviews) {
-                VBox reviewCard = createReviewCard(review, replies);
-                reviewContainer.getChildren().add(reviewCard);
+                VBox card = createReviewCard(review, replies);
+                reviewContainer.getChildren().add(card);
             }
 
         } catch (SQLException e) {
@@ -69,15 +82,9 @@ public class forumadminController implements Initializable {
     }
 
     private VBox createReviewCard(Review review, List<ReviewReply> replies) {
-
         VBox card = new VBox(10);
-        card.setStyle(
-                "-fx-background-color:#FFFFFF;" +
-                        "-fx-padding:15;" +
-                        "-fx-background-radius:15;" +
-                        "-fx-border-radius:15;" +
-                        "-fx-effect:dropshadow(three-pass-box, rgba(0,0,0,0.1),10,0,0,5);"
-        );
+        card.setStyle("-fx-background-color:#FAF3E0; -fx-padding:15; -fx-background-radius:15; " +
+                        "-fx-border-radius:15; -fx-effect:dropshadow(three-pass-box, rgba(0,0,0,0.1),10,0,0,5);");
 
         Label reviewDate = new Label("🗓 " + review.getCreatedAt());
         reviewDate.setStyle("-fx-text-fill:gray; -fx-font-size:11px;");
@@ -86,91 +93,73 @@ public class forumadminController implements Initializable {
         reviewContent.setWrapText(true);
         reviewContent.setStyle("-fx-font-size:14px; -fx-text-fill:#4E342E;");
 
-        // Boutons traduction pour l'avis
+        // Add sentiment analysis emoji under the content
+        String sentiment = sentimentService.analyzeSentiment(review.getContent());
+        Label sentimentLabel = new Label(sentiment);
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:12px; -fx-text-fill:#666;");
+
         HBox translateBox = new HBox(10);
-        Button btnEn = new Button("🇬🇧 EN");
-        Button btnAr = new Button("🇸🇦 AR");
-        styleTranslateButton(btnEn);
-        styleTranslateButton(btnAr);
+        Button btnTranslateEn = new Button("🇬🇧 English");
+        Button btnTranslateAr = new Button("🇸🇦 Arabic");
 
-        btnEn.setOnAction(e -> reviewContent.setText(translationService.translate(review.getContent(), "en")));
-        btnAr.setOnAction(e -> reviewContent.setText(translationService.translate(review.getContent(), "ar")));
+        btnTranslateEn.setOnAction(e -> reviewContent.setText(
+                translationApiService.translate(review.getContent(), "en")
+        ));
+        btnTranslateAr.setOnAction(e -> reviewContent.setText(
+                translationApiService.translate(review.getContent(), "ar")
+        ));
+        translateBox.getChildren().addAll(btnTranslateEn, btnTranslateAr);
 
-        translateBox.getChildren().addAll(btnEn, btnAr);
+        card.getChildren().addAll(reviewDate, reviewContent, sentimentLabel, translateBox);
 
-        card.getChildren().addAll(reviewDate, reviewContent, translateBox);
-
-        // Ajouter les réponses sous l'avis
         replies.stream()
                 .filter(r -> r.getReviewId() == review.getIdReview())
-                .sorted(Comparator.comparing(ReviewReply::getCreatedAt)) // réponses du plus ancien au plus récent
-                .forEach(reply -> {
-                    VBox replyBox = createReplyBox(reply);
+                .sorted(Comparator.comparing(ReviewReply::getCreatedAt))
+                .forEach(r -> {
+                    VBox replyBox = createReplyBox(r);
                     card.getChildren().add(replyBox);
                 });
 
         return card;
     }
 
-    private VBox createReplyBox(ReviewReply reply) {
-
+    private VBox createReplyBox(ReviewReply r) {
         VBox replyBox = new VBox(5);
-        replyBox.setStyle(
-                "-fx-background-color:#FFF8E1;" +
-                        "-fx-padding:10;" +
-                        "-fx-background-radius:12;"
-        );
+        replyBox.setStyle("-fx-background-color:#FFF8E1; -fx-padding:10; -fx-background-radius:12;");
 
-        Label replyDate = new Label("🗓 " + reply.getCreatedAt());
+        Label replyDate = new Label("🗓 " + r.getCreatedAt());
         replyDate.setStyle("-fx-font-size:10px; -fx-text-fill:gray;");
 
-        Label replyContent = new Label("👩‍⚕️ Therapist: " + reply.getContent());
+        Label replyContent = new Label("👩‍⚕️ Therapist: " + r.getContent());
         replyContent.setWrapText(true);
 
-        // Boutons traduction pour la réponse
-        HBox translateBox = new HBox(10);
-        Button btnEn = new Button("🇬🇧 EN");
-        Button btnAr = new Button("🇸🇦 AR");
-        styleTranslateButton(btnEn);
-        styleTranslateButton(btnAr);
+        // Add sentiment analysis for therapist replies too
+        String sentiment = sentimentService.analyzeSentiment(r.getContent());
+        Label sentimentLabel = new Label(sentiment);
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:11px; -fx-text-fill:#666;");
 
-        btnEn.setOnAction(e -> replyContent.setText(translationService.translate(reply.getContent(), "en")));
-        btnAr.setOnAction(e -> replyContent.setText(translationService.translate(reply.getContent(), "ar")));
+        HBox translateReplyBox = new HBox(10);
+        Button btnTranslateEnReply = new Button("🇬🇧 English");
+        Button btnTranslateArReply = new Button("🇸🇦 Arabic");
 
-        translateBox.getChildren().addAll(btnEn, btnAr);
+        btnTranslateEnReply.setOnAction(e -> replyContent.setText(
+                translationApiService.translate(r.getContent(), "en")
+        ));
+        btnTranslateArReply.setOnAction(e -> replyContent.setText(
+                translationApiService.translate(r.getContent(), "ar")
+        ));
+        translateReplyBox.getChildren().addAll(btnTranslateEnReply, btnTranslateArReply);
 
-        replyBox.getChildren().addAll(replyDate, replyContent, translateBox);
+        replyBox.getChildren().addAll(replyDate, replyContent, sentimentLabel, translateReplyBox);
 
         return replyBox;
     }
-
-    private void styleTranslateButton(Button btn) {
-        btn.setStyle("-fx-background-color:#90CAF9; -fx-text-fill:#0D47A1; " +
-                "-fx-background-radius:20; -fx-font-weight:bold; -fx-padding:2 10;");
-    }
-
-    private void updateStatistics(List<Review> reviews, List<ReviewReply> replies) {
-
-        long total = reviews.size();
-        long responded = replies.stream().map(ReviewReply::getReviewId).distinct().count();
-
-        // Pourcentage avis répondus
-        double pctResponded = total == 0 ? 0 : ((double) responded / total) * 100;
-
-        // Pourcentage réponses en moins d'une heure
-        long fastReplies = replies.stream()
-                .filter(r -> {
-                    Review review = reviews.stream()
-                            .filter(rv -> rv.getIdReview() == r.getReviewId())
-                            .findFirst().orElse(null);
-                    if (review == null) return false;
-                    Duration duration = Duration.between(review.getCreatedAt(), r.getCreatedAt());
-                    return duration.toMinutes() <= 60;
-                }).count();
-
-        double pctFast = total == 0 ? 0 : ((double) fastReplies / total) * 100;
-
-        statsLabel.setText(String.format("📊 Total avis: %d | Répondus: %.0f%% | Réponse < 1h: %.0f%%",
-                total, pctResponded, pctFast));
+    
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

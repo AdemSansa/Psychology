@@ -6,6 +6,7 @@ import Service.ReviewService;
 import Service.Reply_ReviewService;
 import Service.BadWordsApiService;
 import Service.TranslationApiService;
+import Service.SentimentAnalysisService;
 import util.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,6 +40,7 @@ public class ForumController implements Initializable {
 
     private final BadWordsApiService badWordsApiService = new BadWordsApiService();
     private final TranslationApiService translationApiService = new TranslationApiService();
+    private final SentimentAnalysisService sentimentService = new SentimentAnalysisService();
 
     private int currentUserId;
 
@@ -169,6 +171,11 @@ public class ForumController implements Initializable {
         content.setWrapText(true);
         content.setStyle("-fx-font-size:14px; -fx-text-fill:#4E342E;");
 
+        // Add sentiment analysis emoji under the content
+        String sentiment = sentimentService.analyzeSentiment(review.getContent());
+        Label sentimentLabel = new Label(sentiment);
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:12px; -fx-text-fill:#666;");
+
         // 🔹 Boutons traduction Review
         Button enBtn = new Button("🌍 EN");
         Button arBtn = new Button("🌍 AR");
@@ -178,7 +185,7 @@ public class ForumController implements Initializable {
 
         HBox translateBox = new HBox(5, enBtn, arBtn);
 
-        card.getChildren().addAll(date, content, translateBox);
+        card.getChildren().addAll(date, content, sentimentLabel, translateBox);
 
         if (review.getIdUser() == currentUserId) {
 
@@ -220,6 +227,11 @@ public class ForumController implements Initializable {
         Label replyDate = new Label(r.getCreatedAt().toString());
         replyDate.setStyle("-fx-font-size:10px; -fx-text-fill:gray;");
 
+        // Add sentiment analysis for therapist replies too
+        String sentiment = sentimentService.analyzeSentiment(r.getContent());
+        Label sentimentLabel = new Label(sentiment);
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:11px; -fx-text-fill:#666;");
+
         // 🔹 Boutons traduction Reply
         Button enBtn = new Button("🌍 EN");
         Button arBtn = new Button("🌍 AR");
@@ -229,7 +241,7 @@ public class ForumController implements Initializable {
 
         HBox translateBox = new HBox(5, enBtn, arBtn);
 
-        replyBox.getChildren().addAll(replyContent, replyDate, translateBox);
+        replyBox.getChildren().addAll(replyContent, replyDate, sentimentLabel, translateBox);
 
         return replyBox;
     }
