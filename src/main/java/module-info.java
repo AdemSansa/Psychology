@@ -12,6 +12,7 @@ module com.example.psy {
     requires java.desktop;
     requires jakarta.mail;
     requires org.eclipse.angus.mail;
+    requires org.apache.pdfbox;
 
     opens com.example.psy to javafx.fxml;
 

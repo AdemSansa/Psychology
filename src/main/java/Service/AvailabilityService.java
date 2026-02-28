@@ -13,13 +13,14 @@ public class AvailabilityService implements Iservice<Availabilities> {
 
     @Override
     public void create(Availabilities availability) throws SQLException {
-        String query = "INSERT INTO availabilities (day, start_time, end_time, is_available, therapist_id) VALUES (?,?,?,?,?)";
+        String query = "INSERT INTO availabilities (day, start_time, end_time, is_available, therapist_id, specific_date) VALUES (?,?,?,?,?,?)";
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
         ps.setString(1, availability.getDay().name());
         ps.setTime(2, availability.getStartTime());
         ps.setTime(3, availability.getEndTime());
         ps.setBoolean(4, availability.isAvailable());
         ps.setInt(5, availability.getTherapistId());
+        ps.setDate(6, availability.getSpecificDate());
         ps.executeUpdate();
         System.out.println("Availability added successfully!");
     }
@@ -34,11 +35,12 @@ public class AvailabilityService implements Iservice<Availabilities> {
         while (rs.next()) {
             Availabilities a = new Availabilities();
             a.setId(rs.getInt("id"));
-            a.setDay(Day.valueOf(rs.getString("day")));
+            a.setDay(rs.getString("day") != null ? Day.valueOf(rs.getString("day")) : null);
             a.setStartTime(rs.getTime("start_time"));
             a.setEndTime(rs.getTime("end_time"));
             a.setAvailable(rs.getBoolean("is_available"));
             a.setTherapistId(rs.getInt("therapist_id"));
+            a.setSpecificDate(rs.getDate("specific_date"));
             list.add(a);
         }
         return list;
@@ -54,25 +56,27 @@ public class AvailabilityService implements Iservice<Availabilities> {
         if (rs.next()) {
             a = new Availabilities();
             a.setId(rs.getInt("id"));
-            a.setDay(Day.valueOf(rs.getString("day")));
+            a.setDay(rs.getString("day") != null ? Day.valueOf(rs.getString("day")) : null);
             a.setStartTime(rs.getTime("start_time"));
             a.setEndTime(rs.getTime("end_time"));
             a.setAvailable(rs.getBoolean("is_available"));
             a.setTherapistId(rs.getInt("therapist_id"));
+            a.setSpecificDate(rs.getDate("specific_date"));
         }
         return a;
     }
 
     @Override
     public void update(Availabilities availability) throws SQLException {
-        String query = "UPDATE availabilities SET day=?, start_time=?, end_time=?, is_available=?, therapist_id=? WHERE id=?";
+        String query = "UPDATE availabilities SET day=?, start_time=?, end_time=?, is_available=?, therapist_id=?, specific_date=? WHERE id=?";
         PreparedStatement ps = dbconnect.getInstance().getConnection().prepareStatement(query);
         ps.setString(1, availability.getDay().name());
         ps.setTime(2, availability.getStartTime());
         ps.setTime(3, availability.getEndTime());
         ps.setBoolean(4, availability.isAvailable());
         ps.setInt(5, availability.getTherapistId());
-        ps.setInt(6, availability.getId());
+        ps.setDate(6, availability.getSpecificDate());
+        ps.setInt(7, availability.getId());
         ps.executeUpdate();
         System.out.println("Availability updated successfully!");
     }
@@ -96,11 +100,12 @@ public class AvailabilityService implements Iservice<Availabilities> {
         while (rs.next()) {
             Availabilities a = new Availabilities();
             a.setId(rs.getInt("id"));
-            a.setDay(Day.valueOf(rs.getString("day")));
+            a.setDay(rs.getString("day") != null ? Day.valueOf(rs.getString("day")) : null);
             a.setStartTime(rs.getTime("start_time"));
             a.setEndTime(rs.getTime("end_time"));
             a.setAvailable(rs.getBoolean("is_available"));
             a.setTherapistId(rs.getInt("therapist_id"));
+            a.setSpecificDate(rs.getDate("specific_date"));
             list.add(a);
         }
         return list;

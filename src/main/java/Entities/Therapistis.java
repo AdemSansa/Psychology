@@ -15,6 +15,9 @@ public class Therapistis {
     private String status; // ACTIVE, INACTIVE
     private String password;
     private String photoUrl; // URL de la photo du thérapeute
+    private String diplomaPath; // Path to uploaded diploma/certificate file
+    private double latitude;
+    private double longitude;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -127,6 +130,30 @@ public class Therapistis {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getDiplomaPath() {
+        return diplomaPath;
+    }
+
+    public void setDiplomaPath(String diplomaPath) {
+        this.diplomaPath = diplomaPath;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public Timestamp getCreatedAt() {

@@ -24,6 +24,7 @@ public class Main extends Application {
         SceneManager.setStage(stage);
         SceneManager.switchScene("/com/example/psy/auth/login.fxml");
         stage.setTitle("Slimenify");
+        stage.setMaximized(true); // open application in full screen (maximized window)
         stage.show();
 
         // Initialize DB connection once (just for testing, optional)

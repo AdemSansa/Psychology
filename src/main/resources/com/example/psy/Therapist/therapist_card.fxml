@@ -9,49 +9,68 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<VBox fx:id="cardContainer" prefWidth="350.0" prefHeight="230.0" styleClass="therapist-card"
-      stylesheets="@../style.css" spacing="12.0"
+<VBox fx:id="cardContainer" prefWidth="380.0" styleClass="therapist-card"
+      stylesheets="@../style.css" spacing="15.0"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <padding>
-        <Insets bottom="18.0" left="18.0" right="18.0" top="18.0" />
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
-        <HBox alignment="CENTER_LEFT" spacing="14.0">
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
             <children>
-                <!-- Avatar: initials circle + optional photo on top -->
-                <StackPane fx:id="avatarPane" prefHeight="80.0" prefWidth="80.0" styleClass="therapist-initials">
+                <StackPane fx:id="avatarPane" prefHeight="70.0" prefWidth="70.0" styleClass="therapist-initials">
                     <children>
-                        <!-- Fallback initials -->
                         <Label fx:id="initialsLabel" text="SD" styleClass="therapist-initials-label" />
-                        <!-- Photo (shown when URL is set, clipped to circle) -->
-                        <ImageView fx:id="photoView" fitWidth="80.0" fitHeight="80.0"
+                        <ImageView fx:id="photoView" fitWidth="70.0" fitHeight="70.0"
                                    preserveRatio="false" smooth="true" visible="false">
                             <clip>
-                                <Circle centerX="40.0" centerY="40.0" radius="40.0" />
+                                <Circle centerX="35.0" centerY="35.0" radius="35.0" />
                             </clip>
                         </ImageView>
                     </children>
                 </StackPane>
-                <VBox>
+                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label fx:id="nameLabel" text="Sophie Dubois" styleClass="therapist-name" />
-                        <Label fx:id="roleLabel" text="Consultation" styleClass="therapist-role" />
+                        <Label fx:id="roleLabel" text="Online" styleClass="therapist-badge" />
                     </children>
                 </VBox>
             </children>
         </HBox>
-        <VBox spacing="6.0">
+
+        <VBox spacing="8.0">
             <children>
-                <Label fx:id="emailLabel" text="sophie@email.com" styleClass="therapist-detail" />
-                <Label fx:id="phoneLabel" text="+216 99222999" styleClass="therapist-detail" />
-                <Label fx:id="addressLabel" text="Description..." styleClass="therapist-detail" />
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <children>
+                        <Label text="📧 Email:" styleClass="therapist-label-prefix" />
+                        <Label fx:id="emailLabel" text="sophie@email.com" styleClass="therapist-value" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <children>
+                        <Label text="📞 Phone:" styleClass="therapist-label-prefix" />
+                        <Label fx:id="phoneLabel" text="+216 99222999" styleClass="therapist-value" />
+                    </children>
+                </HBox>
+                <HBox alignment="TOP_LEFT" spacing="5.0">
+                    <children>
+                        <Label text="📝 Bio:" styleClass="therapist-label-prefix" />
+                        <Label fx:id="addressLabel" text="Detailed description..." styleClass="therapist-value" wrapText="true" maxWidth="250" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                    <children>
+                        <Label text="🎓 Specialty:" styleClass="therapist-label-prefix" />
+                        <Label fx:id="specializationLabel" text="Psychologie" styleClass="therapist-value" wrapText="true" />
+                    </children>
+                </HBox>
             </children>
         </VBox>
-        <Label fx:id="specializationLabel" text="Spécialisation" styleClass="therapist-detail" wrapText="true" />
-        <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="ALWAYS">
+
+        <HBox alignment="CENTER_RIGHT" spacing="12.0" style="-fx-padding: 10 0 0 0;">
             <children>
-                <Button fx:id="editButton" mnemonicParsing="false" text="Modifier" styleClass="btn-action" prefWidth="100" />
-                <Button fx:id="deleteButton" mnemonicParsing="false" text="Supprimer" styleClass="btn-action btn-delete" />
+                <Button fx:id="editButton" mnemonicParsing="false" text="Edit" styleClass="btn-secondary" />
+                <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" styleClass="btn-primary" style="-fx-background-color: #63704f;" />
             </children>
         </HBox>
     </children>
