@@ -2,6 +2,7 @@ package Service;
 
 import Database.dbconnect;
 import Entities.Review;
+import Entities.User;
 import interfaces.Iservice;
 
 import java.sql.*;
@@ -103,4 +104,5 @@ public class ReviewService implements Iservice<Review> {
         }
         return 0;
     }
+
 }

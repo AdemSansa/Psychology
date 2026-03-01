@@ -131,6 +131,11 @@ public class UserService implements Iservice<User> {
         return null;
     }
 
+    // ------------------- Lecture par ID (alias pour read) -------------------
+    public User getUserById(int id) throws SQLException {
+        return read(id);
+    }
+
     // ------------------- Mapping ResultSet vers User -------------------
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User u = new User();

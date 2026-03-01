@@ -2,12 +2,16 @@ package Controllers.forum;
 
 import Entities.Review;
 import Entities.ReviewReply;
+import Entities.User;
 import Service.ReviewService;
 import Service.Reply_ReviewService;
 import Service.BadWordsApiService;
 import Service.TranslationApiService;
 import Service.SentimentAnalysisService;
+import Service.UserService;
+import Service.EmailService;
 import util.Session;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,6 +46,10 @@ public class ForumController implements Initializable {
     private final TranslationApiService translationApiService = new TranslationApiService();
     private final SentimentAnalysisService sentimentService = new SentimentAnalysisService();
 
+    // 🔹 AJOUT
+    private final UserService userService = new UserService();
+    private final EmailService emailService = new EmailService();
+
     private int currentUserId;
 
     @Override
@@ -72,6 +80,7 @@ public class ForumController implements Initializable {
     }
 
     private void translateContent(String lang) {
+
         String text = contentField.getText().trim();
 
         if (text.isEmpty()) {
@@ -105,7 +114,8 @@ public class ForumController implements Initializable {
         }
 
         if (content.length() < 10) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Review must contain at least 10 characters!");
+            showAlert(Alert.AlertType.WARNING, "Validation Error",
+                    "Review must contain at least 10 characters!");
             return;
         }
 
@@ -120,16 +130,38 @@ public class ForumController implements Initializable {
                 showAlert(Alert.AlertType.WARNING, "Validation Error", "Review already exists!");
                 return;
             } else {
+
                 Review review = new Review();
                 review.setContent(content);
                 review.setIdUser(currentUserId);
 
                 reviewService.create(review);
 
+                // 🔹 AJOUT : récupération user + envoi mail
+                User user = userService.getUserById(currentUserId);
+
+                if (user != null) {
+                    String message =
+                            "Bonjour " + user.getFirstName() + " " + user.getLastName() + ",\n\n" +
+                                    "Merci de bien vouloir partager votre expérience avec nous.\n" +
+                                    "Votre avis est très important et nous aide à améliorer nos services.\n\n" +
+                                    "Cordialement,\nL'équipe support";
+
+                    // 🔹 envoi asynchrone (ne bloque pas JavaFX)
+                    new Thread(() -> {
+                        emailService.sendEmail(
+                                user.getEmail(),
+                                "Merci pour votre avis",
+                                message
+                        );
+                    }).start();
+                }
+
                 contentField.clear();
                 loadReviews();
 
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Review added successfully!");
+                showAlert(Alert.AlertType.INFORMATION,
+                        "Success", "Review added successfully!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,23 +169,24 @@ public class ForumController implements Initializable {
         }
     }
 
+    /* 🔽 TOUT LE RESTE DE TON CODE EST INCHANGÉ 🔽 */
+
     private void loadReviews() {
-
         reviewContainer.getChildren().clear();
-
         try {
             List<Review> reviews = reviewService.list();
             List<ReviewReply> replies = replyService.list();
-
             for (Review review : reviews) {
                 VBox card = createReviewCard(review, replies);
                 reviewContainer.getChildren().add(card);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    // ... (createReviewCard, replies, edit, delete, translateLabel, showAlert)
+
 
     private VBox createReviewCard(Review review, List<ReviewReply> replies) {
 
