@@ -67,9 +67,12 @@
 
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
-            <FlowPane fx:id="cardContainer"
-                      hgap="25" vgap="25"
-                      style="-fx-padding: 30;"/>
+            <StackPane>
+                <FlowPane fx:id="cardContainer"
+                          hgap="25" vgap="25"
+                          style="-fx-padding: 30;"/>
+                <Label fx:id="emptyListLabel" text="No registrations found matching your criteria." visible="false" managed="false" style="-fx-text-fill: #aaa; -fx-font-style: italic; -fx-font-size: 14px;"/>
+            </StackPane>
         </ScrollPane>
     </center>
 

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful</title>
+    <style>
+        :root {
+            --primary: #6f4e37;
+            --success: #38a169;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #f0fff4;
+            color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 25px;
+        }
+
+        h1 {
+            color: var(--text-main);
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .chair-card {
+            background: #fffaf0;
+            border: 2px solid #feebc8;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chair-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #c05621;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .chair-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .info-row {
+            text-align: left;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        <h1>Registration Success!</h1>
+        <p class="subtitle">Thank you for your application.</p>
+
+        <div class="chair-card">
+            <div class="chair-label">Your Chair Number</div>
+            <div class="chair-number" id="chairNum">#--</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Participant</div>
+            <div class="info-value" id="userName">Loading...</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">Event</div>
+            <div class="info-value" id="eventName">Event Details</div>
+        </div>
+
+        <div class="footer">
+            Psychology Event Management System
+        </div>
+    </div>
+
+    <script>
+        function getParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        window.onload = () => {
+            const name = getParam('name') || 'Guest';
+            const chair = getParam('chair') || '00';
+            const event = getParam('event') || 'Therapy Session';
+
+            document.getElementById('userName').textContent = decodeURIComponent(name);
+            document.getElementById('chairNum').textContent = '#' + (chair.padStart(2, '0'));
+            document.getElementById('eventName').textContent = decodeURIComponent(event);
+        };
+    </script>
+</body>
+</html>

@@ -26,6 +26,7 @@ public class RegistrationListController implements Initializable {
     @FXML private Label titleLabel;
     @FXML private FlowPane cardContainer;
     @FXML private Label totalLabel;
+    @FXML private Label emptyListLabel;
 
     @FXML private Label totalCountLabel;
     @FXML private Label registeredCountLabel;
@@ -297,6 +298,13 @@ public class RegistrationListController implements Initializable {
     // ================= RENDER =================
     private void renderCards() {
         cardContainer.getChildren().clear();
+        boolean isEmpty = filteredRegistrations.isEmpty();
+
+        if (emptyListLabel != null) {
+            emptyListLabel.setVisible(isEmpty);
+            emptyListLabel.setManaged(isEmpty);
+        }
+
         for (Registration r : filteredRegistrations) {
             cardContainer.getChildren().add(createCard(r));
         }
