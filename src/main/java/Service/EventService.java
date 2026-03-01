@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventService implements Iservice<Event> {
-
     private final Connection cnx;
 
     public EventService() {
@@ -20,8 +19,8 @@ public class EventService implements Iservice<Event> {
     @Override
     public void create(Event event) throws SQLException {
 
-        String sql = "INSERT INTO event (title, description, type, date_start, date_end, location, max_participants, status,image_url) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO event (title, description, type, date_start, date_end, location, max_participants, status, image_url, organizer_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement ps = cnx.prepareStatement(sql);
 
@@ -29,8 +28,6 @@ public class EventService implements Iservice<Event> {
         ps.setString(2, event.getDescription());
         ps.setString(3, event.getType());
         ps.setTimestamp(4, Timestamp.valueOf(event.getDateStart()));
-
-
 
         if (event.getDateEnd() != null)
             ps.setTimestamp(5, Timestamp.valueOf(event.getDateEnd()));
@@ -45,8 +42,11 @@ public class EventService implements Iservice<Event> {
             ps.setNull(7, Types.INTEGER);
 
         ps.setString(8, event.getStatus());
-
         ps.setString(9, event.getImageUrl());
+
+        // Add id_user (organizer)
+        ps.setInt(10, event.getOrganizerId());
+
         ps.executeUpdate();
         System.out.println("Event added successfully!");
     }
@@ -127,7 +127,6 @@ public class EventService implements Iservice<Event> {
         ps.setTimestamp(4, Timestamp.valueOf(event.getDateStart()));
 
 
-
         if (event.getDateEnd() != null)
             ps.setTimestamp(5, Timestamp.valueOf(event.getDateEnd()));
         else
@@ -143,7 +142,7 @@ public class EventService implements Iservice<Event> {
         ps.setString(8, event.getStatus());
         ps.setObject(9, event.getOrganizerId());
         ps.setString(10, event.getImageUrl());
-        ps.setInt(11,event.getIdEvent() );
+        ps.setInt(11, event.getIdEvent());
         ps.executeUpdate();
         System.out.println("Event updated successfully!");
     }
@@ -159,6 +158,7 @@ public class EventService implements Iservice<Event> {
 
         System.out.println("Event deleted successfully!");
     }
+
     private final RegistrationService registrationService = new RegistrationService();
 
 
@@ -176,4 +176,30 @@ public class EventService implements Iservice<Event> {
         return max;
     }
 
+    public List<Event> listByOrganizer(int organizerId) throws SQLException {
+        List<Event> events = new ArrayList<>();
+        String sql = "SELECT * FROM event WHERE organizer_id = ?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, organizerId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Event e = new Event(
+                    rs.getInt("id_event"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getString("type"),
+                    rs.getTimestamp("date_start").toLocalDateTime(),
+                    rs.getTimestamp("date_end") != null ? rs.getTimestamp("date_end").toLocalDateTime() : null,
+                    rs.getString("location"),
+                    rs.getObject("max_participants") != null ? rs.getInt("max_participants") : null,
+                    rs.getString("status"),
+                    rs.getTimestamp("created_at").toLocalDateTime(),
+                    rs.getObject("organizer_id") != null ? rs.getInt("organizer_id") : null,
+                    rs.getString("image_url")
+            );
+            events.add(e);
+        }
+        return events;
+    }
 }

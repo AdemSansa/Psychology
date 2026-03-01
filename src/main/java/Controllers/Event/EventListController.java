@@ -4,20 +4,35 @@ package Controllers.Event;
 import Service.RegistrationService;
 import Entities.Event;
 import Service.EventService;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import util.SceneManager;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
+import util.SceneManager;
+import util.Session;
+import Entities.User;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +48,8 @@ public class EventListController implements Initializable {
     @FXML private TextField searchField;
     @FXML private FlowPane cardContainer;
     @FXML private Label totalEventsLabel;
+    @FXML private Button registrationsBtn;
+    @FXML private Button addEventBtn;
 
     private final EventService eventService = new EventService();
 
@@ -46,6 +63,14 @@ public class EventListController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         loadEventsFromDB();
 
+        String role = Session.getInstance().getUser().getRole();
+        boolean canManage = "therapist".equals(role) || "admin".equals(role);
+        
+        registrationsBtn.setVisible(canManage);
+        registrationsBtn.setManaged(canManage);
+        addEventBtn.setVisible(canManage);
+        addEventBtn.setManaged(canManage);
+
         searchField.textProperty().addListener((obs, oldVal, newVal) -> handleSearch());
 
         // ===== FIX SCROLL =====
@@ -57,7 +82,13 @@ public class EventListController implements Initializable {
     // ================= LOAD =================
     private void loadEventsFromDB() {
         try {
-            events.setAll(eventService.list());
+            Session session = Session.getInstance();
+            if ("therapist".equals(session.getUser().getRole())) {
+                events.setAll(eventService.listByOrganizer(session.getUser().getId()));
+            } else {
+                // Admin or Guest/Patient (Guests see all published events usually)
+                events.setAll(eventService.list());
+            }
             filteredEvents.setAll(events);
             renderCards();
             updateTotalLabel();
@@ -83,25 +114,43 @@ public class EventListController implements Initializable {
         else {
             countdownLabel.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
         }
+        // Allow Admin OR Therapist to edit/delete (back office)
+        String role2 = Session.getInstance().getUser().getRole();
+        boolean isAdminOrTherapist = "admin".equals(role2) || "therapist".equals(role2);
+        
+        Button editBtn = new Button("Edit");
+        Button deleteBtn = new Button("Delete");
+
+        editBtn.getStyleClass().add("btn-primary");
+        deleteBtn.getStyleClass().add("btn-danger");
+
+        // ONLY Admin or Therapist can See Edit/Delete
+        editBtn.setVisible(isAdminOrTherapist);
+        editBtn.setManaged(isAdminOrTherapist);
+        deleteBtn.setVisible(isAdminOrTherapist);
+        deleteBtn.setManaged(isAdminOrTherapist);
+
 
 
         // ===== IMAGE =====
         StackPane imageContainer = new StackPane();
-        imageContainer.setPrefSize(300, 170);
+        imageContainer.setPrefSize(290, 170);
 
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(300);
+        imageView.setFitWidth(290);
         imageView.setFitHeight(170);
         imageView.setPreserveRatio(false);
 
-        Rectangle clip = new Rectangle(300, 170);
+        Rectangle clip = new Rectangle(290, 170);
         clip.setArcWidth(20);
         clip.setArcHeight(20);
         imageView.setClip(clip);
 
         if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
             try {
-                imageView.setImage(new Image(event.getImageUrl(), true));
+                String imageUrl = event.getImageUrl();
+                String finalUrl = imageUrl.startsWith("http") ? imageUrl : new java.io.File(imageUrl).toURI().toString();
+                imageView.setImage(new Image(finalUrl, true));
                 imageContainer.getChildren().add(imageView);
             } catch (Exception e) {
                 imageContainer.getChildren().add(createImagePlaceholder());
@@ -190,36 +239,32 @@ public class EventListController implements Initializable {
         """);
 
         // ===== BUTTONS =====
-        Button editBtn = new Button("Edit");
+
         editBtn.getStyleClass().add("btn-primary");
         editBtn.setOnAction(e -> handleEdit(event));
         Button registerBtn = new Button("Register");
         registerBtn.getStyleClass().add("btn-primary");
 
-// 🚫 Désactiver si FULL
+        // 🚫 Hide for Therapist (they manage)
+        boolean isTherapist = "therapist".equals(role2);
+        if (isTherapist) {
+            registerBtn.setVisible(false);
+            registerBtn.setManaged(false);
+        }
+
+        // 🚫 Disable if FULL
         if (dispo <= 0) {
             registerBtn.setDisable(true);
             registerBtn.setText("FULL");
         }
 
-        registerBtn.setOnAction(e -> {
-            RegistrationController controller =
-                    (RegistrationController) SceneManager.switchSceneWithController(
-                            "/com/example/psy/Event/registration.fxml"
-                    );
-
-            if (controller != null) {
-                controller.setEventId(event.getIdEvent());
-            }
-
-        });
 
         registerBtn.getStyleClass().add("btn-primary");
         registerBtn.setOnAction(e -> {
 
             RegistrationController controller =
-                    (RegistrationController) SceneManager.switchSceneWithController(
-                            "/com/example/psy/Event/registration.fxml"
+                    (RegistrationController) SceneManager.loadPageWithController(
+                            "/com/example/psy/Event/registration_list.fxml"
                     );
 
             if (controller != null) {
@@ -229,7 +274,7 @@ public class EventListController implements Initializable {
 
 
 
-        Button deleteBtn = new Button("Delete");
+
         deleteBtn.getStyleClass().add("btn-primary");
         deleteBtn.setOnAction(e -> {
             try {
@@ -238,6 +283,35 @@ public class EventListController implements Initializable {
                 ex.printStackTrace();
             }
         });
+
+        // ===== MAP PREVIEW (Nominatim + OSM Static Map) =====
+        ImageView mapPreview = new ImageView();
+        mapPreview.setFitWidth(270);
+        mapPreview.setFitHeight(110);
+        mapPreview.setPreserveRatio(false);
+        Rectangle mapClip = new Rectangle(270, 110);
+        mapClip.setArcWidth(12);
+        mapClip.setArcHeight(12);
+        mapPreview.setClip(mapClip);
+
+        Label mapPlaceholder = new Label("🗺 Loading map...");
+        mapPlaceholder.setStyle("-fx-text-fill: #aaa; -fx-font-size: 12px;");
+        StackPane mapHolder = new StackPane(mapPlaceholder, mapPreview);
+        mapHolder.setPrefSize(270, 110);
+        mapHolder.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 10;");
+
+        if (event.getLocation() != null && !event.getLocation().isBlank()) {
+            fetchMapImageAsync(event.getLocation(), mapPreview, mapPlaceholder, 270, 110);
+        } else {
+            mapPlaceholder.setText("📍 No location set");
+        }
+
+        Button mapBtn = new Button("📍 View Map");
+        mapBtn.getStyleClass().add("btn-secondary");
+        mapBtn.setStyle("-fx-font-size: 11px; -fx-background-radius: 10; -fx-padding: 4 10;");
+        mapBtn.setOnAction(e -> showMapPopup(event.getLocation()));
+        HBox mapBtnRow = new HBox(mapBtn);
+        mapBtnRow.setAlignment(Pos.CENTER_RIGHT);
 
         HBox btnRow = new HBox(10, registerBtn, editBtn, deleteBtn);
         btnRow.setAlignment(Pos.CENTER);
@@ -249,8 +323,9 @@ public class EventListController implements Initializable {
 
 
         // ===== CARD =====
-        VBox card = new VBox(12);
-        card.setPrefWidth(300);
+        VBox card = new VBox(15); // Increased spacing
+        card.setPrefWidth(350);
+        card.setStyle("-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);");
         card.getStyleClass().add("event-card");
 
         card.getChildren().addAll(
@@ -258,8 +333,10 @@ public class EventListController implements Initializable {
                 titleLabel,
                 metaBox,
                 countdownLabel,
-                badgeRow,   // 🔥 UTILISE badgeRow PAS typeBadge
+                badgeRow,
                 descLabel,
+                mapHolder,
+                mapBtnRow,
                 bottomRow
         );
 
@@ -275,18 +352,6 @@ public class EventListController implements Initializable {
             card.getStyleClass().add("event-card-selected");
 
         });
-// ===== SELECTION CARD (bordure marron) =====
-        card.setOnMouseClicked(e -> {
-
-            // retirer ancienne sélection
-            if (selectedCard != null) {
-                selectedCard.getStyleClass().remove("event-card-selected");
-            }
-
-            // nouvelle sélection
-            selectedCard = card;
-            card.getStyleClass().add("event-card-selected");
-        });
 
 
 
@@ -295,9 +360,160 @@ public class EventListController implements Initializable {
     }
 
     private StackPane createImagePlaceholder() {
-        Rectangle bg = new Rectangle(300, 170);
+        Rectangle bg = new Rectangle(290, 170);
         bg.setFill(Color.LIGHTGRAY);
         return new StackPane(bg, new Label("No Image"));
+    }
+
+    // ================= MAP: NOMINATIM + OSM STATIC =================
+
+    /**
+     * Geocodes a location with Nominatim (OpenStreetMap), returns [lat, lon] or null.
+     * JSON is parsed manually — no external library needed.
+     */
+    private double[] geocodeLocation(String location) {
+        try {
+            String encoded = URLEncoder.encode(location.trim(), StandardCharsets.UTF_8);
+            String urlStr = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encoded;
+            HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("User-Agent", "PsychologyApp/1.0 (edu-project)");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            if (conn.getResponseCode() != 200) return null;
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = br.readLine()) != null) sb.append(line);
+            }
+            String json = sb.toString();
+            if (json.isEmpty() || json.equals("[]")) return null;
+            // Manual extraction: "lat":"36.81...","lon":"10.18..."
+            int latIdx = json.indexOf("\"lat\":\"") + 7;
+            int latEnd = json.indexOf("\"", latIdx);
+            int lonIdx = json.indexOf("\"lon\":\"") + 7;
+            int lonEnd = json.indexOf("\"", lonIdx);
+            if (latIdx < 7 || lonIdx < 7) return null;
+            double lat = Double.parseDouble(json.substring(latIdx, latEnd));
+            double lon = Double.parseDouble(json.substring(lonIdx, lonEnd));
+            return new double[]{lat, lon};
+        } catch (Exception e) {
+            System.err.println("[Map] Geocode failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Builds an OSM tile URL from lat/lon + zoom.
+     * Tile coords calculated per OpenStreetMap slippy-map standard.
+     */
+    private String buildOsmTileUrl(double lat, double lon, int zoom) {
+        int tileX = (int) Math.floor((lon + 180) / 360 * (1 << zoom));
+        double latRad = Math.toRadians(lat);
+        int tileY = (int) Math.floor(
+                (1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * (1 << zoom));
+        return "https://tile.openstreetmap.org/" + zoom + "/" + tileX + "/" + tileY + ".png";
+    }
+
+    /**
+     * Downloads image bytes via HttpURLConnection (controls User-Agent, avoids JavaFX SSL issues),
+     * then returns a JavaFX Image from ByteArrayInputStream.
+     */
+    private void fetchMapImageAsync(String location, ImageView target, Label placeholder, int w, int h) {
+        Task<Image> task = new Task<>() {
+            @Override
+            protected Image call() throws Exception {
+                double[] coords = geocodeLocation(location);
+                if (coords == null) return null;
+                // zoom=11 gives ~city-level context on a single tile
+                String tileUrl = buildOsmTileUrl(coords[0], coords[1], 11);
+                HttpURLConnection conn = (HttpURLConnection) new URL(tileUrl).openConnection();
+                conn.setRequestProperty("User-Agent", "PsychologyApp/1.0 (edu-project)");
+                conn.setConnectTimeout(7000);
+                conn.setReadTimeout(7000);
+                if (conn.getResponseCode() != 200) return null;
+                byte[] bytes = conn.getInputStream().readAllBytes();
+                return new Image(new ByteArrayInputStream(bytes));
+            }
+        };
+        task.setOnSucceeded(ev -> Platform.runLater(() -> {
+            Image img = task.getValue();
+            if (img == null || img.isError()) {
+                placeholder.setText("📍 Map unavailable");
+            } else {
+                target.setImage(img);
+                placeholder.setVisible(false);
+            }
+        }));
+        task.setOnFailed(ev -> Platform.runLater(() -> placeholder.setText("📍 Map unavailable")));
+        Thread t = new Thread(task, "map-fetch");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    /**
+     * Opens a popup with a larger map + location label.
+     */
+    private void showMapPopup(String location) {
+        Stage stage = new Stage();
+        stage.setTitle("📍 Event Location");
+
+        Label titleLbl = new Label("📍 " + (location != null ? location : "Unknown"));
+        titleLbl.setWrapText(true);
+        titleLbl.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #3e2c23;");
+
+        WebView webView = new WebView();
+        WebEngine engine = webView.getEngine();
+        webView.setPrefSize(700, 450);
+
+        if (location != null && !location.isBlank()) {
+            engine.loadContent(buildViewMapHtml(location));
+        } else {
+            Label errorLbl = new Label("📍 No location available");
+            VBox errorBox = new VBox(errorLbl);
+            errorBox.setAlignment(Pos.CENTER);
+            errorBox.setPrefSize(700, 450);
+            webView.getEngine().loadContent("<html><body style='display:flex;justify-content:center;align-items:center;height:100vh;margin:0;font-family:sans-serif;color:#888;'>📍 No location available</body></html>");
+        }
+
+        Button closeBtn = new Button("Close");
+        closeBtn.getStyleClass().add("btn-secondary");
+        closeBtn.setOnAction(e -> stage.close());
+
+        VBox box = new VBox(15, titleLbl, webView, closeBtn);
+        box.setAlignment(Pos.CENTER);
+        box.setStyle("-fx-padding: 20; -fx-background-color: white;");
+
+        stage.setScene(new Scene(box, 750, 580));
+        stage.show();
+    }
+
+    private String buildViewMapHtml(String location) {
+        return "<!DOCTYPE html><html><head>" +
+               "<meta charset='utf-8'>" +
+               "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>" +
+               "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>" +
+               "<style>html,body,#map{width:100%;height:100%;margin:0;padding:0;}</style>" +
+               "</head><body>" +
+               "<div id='map'></div>" +
+               "<script>" +
+               "var map = L.map('map').setView([36.8, 10.2], 6);" +
+               "L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{" +
+               "  maxZoom:19," +
+               "  attribution:'&copy; OpenStreetMap contributors'" +
+               "}).addTo(map);" +
+               "fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent('" + location.replace("'", "\\'") + "'))" +
+               "  .then(r=>r.json())" +
+               "  .then(data=>{" +
+               "    if(data && data.length > 0) {" +
+               "      var lat=data[0].lat; var lon=data[0].lon;" +
+               "      map.setView([lat, lon], 14);" +
+               "      L.marker([lat,lon]).addTo(map)" +
+               "        .bindPopup('<b>" + location.replace("'", "\\'") + "</b>').openPopup();" +
+               "    }" +
+               "  });" +
+               "</script></body></html>";
     }
 
     private void renderCards() {
@@ -323,12 +539,17 @@ public class EventListController implements Initializable {
     // ================= NAVIGATION =================
     @FXML
     private void handleBack() {
-        SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
+        SceneManager.loadPage("/com/example/psy/intro/dashboard.fxml");
     }
 
     @FXML
     private void handleAddEvent() {
-        SceneManager.switchScene("/com/example/psy/Event/eventAdd.fxml");
+        SceneManager.loadPage("/com/example/psy/Event/eventAdd.fxml");
+    }
+
+    @FXML
+    private void handleViewRegistrations() {
+        SceneManager.loadPage("/com/example/psy/Event/registration.fxml");
     }
 
     private void handleEdit(Event event) {

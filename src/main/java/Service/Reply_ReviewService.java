@@ -30,16 +30,18 @@ public class Reply_ReviewService implements Iservice<ReviewReply> {
     public List<ReviewReply> list() throws SQLException {
         List<ReviewReply> replies = new ArrayList<>();
         String sql = "SELECT * FROM review_reply";
-        Statement st = cnx.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-        while (rs.next()) {
-            replies.add(new ReviewReply(
-                    rs.getInt("id_reply"),
-                    rs.getString("content"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_review"),
-                    rs.getInt("id_therapist")
-            ));
+
+        try (Statement st = cnx.createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                replies.add(new ReviewReply(
+                        rs.getInt("id_reply"),
+                        rs.getString("content"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getInt("id_review"),
+                        rs.getInt("id_therapist")));
+            }
         }
         return replies;
     }
@@ -47,17 +49,19 @@ public class Reply_ReviewService implements Iservice<ReviewReply> {
     @Override
     public ReviewReply read(int id) throws SQLException {
         String sql = "SELECT * FROM review_reply WHERE id_reply=?";
-        PreparedStatement ps = cnx.prepareStatement(sql);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return new ReviewReply(
-                    rs.getInt("id_reply"),
-                    rs.getString("content"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_review"),
-                    rs.getInt("id_therapist")
-            );
+
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new ReviewReply(
+                        rs.getInt("id_reply"),
+                        rs.getString("content"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getInt("id_review"),
+                        rs.getInt("id_therapist"));
+            }
         }
         return null;
     }

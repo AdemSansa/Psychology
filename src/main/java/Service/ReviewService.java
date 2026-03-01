@@ -36,8 +36,8 @@ public class ReviewService implements Iservice<Review> {
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_usr")
-            ));
+                    rs.getInt("id_usr"));
+            reviews.add(r);
         }
         return reviews;
     }
@@ -53,8 +53,7 @@ public class ReviewService implements Iservice<Review> {
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_usr")
-            );
+                    rs.getInt("id_usr"));
         }
         return null;
     }
@@ -82,15 +81,8 @@ public class ReviewService implements Iservice<Review> {
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, content);
         ResultSet rs = ps.executeQuery();
-        return rs.next();
-    }
-
-    // ✅ Statistiques
-    public int countReviews() throws SQLException {
-        String sql = "SELECT COUNT(*) AS total FROM review";
-        try (Statement st = cnx.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) return rs.getInt("total");
+        if (rs.next()) {
+            return true;
         }
         return 0;
     }

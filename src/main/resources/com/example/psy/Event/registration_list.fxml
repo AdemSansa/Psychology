@@ -1,59 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controllers.Event.RegistrationListController"
+            fx:controller="Controllers.Event.RegistrationController"
             stylesheets="@../style.css"
             styleClass="background-gradient">
 
-    <!-- ===== HEADER ===== -->
     <top>
-        <VBox spacing="10" style="-fx-padding:20;">
-            <Label fx:id="titleLabel" text="Participants" styleClass="section-title"/>
-
-            <TextField fx:id="searchField"
-                       promptText="🔍 Search participant..."
-                       styleClass="form-control"
-                       prefWidth="320"/>
+        <VBox spacing="10" styleClass="top-header">
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Button text="←" onAction="#handleBack" styleClass="btn-secondary" style="-fx-background-radius: 50;"/>
+                <VBox spacing="2">
+                    <Label fx:id="eventInfoLabel" text="Register for Event" styleClass="section-title" style="-fx-font-size: 18;"/>
+                    <Label text="Secure your spot by providing your details"/>
+                </VBox>
+            </HBox>
         </VBox>
     </top>
 
-    <!-- ===== FORM ADD / UPDATE ===== -->
     <center>
-        <VBox spacing="15" alignment="CENTER" style="-fx-padding:20;">
+        <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: transparent; -fx-background-color: transparent; -fx-padding: 20;">
+            <VBox spacing="25" alignment="TOP_CENTER">
 
-            <HBox spacing="15" alignment="CENTER">
-                <TextField fx:id="nameField"
-                           promptText="Participant name"
-                           styleClass="form-control"
-                           prefWidth="220"/>
+            <!-- Registration Form Card -->
+            <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);" maxWidth="500">
+                <Label text="Registration Form" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
 
-                <ComboBox fx:id="statusBox"
-                          styleClass="form-control"
-                          prefWidth="160"/>
-            </HBox>
+                <!-- Full Name -->
+                <VBox spacing="5">
+                    <Label text="Full Name" style="-fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
+                    <TextField fx:id="nameField" promptText="Your name" styleClass="form-control" editable="false" style="-fx-background-color: #f5f5f5;"/>
+                    <Label fx:id="nameError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" visible="false" managed="false"/>
+                </VBox>
 
-            <Button text="Add / Update"
-                    onAction="#handleAddOrUpdate"
-                    styleClass="btn-primary"/>
+                <!-- Email -->
+                <VBox spacing="5">
+                    <Label text="Email Address *" style="-fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
+                    <TextField fx:id="emailField" promptText="your.email@example.com" styleClass="form-control"/>
+                    <Label fx:id="emailError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" visible="false" managed="false"/>
+                </VBox>
 
-            <ScrollPane fitToWidth="true" style="-fx-background-color:transparent;">
-                <FlowPane fx:id="cardContainer"
-                          hgap="20" vgap="20"
-                          style="-fx-padding:10;"
-                          alignment="CENTER"/>
-            </ScrollPane>
+                <!-- Phone Number -->
+                <VBox spacing="5">
+                    <Label text="Phone Number" style="-fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
+                    <TextField fx:id="phoneField" promptText="+1234567890" styleClass="form-control"/>
+                    <Label fx:id="phoneError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" visible="false" managed="false"/>
+                </VBox>
 
-        </VBox>
+                <!-- Notes -->
+                <VBox spacing="5">
+                    <Label text="Notes / Message to Organizer" style="-fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
+                    <TextArea fx:id="notesArea" promptText="Any special requirements..." styleClass="form-control" prefRowCount="4" wrapText="true"/>
+                </VBox>
+
+                <ComboBox fx:id="statusBox" visible="false" managed="false"/>
+
+                <!-- Buttons -->
+                <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                    <Button text="Cancel" onAction="#handleBack" styleClass="btn-secondary" prefWidth="120"/>
+                    <Button fx:id="submitBtn" text="Submit Registration" onAction="#handleRegister" styleClass="btn-primary" prefWidth="180"/>
+                </HBox>
+
+                <Label fx:id="messageLabel" style="-fx-font-weight: bold; -fx-alignment: center;" wrapText="true"/>
+            </VBox>
+
+            <!-- Existing Registrations List (for admins/therapists) -->
+            <VBox spacing="15" fx:id="registrationsListContainer" visible="false" managed="false" style="-fx-padding: 0 40 40 40;">
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="Registered Participants" styleClass="section-title" style="-fx-font-size: 20;"/>
+                    <Button text="🔄 Refresh" onAction="#handleRefresh" styleClass="btn-secondary" style="-fx-font-size: 11px; -fx-padding: 4 10; -fx-background-radius: 12;"/>
+                </HBox>
+                
+                <TextField fx:id="searchField" 
+                           promptText="🔍 Search participant..." 
+                           styleClass="form-control" 
+                           maxWidth="400"/>
+                
+                <ScrollPane fitToWidth="true" prefHeight="450" style="-fx-background: transparent; -fx-background-color: transparent;">
+                    <StackPane>
+                        <FlowPane fx:id="cardContainer" hgap="25" vgap="25" style="-fx-padding: 10 0;"/>
+                        <Label fx:id="emptyListLabel" text="No participants registered yet for this event." visible="false" managed="false" style="-fx-text-fill: #aaa; -fx-font-style: italic; -fx-font-size: 14px;"/>
+                    </StackPane>
+                </ScrollPane>
+            </VBox>
+
+            </VBox>
+        </ScrollPane>
     </center>
-
-    <!-- ===== FOOTER ===== -->
-    <bottom>
-        <HBox alignment="CENTER_RIGHT" style="-fx-padding:10;">
-            <Label fx:id="totalLabel" style="-fx-font-weight:bold;"/>
-        </HBox>
-    </bottom>
 
 </BorderPane>

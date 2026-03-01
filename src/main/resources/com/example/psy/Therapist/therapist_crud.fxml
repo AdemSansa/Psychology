@@ -4,115 +4,348 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.Circle?>
 
-<StackPane prefHeight="650.0" prefWidth="1100.0" styleClass="background-gradient" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Therapists.TherapistCRUDController">
+<StackPane prefHeight="650.0" prefWidth="1100.0" styleClass="background-gradient" stylesheets="@../style.css"
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.Therapists.TherapistCRUDController">
     <children>
-        <!-- MAIN CONTENT -->
-        <VBox spacing="25.0">
-            <padding>
-                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-            </padding>
+
+        <!-- ═══════════════════════════════════════
+             MAIN CONTENT
+             ═══════════════════════════════════════ -->
+        <VBox spacing="18.0">
+            <padding><Insets bottom="28.0" left="28.0" right="28.0" top="28.0" /></padding>
             <children>
-                <!-- HEADER CARD -->
-                <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
+
+                <!-- HEADER -->
+                <HBox alignment="CENTER_LEFT" spacing="20.0"
+                      style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20 25; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4); -fx-border-color: #d7dacc;">
                     <children>
                         <VBox>
                             <children>
-                                <Label styleClass="section-title" text="Gestion des Médecins" />
-                                <Label fx:id="totalTherapistsLabel" styleClass="subtitle" style="-fx-font-size: 14px;" text="0 médecin enregistré" />
+                                <Label styleClass="section-title" text="Therapist Directory" />
+                                <Label fx:id="totalTherapistsLabel" style="-fx-font-size: 13px; -fx-text-fill: #2c351c;" text="0 therapist registered" />
                             </children>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" fx:id="dispo" onAction="#handleSwitch" styleClass="btn-secondary" text="Gérer les Disponibilités ➜" />
-                        <Button mnemonicParsing="false" fx:id="ajoutdocteur" onAction="#openAddModal" styleClass="btn-primary" text="+ Ajouter un médecin" />
+                        <Button mnemonicParsing="false" fx:id="dispo" onAction="#handleSwitch" styleClass="btn-secondary" text="🗓 Manage Availabilities" />
+                        <Button mnemonicParsing="false" fx:id="ajoutdocteur" onAction="#openAddModal" styleClass="btn-primary" text="➕ New Therapist" />
                     </children>
                 </HBox>
 
-                <!-- CARDS CONTAINER -->
+                <!-- SEARCH & FILTER BAR -->
+                <HBox alignment="CENTER_LEFT" spacing="15.0"
+                      style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.03), 8, 0, 0, 2); -fx-border-color: #d7dacc;">
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Search" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #63704f;" />
+                                <TextField fx:id="searchField" promptText="Name, surname..." prefWidth="220.0" styleClass="form-control" />
+                            </children>
+                        </VBox>
+
+                        <Separator orientation="VERTICAL" prefHeight="30.0" />
+
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Specialty" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #63704f;" />
+                                <ComboBox fx:id="specialityFilterBox" promptText="All" prefWidth="170.0" styleClass="form-control" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Mode" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #63704f;" />
+                                <ComboBox fx:id="consultTypeFilterBox" promptText="All" prefWidth="130.0" styleClass="form-control" />
+                            </children>
+                        </VBox>
+
+                        <Separator orientation="VERTICAL" prefHeight="30.0" />
+
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Location (📍)" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #63704f;" />
+                                <HBox spacing="5.0">
+                                    <TextField fx:id="locationSearchField" promptText="My city..." prefWidth="130.0" styleClass="form-control" />
+                                    <Button onAction="#handleLocationSearch" styleClass="btn-primary" text="📍" style="-fx-padding: 8 10;" />
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Sort by" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #63704f;" />
+                                <ComboBox fx:id="sortComboBox" promptText="Default" prefWidth="120.0" styleClass="form-control" />
+                            </children>
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <Button fx:id="resetFilterBtn" mnemonicParsing="false" onAction="#resetFilters" text="🔄 Reset" styleClass="btn-secondary" />
+
+                        <!-- Results count -->
+                        <Label fx:id="searchResultLabel" text="" style="-fx-text-fill: #63704f; -fx-font-size: 12px;" />
+                    </children>
+                </HBox>
+
+                <!-- CARDS -->
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
                     <content>
-                        <FlowPane fx:id="cardsContainer" hgap="25.0" vgap="25.0" prefWrapLength="1000.0" style="-fx-padding: 5;" />
+                        <VBox>
+                            <children>
+                                <Label fx:id="emptyStateLabel"
+                                       text="No therapist matches your search."
+                                       visible="false" managed="false"
+                                       style="-fx-font-size: 14px; -fx-text-fill: #63704f; -fx-padding: 40;" />
+                                <FlowPane fx:id="cardsContainer" hgap="22.0" vgap="22.0" prefWrapLength="1000.0" style="-fx-padding: 5;" />
+                            </children>
+                        </VBox>
                     </content>
                 </ScrollPane>
+
             </children>
         </VBox>
 
-        <!-- MODAL OVERLAY -->
-        <StackPane fx:id="modalOverlay" alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.4);" visible="false">
+        <!-- ═══════════════════════════════════════
+             PROFILE DETAIL MODAL
+             ═══════════════════════════════════════ -->
+        <StackPane fx:id="profileModalOverlay" alignment="CENTER"
+                   style="-fx-background-color: rgb(215,218,204);" visible="false">
             <children>
-                <VBox maxWidth="600.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 20, 0, 0, 0);">
+                <VBox maxWidth="720.0" maxHeight="900.0" spacing="0"
+                      style="-fx-background-color: #fdfaf5; -fx-background-radius: 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 40, 0, 0, 0);"
+                      StackPane.alignment="CENTER">
+                    
+                    <!-- Fixed Header Section -->
+                    <VBox style="-fx-background-color: linear-gradient(to right, #63704f, #9e9f8d); -fx-background-radius: 24 24 0 0; -fx-padding: 30 35 25 35;">
+                        <children>
+                            <HBox alignment="CENTER_LEFT" spacing="25.0">
+                                <children>
+                                    <StackPane prefHeight="90.0" prefWidth="90.0"
+                                               style="-fx-background-color: rgba(255,255,255,0.15); -fx-background-radius: 50; -fx-border-color: rgba(255,255,255,0.4); -fx-border-width: 3; -fx-border-radius: 50;">
+                                        <children>
+                                            <Label fx:id="profileInitialsLabel" text="AB"
+                                                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                                        </children>
+                                    </StackPane>
+                                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                                        <children>
+                                            <Label fx:id="profileNameLabel" text="Dr. First Last"
+                                                   style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                                            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <Label fx:id="profileSpecLabel" text="Specialty"
+                                                           style="-fx-font-size: 13px; -fx-text-fill: white; -fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 15; -fx-padding: 5 15 5 15;" />
+                                                    <Label fx:id="profileStatusBadge" text="● ACTIVE"
+                                                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #b9f6ca; -fx-background-color: rgba(0,0,0,0.2); -fx-background-radius: 15; -fx-padding: 5 12 5 12;" />
+                                                </children>
+                                            </HBox>
+                                        </children>
+                                    </VBox>
+                                    <Button mnemonicParsing="false" onAction="#closeProfileModal"
+                                            style="-fx-background-color: rgba(255,255,255,0.15); -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 50; -fx-cursor: hand; -fx-min-width: 40; -fx-min-height: 40;"
+                                            text="✕" />
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+
+                    <!-- Scrollable Content -->
+                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                        <content>
+                            <VBox spacing="25.0" style="-fx-padding: 30 35 30 35;">
+                                <children>
+                                    <!-- Action Cards -->
+                                    <HBox spacing="20.0">
+                                        <children>
+                                            <VBox spacing="10.0" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5); -fx-border-color: #d7dacc; -fx-border-radius: 15;">
+                                                <children>
+                                                    <Label text="✉  Email" style="-fx-font-weight: bold; -fx-text-fill: #90957e; -fx-font-size: 12px;" />
+                                                    <Label fx:id="profileEmailLabel" text="email@example.com" style="-fx-font-size: 15px; -fx-text-fill: #343e23;" wrapText="true" />
+                                                </children>
+                                            </VBox>
+                                            <VBox spacing="10.0" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5); -fx-border-color: #d7dacc; -fx-border-radius: 15;">
+                                                <children>
+                                                    <Label text="☎  Phone" style="-fx-font-weight: bold; -fx-text-fill: #63704f; -fx-font-size: 12px;" />
+                                                    <Label fx:id="profilePhoneLabel" text="+216 00 000 000" style="-fx-font-size: 15px; -fx-text-fill: #343e23;" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </HBox>
+
+                                    <!-- Details & Description -->
+                                    <VBox spacing="12.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 25; -fx-border-color: #d7dacc; -fx-border-radius: 15;">
+                                        <children>
+                                            <Label text="About the therapist" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #878874;" />
+                                            <Label fx:id="profileDescLabel" text="Detailed description here..." wrapText="true" style="-fx-text-fill: #878874; -fx-line-spacing: 4; -fx-font-size: 14px;" />
+                                            <Separator style="-fx-padding: 10 0 10 0;" />
+                                            <HBox spacing="15.0" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <Label text="Consultation mode:" style="-fx-font-weight: bold; -fx-text-fill: #90957e;" />
+                                                    <Label fx:id="profileConsultTypeLabel" text="In clinic / Video" style="-fx-text-fill: #878874;" />
+                                                </children>
+                                            </HBox>
+                                        </children>
+                                    </VBox>
+
+                                    <!-- Location & Map -->
+                                    <VBox spacing="15.0">
+                                        <children>
+                                            <Label text="📍 Location" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #878874;" />
+                                            <StackPane fx:id="mapContainer" prefHeight="350.0" 
+                                                       style="-fx-background-color: #f0f0f0; -fx-background-radius: 20; -fx-border-color: #d7dacc; -fx-border-radius: 20; -fx-border-width: 2; -fx-overflow: hidden;">
+                                                <children>
+                                                    <!-- WebView integrated here -->
+                                                </children>
+                                            </StackPane>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+
+                    <!-- Footer Action Bar -->
+                    <HBox alignment="CENTER" spacing="15.0" style="-fx-background-color: white; -fx-padding: 25 35 25 35; -fx-background-radius: 0 0 24 24; -fx-border-color: #d7dacc; -fx-border-width: 1 0 0 0;">
+                        <children>
+                            <Button mnemonicParsing="false" onAction="#handleCallAction"
+                                    style="-fx-background-color: #f5f5f5; -fx-text-fill: #878874; -fx-background-radius: 12; -fx-padding: 12 20 12 20; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #9e9f8d; -fx-border-radius: 12;"
+                                    text="📞 Call" />
+                            <Button fx:id="profileDiplomaBtn" mnemonicParsing="false" onAction="#handleViewDiploma"
+                                    style="-fx-background-color: transparent; -fx-text-fill: #90957e; -fx-font-weight: bold; -fx-cursor: hand;"
+                                    text="View diploma" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button fx:id="rdvButton" mnemonicParsing="false" onAction="#goToAppointment"
+                                    style="-fx-background-color: #63704f; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 12 30 12 30; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgb(135,136,116), 10, 0, 0, 5);"
+                                    text="Book Appointment" />
+                        </children>
+                    </HBox>
+                </VBox>
+            </children>
+        </StackPane>
+
+        <!-- ═══════════════════════════════════════
+             ADD / EDIT MODAL
+             ═══════════════════════════════════════ -->
+        <StackPane fx:id="modalOverlay" alignment="CENTER"
+                   style="-fx-background-color: rgb(215,218,204);" visible="false">
+            <children>
+                <VBox maxWidth="600.0" spacing="20.0"
+                      style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(gaussian, rgb(99,112,79), 22, 0, 0, 0);">
                     <children>
-                        <!-- Modal Header -->
                         <HBox alignment="CENTER_LEFT">
                             <children>
-                                <Label fx:id="modalTitle" styleClass="section-title" style="-fx-font-size: 20px;" text="Ajouter un médecin" />
+                                <Label fx:id="modalTitle" styleClass="section-title" style="-fx-font-size: 19px;" text="Add Therapist" />
                                 <Region HBox.hgrow="ALWAYS" />
-                                <Button mnemonicParsing="false" onAction="#closeModal" style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-font-size: 18px; -fx-cursor: hand; -fx-text-fill: #999;" text="✕" />
+                                <Button mnemonicParsing="false" onAction="#closeModal"
+                                        style="-fx-background-color: transparent; -fx-font-weight: bold; -fx-font-size: 17px; -fx-cursor: hand; -fx-text-fill: #90957e;" text="✕" />
                             </children>
                         </HBox>
-
-                        <!-- Modal Form -->
-                        <GridPane hgap="15.0" vgap="15.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-                            </columnConstraints>
-                            
-                            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                <Label style="-fx-font-weight: bold;" text="Nom *" />
-                                <TextField fx:id="lastNameField" styleClass="form-control" promptText="Nom" />
-                            </VBox>
-                            
-                            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                <Label style="-fx-font-weight: bold;" text="Prénom *" />
-                                <TextField fx:id="firstNameField" styleClass="form-control" promptText="Prénom" />
-                            </VBox>
-                            
-                            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                <Label style="-fx-font-weight: bold;" text="Spécialité *" />
-                                <TextField fx:id="specializationField" styleClass="form-control" promptText="Ex: Psychologue" />
-                            </VBox>
-                            
-                            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                <Label style="-fx-font-weight: bold;" text="Type Consultation" />
-                                <ComboBox fx:id="consultationTypeBox" maxWidth="Infinity" styleClass="form-control" promptText="Sélectionner" />
-                            </VBox>
-                            
-                            <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                                <Label style="-fx-font-weight: bold;" text="Email *" />
-                                <TextField fx:id="emailField" styleClass="form-control" promptText="email@example.com" />
-                            </VBox>
-                            
-                            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                <Label style="-fx-font-weight: bold;" text="Téléphone *" />
-                                <TextField fx:id="phoneField" styleClass="form-control" promptText="+33 6..." />
-                            </VBox>
-
-                            <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
-                                <Label style="-fx-font-weight: bold;" text="Mot de Passe *" />
-                                <TextField fx:id="passwordField" styleClass="form-control" promptText="Mot de passe du médecin" />
-                            </VBox>
-
-                            <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
-                                <Label style="-fx-font-weight: bold;" text="Description" />
-                                <TextArea fx:id="descriptionArea" prefHeight="80.0" styleClass="form-control" wrapText="true" promptText="Brève description..." />
-                            </VBox>
-                        </GridPane>
-
-                        <!-- Modal Footer -->
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: white;" vbarPolicy="AS_NEEDED" prefHeight="400.0">
+                            <content>
+                                <GridPane hgap="15.0" vgap="15.0" style="-fx-padding: 5;">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+                                    </columnConstraints>
+                                    <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Nom *" />
+                                        <TextField fx:id="lastNameField" styleClass="form-control" promptText="Nom" />
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Prénom *" />
+                                        <TextField fx:id="firstNameField" styleClass="form-control" promptText="Prénom" />
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Spécialité *" />
+                                        <ComboBox fx:id="specializationField" styleClass="form-control" promptText="Sélectionner" maxWidth="Infinity" />
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Type Consultation" />
+                                        <ComboBox fx:id="consultationTypeBox" maxWidth="Infinity" styleClass="form-control" promptText="Sélectionner" />
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Email *" />
+                                        <TextField fx:id="emailField" styleClass="form-control" promptText="email@example.com" />
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Téléphone *" />
+                                        <TextField fx:id="phoneField" styleClass="form-control" promptText="2XXXXXXX" />
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Mot de Passe *" />
+                                        <TextField fx:id="passwordField" styleClass="form-control" promptText="Mot de passe" />
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="🖼 Photo (URL)" />
+                                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                            <TextField fx:id="photoUrlField" styleClass="form-control" promptText="https://example.com/photo.jpg" HBox.hgrow="ALWAYS" />
+                                            <!-- Preview thumbnail -->
+                                            <StackPane prefWidth="50.0" prefHeight="50.0"
+                                                       style="-fx-background-color: #f5efe6; -fx-background-radius: 50; -fx-border-color: #90957e; -fx-border-radius: 50; -fx-border-width: 1;">
+                                                <ImageView fx:id="photoPreview" fitWidth="48.0" fitHeight="48.0"
+                                                           preserveRatio="false" smooth="true">
+                                                    <clip>
+                                                        <Circle centerX="24.0" centerY="24.0" radius="24.0"
+                                                                xmlns="http://javafx.com/javafx/17"/>
+                                                    </clip>
+                                                </ImageView>
+                                                <Label fx:id="photoPreviewInitials" text="?" style="-fx-font-size:16px; -fx-text-fill:#90957e;" />
+                                            </StackPane>
+                                        </HBox>
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #63704f;" text="📜 Diplôme / Certificat" />
+                                        <HBox spacing="10" alignment="CENTER_LEFT">
+                                            <Button text="📎 Uploader le diplôme" onAction="#handleDiplomaUpload"
+                                                    style="-fx-background-color: #343e23; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 8 14;"/>
+                                            <Label fx:id="diplomaFileLabel" text="Aucun fichier sélectionné"
+                                                   style="-fx-text-fill: #888; -fx-font-style: italic;"/>
+                                        </HBox>
+                                        <Label fx:id="diplomaStatusLabel" text=""
+                                               style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    </VBox>
+                                    <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Description" />
+                                        <TextArea fx:id="descriptionArea" prefHeight="70.0" styleClass="form-control" wrapText="true" promptText="Brève description..." />
+                                    </VBox>
+                                    <HBox spacing="10" GridPane.columnSpan="2" GridPane.rowIndex="7" alignment="CENTER_LEFT">
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Latitude" />
+                                            <TextField fx:id="latitudeField" styleClass="form-control" promptText="ex: 36.8" />
+                                        </VBox>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <Label style="-fx-font-weight: bold; -fx-text-fill: #878874;" text="Longitude" />
+                                            <TextField fx:id="longitudeField" styleClass="form-control" promptText="ex: 10.1" />
+                                        </VBox>
+                                        <VBox spacing="5.0" alignment="BOTTOM_CENTER">
+                                            <Button onAction="#handleModalLocationLookup" styleClass="btn-secondary" text="📍" 
+                                                    style="-fx-padding: 8 12; -fx-font-size: 14px;">
+                                                <tooltip>
+                                                    <Tooltip text="Localiser à partir de la description" />
+                                                </tooltip>
+                                            </Button>
+                                        </VBox>
+                                    </HBox>
+                                </GridPane>
+                            </content>
+                        </ScrollPane>
                         <HBox alignment="CENTER_RIGHT" spacing="10.0">
                             <Button mnemonicParsing="false" onAction="#closeModal" styleClass="btn-secondary" text="Annuler" />
                             <Button mnemonicParsing="false" onAction="#handleSave" styleClass="btn-primary" text="Enregistrer" />
@@ -121,5 +354,6 @@
                 </VBox>
             </children>
         </StackPane>
+
     </children>
 </StackPane>

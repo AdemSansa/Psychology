@@ -20,9 +20,9 @@
     <VBox styleClass="login-background" alignment="CENTER">
         
         <StackPane>
-            <!-- Decorative Circles for Depth -->
-            <Circle radius="150" fill="rgba(210, 180, 140, 0.2)" translateX="-300" translateY="-150"/>
-            <Circle radius="100" fill="rgba(111, 78, 55, 0.3)" translateX="350" translateY="200"/>
+            <!-- Decorative Soft Circles for Depth -->
+            <Circle radius="180" fill="rgba(143, 151, 130, 0.15)" translateX="-350" translateY="-200"/>
+            <Circle radius="120" fill="rgba(62, 44, 35, 0.06)" translateX="400" translateY="250"/>
 
             <!-- Main glass card -->
             <HBox alignment="CENTER" maxWidth="900" maxHeight="580" styleClass="glass-pane">
@@ -40,22 +40,22 @@
                     </StackPane>
                     
                     <VBox alignment="CENTER" spacing="5">
-                        <Label text="Slimenify" style="-fx-font-size: 32px; -fx-font-weight: 900; -fx-text-fill: #3e2c23;"/>
-                        <Label text="Votre bien-être, notre priorité." style="-fx-font-size: 14px; -fx-text-fill: #5d4037; -fx-font-style: italic;"/>
+                        <Label text="Slimenify" style="-fx-font-size: 34px; -fx-font-weight: 900; -fx-text-fill: #3E2C23;"/>
+                        <Label text="Votre bien-être, notre priorité." style="-fx-font-size: 15px; -fx-text-fill: #8F9782; -fx-font-style: italic;"/>
                     </VBox>
                     
                     <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 0 0;">
                         <Label text="Rejoignez notre communauté de soins et de soutien." 
-                               style="-fx-font-size: 13px; -fx-text-fill: #6f4e37; -fx-wrap-text: true; -fx-text-alignment: center;"/>
+                               style="-fx-font-size: 13px; -fx-text-fill: #3E2C23; -fx-wrap-text: true; -fx-text-alignment: center;"/>
                     </VBox>
                 </VBox>
                 
                 <!-- Right Section: Login Inputs -->
-                <VBox alignment="CENTER" prefWidth="480" spacing="30" style="-fx-background-color: rgba(255,255,255,0.85); -fx-background-radius: 0 20 20 0; -fx-padding: 50;">
+                <VBox alignment="CENTER" prefWidth="480" spacing="30" style="-fx-background-color: rgba(245, 240, 215, 0.4); -fx-background-radius: 0 20 20 0; -fx-padding: 50;">
                     
                     <VBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="Connexion" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3e2c23;"/>
-                        <Label text="Veuillez entrer vos identifiants" style="-fx-text-fill: #95a5a6; -fx-font-size: 13px;"/>
+                        <Label text="Connexion" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #3E2C23;"/>
+                        <Label text="Veuillez entrer vos identifiants" style="-fx-text-fill: #8F9782; -fx-font-size: 13px; font-weight: bold;"/>
                     </VBox>
                     
                     <VBox spacing="18" maxWidth="360">
@@ -71,7 +71,7 @@
                         
                         <HBox alignment="CENTER_RIGHT">
                             <Button onAction="#handleForgotPassword" 
-                                    style="-fx-background-color: transparent; -fx-text-fill: #d2b48c; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 0;" 
+                                    style="-fx-background-color: transparent; -fx-text-fill: #8F9782; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 0;" 
                                     text="Mot de passe oublié ?" />
                         </HBox>
                     </VBox>
@@ -85,9 +85,9 @@
                     <Separator maxWidth="200" style="-fx-opacity: 0.5;"/>
                     
                     <HBox alignment="CENTER" spacing="8">
-                        <Label text="Pas encore de compte ?" style="-fx-text-fill: #7f8c8d;"/>
+                        <Label text="Pas encore de compte ?" style="-fx-text-fill: #3E2C23;"/>
                         <Button onAction="#goToRegister" 
-                                style="-fx-background-color: transparent; -fx-text-fill: #6f4e37; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 0;" 
+                                style="-fx-background-color: transparent; -fx-text-fill: #8F9782; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 0;" 
                                 text="S'inscrire" />
                     </HBox>
                     

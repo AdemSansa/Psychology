@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Event.EventListController"
+            stylesheets="@../style.css"
+            styleClass="background-gradient">
+
+    <!-- ================= TOP ================= -->
+    <top>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="30" right="40" bottom="20" left="40"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="20"
+                  style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;">
+
+                <!-- BACK BUTTON -->
+                <Button text="←"
+                        onAction="#handleBack"
+                        styleClass="btn-secondary"
+                        style="-fx-font-size:16; -fx-background-radius:50; -fx-min-width:35; -fx-min-height:35;"/>
+
+                <!-- TITLE -->
+                <VBox>
+                    <Label text="Events Management" styleClass="section-title"/>
+                    <Label text="Upcoming and past therapy events"/>
+                </VBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- SEARCH -->
+                <TextField fx:id="searchField"
+                           promptText="Search by title..."
+                           styleClass="form-control"
+                           prefWidth="200"/>
+
+                <!-- ADD -->
+                <Button text="+ Add Event"
+                        styleClass="btn-primary"
+                        onAction="#handleAddEvent"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ================= CENTER (SCROLL FIX) ================= -->
+    <center>
+        <ScrollPane fx:id="scrollPane"
+                    fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    style="-fx-background: transparent;">
+
+            <content>
+                <FlowPane fx:id="cardContainer"
+                          hgap="20"
+                          vgap="20"
+                          prefWrapLength="1000"
+                          style="-fx-padding: 20;"/>
+            </content>
+
+        </ScrollPane>
+    </center>
+
+    <!-- ================= BOTTOM ================= -->
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10 40 20 40;">
+            <Label fx:id="totalEventsLabel" text="Total events: 0"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

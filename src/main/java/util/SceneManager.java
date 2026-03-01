@@ -23,7 +23,9 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setFullScreen(true); // ensure every page uses full screen
             stage.show();
 
         } catch (Exception e) {
@@ -36,7 +38,9 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setFullScreen(true); // ensure every page uses full screen
             stage.show();
 
             return loader.getController();
@@ -58,6 +62,25 @@ public class SceneManager {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static <T> T loadPageWithController(String fxmlPath) {
+        try {
+            if (contentArea == null) {
+                throw new IllegalStateException("ContentArea not set!");
+            }
+
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
+            Node page = loader.load();
+
+            contentArea.getChildren().setAll(page);
+
+            return loader.getController();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
     public static void goBack() {

@@ -35,9 +35,11 @@ public class HomeController {
     @FXML
     private javafx.scene.control.Button btnForum;
     @FXML
-    private javafx.scene.control.Button btnForumtherapist ;
+    private javafx.scene.control.Button btnForumtherapist;
     @FXML
-    private javafx.scene.control.Button btnForumUsr ;
+    private javafx.scene.control.Button btnForumUsr;
+    @FXML
+    private javafx.scene.control.Button btnRegistrations;
 
     @FXML
     private javafx.scene.control.Button btnQuestions;
@@ -63,9 +65,9 @@ public class HomeController {
             if (welcomeLabel != null) {
                 welcomeLabel.setText("Bienvenue, " + displayName);
             }
-                if (RoleLabel != null) {
-                    RoleLabel.setText(user.getRole());
-                }
+            if (RoleLabel != null) {
+                RoleLabel.setText(user.getRole());
+            }
 
         } else {
             System.out.println("No user logged in session.");
@@ -89,9 +91,12 @@ public class HomeController {
         setButtonVisible(btnForum, false);
         setButtonVisible(btnForumtherapist, false);
         setButtonVisible(btnForumUsr, false);
+        setButtonVisible(btnRegistrations, false);
         setButtonVisible(btnQuestions, false);
         setButtonVisible(btnQuizzes, false);
         setButtonVisible(btnQuizAssessment, false);
+
+        setButtonVisible(btnPastAppointments, false);
 
         if (role == null)
             return;
@@ -102,21 +107,30 @@ public class HomeController {
                 setButtonVisible(btnTherapists, true); // Admin manages therapists
                 setButtonVisible(btnEvents, true);
                 setButtonVisible(btnForum, true); // Admin moderates forum
+                setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnQuestions, true);
                 setButtonVisible(btnQuizzes, true);
+                setButtonVisible(btnEvents, true);
                 break;
             case "patient":
                 setButtonVisible(btnTherapists, true); // Patient views therapists
                 setButtonVisible(btnAppointments, true);
                 setButtonVisible(btnForumUsr, true);
+                setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnQuizAssessment, true);
+                setButtonVisible(btnEvents, true);
+                setButtonVisible(btnPastAppointments, true);
+
                 break;
             case "therapist":
                 setButtonVisible(btnAppointments, true);
                 setButtonVisible(btnForumtherapist, true);
                 setButtonVisible(btnEvents, true);
+                setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnTherapists, true);
                 setButtonVisible(btnQuizAssessment, true);
+                setButtonVisible(btnEvents, true);
+
                 break;
             default:
                 // Unknown role, minimal access
@@ -153,12 +167,24 @@ public class HomeController {
     }
 
     @FXML
+    public void gotoRegistrations() {
+        SceneManager.loadPage("/com/example/psy/Event/registration.fxml");
+    }
+
+    @FXML
     public void gotoAppoitnments() {
         SceneManager.loadPage("/com/example/psy/Appointment/AppointmentCalendar.fxml");
     }
 
     @FXML
+    private javafx.scene.control.Button btnPastAppointments;
 
+    @FXML
+    public void gotoPastAppointments() {
+        SceneManager.loadPage("/com/example/psy/Appointment/past_appointments.fxml");
+    }
+
+    @FXML
     public void gotoQuestions() {
         SceneManager.loadPage("/com/example/psy/Question/Question.fxml");
     }
@@ -167,10 +193,12 @@ public class HomeController {
     public void gotoReview() {
         SceneManager.loadPage("/com/example/psy/forum/forum.fxml");
     }
+
     @FXML
     public void gotoReviewtherapist() {
         SceneManager.loadPage("/com/example/psy/forum/forumtherapist.fxml");
     }
+
     @FXML
     public void gotoReviewadmin() {
         SceneManager.loadPage("/com/example/psy/forum/forumadmin.fxml");
@@ -182,6 +210,10 @@ public class HomeController {
 
     public void gotoQuizAssesment() {
         SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml");
+    }
+
+    public void gotoTherapistDashboard() {
+        SceneManager.loadPage("/com/example/psy/dashboards/TherapistDashboard.fxml");
     }
 
     public void logout() {

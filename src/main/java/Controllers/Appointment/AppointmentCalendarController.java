@@ -1,74 +1,213 @@
 package Controllers.Appointment;
 
 import Entities.Appointment;
+import Entities.Therapistis;
 import Service.AppointmentService;
-
+import Service.TherapistService;
 import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarEvent;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import util.Session;
+
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.ComboBox;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
+import java.util.Optional;
+import javafx.scene.control.ChoiceDialog;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AppointmentCalendarController {
 
     @FXML
     private VBox calendarContainer;
+    @FXML
+    private Label subtitleLabel;
 
     @FXML
-    private ComboBox<Integer> therapistComboBox;
+    private HBox therapistControlsRow;
+    @FXML
+    private ComboBox<Therapistis> therapistComboBox;
 
     private CalendarView calendarView;
     private Calendar appointmentsCalendar;
-    private AppointmentService service = new AppointmentService();
+    private AppointmentService appointmentService = new AppointmentService();
+    private TherapistService therapistService = new TherapistService();
+    private Timer videoCallTimer;
+
+    private static final int APPOINTMENT_DURATION_MIN = 90;
 
     @FXML
     public void initialize() {
-
         calendarView = new CalendarView();
         appointmentsCalendar = new Calendar("Appointments");
         appointmentsCalendar.setStyle(Calendar.Style.STYLE1);
+
         VBox.setVgrow(calendarView, Priority.ALWAYS);
         calendarView.setMaxHeight(Double.MAX_VALUE);
+
         calendarView.getCalendarSources().add(
-                new com.calendarfx.model.CalendarSource("My Calendars") {{
-                    getCalendars().add(appointmentsCalendar);
-                }}
-        );
+                new com.calendarfx.model.CalendarSource("My Calendars") {
+                    {
+                        getCalendars().add(appointmentsCalendar);
+                    }
+                });
 
         calendarContainer.getChildren().add(calendarView);
 
-        loadTherapists();
+        if (!isTherapist()) {
+            // Define visual formatting before loading data
+            therapistComboBox.setConverter(new javafx.util.StringConverter<>() {
+                @Override
+                public String toString(Therapistis object) {
+                    return object == null ? "" : object.toString();
+                }
+
+                @Override
+                public Therapistis fromString(String string) {
+                    return null;
+                }
+            });
+
+            therapistComboBox.setButtonCell(new javafx.scene.control.ListCell<>() {
+                @Override
+                protected void updateItem(Therapistis item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(item.toString());
+                    }
+                }
+            });
+
+            loadTherapists();
+
+            // Auto-select therapist if navigated from the directory
+            Therapistis preSelected = Session.getInstance().getSelectedTherapistForBooking();
+            if (preSelected != null) {
+                for (Therapistis t : therapistComboBox.getItems()) {
+                    if (t.getId() == preSelected.getId()) {
+                        therapistComboBox.setValue(t);
+                        break;
+                    }
+                }
+                Session.getInstance().setSelectedTherapistForBooking(null); // clear after use
+            }
+
+            therapistComboBox.setOnAction(e -> loadAppointments());
+        } else {
+            therapistComboBox.setVisible(false);
+            therapistComboBox.setManaged(false);
+            therapistControlsRow.setVisible(false);
+            therapistControlsRow.setManaged(false);
+            subtitleLabel.setVisible(false);
+            subtitleLabel.setManaged(false);
+        }
+
         loadAppointments();
         setupInteractions();
+        startAutoVideoCallChecker();
+    }
+
+    private boolean isTherapist() {
+        return Session.getInstance().getUser() != null &&
+                "therapist".equalsIgnoreCase(Session.getInstance().getUser().getRole());
     }
 
     private void loadTherapists() {
-        // Example static data (replace with TherapistService)
-        therapistComboBox.getItems().addAll(1, 2, 3);
-        if (!therapistComboBox.getItems().isEmpty()) {
-            therapistComboBox.setValue(therapistComboBox.getItems().get(0));
+        therapistComboBox.getItems().clear();
+        try {
+            List<Therapistis> therapists = therapistService.list();
+            therapistComboBox.getItems().addAll(therapists);
+            if (!therapistComboBox.getItems().isEmpty()) {
+                therapistComboBox.setValue(therapists.get(0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     private void loadAppointments() {
         appointmentsCalendar.clear();
-
         try {
-            List<Appointment> list = service.list();
-            for (Appointment a : list) {
-                Entry<Appointment> entry = new Entry<>("Booked");
-                entry.setUserObject(a);
-                entry.setInterval(a.getAppointmentDate().atTime(a.getStartTime()),
-                        a.getAppointmentDate().atTime(a.getEndTime()));
-                appointmentsCalendar.addEntry(entry);
+            List<Appointment> list;
+            if (isTherapist()) {
+                Integer therapistId = Session.getInstance().getConnectedTherapistId();
+                list = appointmentService.listByTherapist(therapistId);
+            } else {
+                Therapistis selected = therapistComboBox.getValue();
+                if (selected == null)
+                    return;
+                list = appointmentService.listByTherapist(selected.getId());
             }
+
+            for (Appointment a : list) {
+                Entry<Appointment> entry = new Entry<>();
+                ZonedDateTime start = a.getAppointmentDate().atTime(a.getStartTime()).atZone(ZoneId.systemDefault());
+                ZonedDateTime end = a.getAppointmentDate().atTime(a.getEndTime()).atZone(ZoneId.systemDefault());
+
+                entry.setInterval(start, end);
+                entry.setUserObject(a);
+                entry.setMinimumDuration(java.time.Duration.ofMinutes(APPOINTMENT_DURATION_MIN));
+
+                LocalDate date = start.toLocalDate();
+                LocalTime startTime = start.toLocalTime();
+                LocalTime endTime = end.toLocalTime();
+
+                // ✅ Do NOT clear default style classes, as CalendarFX needs them for rendering!
+                // entry.getStyleClass().clear();
+
+                // ✅ Set style based on status
+                if (!appointmentService.isWithinAvailability(a.getTherapistId(), date, startTime, endTime)) {
+                    entry.getStyleClass().add("outside-hours-entry"); // dark gray
+                } else if ("pending".equalsIgnoreCase(a.getStatus())) {
+                    entry.getStyleClass().add("pending-entry"); // yellow
+                } else if ("in-progress".equalsIgnoreCase(a.getStatus())) {
+                    entry.getStyleClass().add("in-progress-entry"); // purple
+                } else if ("confirmed".equalsIgnoreCase(a.getStatus())) {
+                    entry.getStyleClass().add("confirmed-entry"); // green
+                } else if ("completed".equalsIgnoreCase(a.getStatus())) {
+                    entry.getStyleClass().add("completed-entry"); // blue
+                } else {
+                    entry.getStyleClass().add("default-entry"); // fallback
+                }
+
+                // Optional: add extra class for video call appointments
+                if ("Video Call".equalsIgnoreCase(a.getType())) {
+                    entry.getStyleClass().add("video-call-entry"); // you can style in CSS
+                }
+
+                // ✅ Set title based on user role
+                if (isTherapist()) {
+                    entry.setTitle(appointmentService.getPatientName(a.getPatientId()) + " - [" + a.getType() + "]");
+                } else {
+                    if (Session.getInstance().getUser() != null
+                            && a.getPatientId() == Session.getInstance().getUser().getId()) {
+                        entry.setTitle("My Appointment - [" + a.getType() + "]");
+                    } else {
+                        entry.setTitle("Reserved"); // Hide type and details from other patients
+                    }
+                }
+
+                appointmentsCalendar.addEntry(entry);
+                addEntryListeners(entry);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,42 +215,91 @@ public class AppointmentCalendarController {
 
     private void setupInteractions() {
 
-        // Click existing appointment → open details safely
-        calendarView.setEntryDetailsCallback(param -> {
-            Appointment appointment = (Appointment) param.getEntry().getUserObject();
-            if (appointment != null) {
-                AppointmentDetailsController.openDetails(appointment);
-            }
-            return true;
-        });
-
-        // Create new appointment (double-click / drag)
+        // Entry creation
         calendarView.setEntryFactory(param -> {
+            if (isTherapist()) {
+                return null;
+            }
 
-            LocalDate date = param.getZonedDateTime().toLocalDate();
-            LocalTime start = param.getZonedDateTime().toLocalTime();
-            LocalTime end = start.plusMinutes(90);
+            ZonedDateTime start = param.getZonedDateTime();
+            ZonedDateTime end = start.plusMinutes(APPOINTMENT_DURATION_MIN);
 
-            // 1️⃣ Create Entry immediately to satisfy CalendarFX
-            Entry<Appointment> entry = new Entry<>("New Appointment");
-            entry.setInterval(date.atTime(start), date.atTime(end));
+            Therapistis therapist = therapistComboBox.getValue();
+            if (therapist == null)
+                return null;
 
-            // 2️⃣ Save the appointment in a background thread
-            javafx.concurrent.Task<Appointment> task = new javafx.concurrent.Task<>() {
+            try {
+                LocalDate today = LocalDate.now();
+                LocalTime now = LocalTime.now();
+
+                if (start.toLocalDate().isBefore(today) ||
+                        (start.toLocalDate().equals(today) && start.toLocalTime().isBefore(now))) {
+                    showAlert("Cannot book appointments in the past.");
+                    return null;
+                }
+
+                if (!appointmentService.isSlotAvailable(therapist.getId(),
+                        start.toLocalDate(), start.toLocalTime(), end.toLocalTime(), null)) {
+                    showAlert("This slot is already booked.");
+                    return null;
+                }
+                if (!appointmentService.isWithinAvailability(therapist.getId(),
+                        start.toLocalDate(), start.toLocalTime(), end.toLocalTime())) {
+                    showAlert("This slot is outside therapist's working hours.");
+                    return null;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            // Determine appointment type based on therapist's consultation mode
+            String therapistMode = therapist.getConsultationType();
+            String selectedType = "Presential"; // Default
+
+            if ("ONLINE".equalsIgnoreCase(therapistMode)) {
+                selectedType = "Video Call";
+            } else if ("IN_PERSON".equalsIgnoreCase(therapistMode)) {
+                selectedType = "Presential";
+            } else {
+                // "BOTH" or unknown layout, ask user
+                List<String> choices = List.of("Presential", "Video Call");
+                ChoiceDialog<String> dialog = new ChoiceDialog<>("Presential", choices);
+                dialog.setTitle("Appointment Type");
+                dialog.setHeaderText("Choose how you want to attend this appointment");
+                dialog.setContentText("Type:");
+
+                Optional<String> result = dialog.showAndWait();
+                if (result.isEmpty()) {
+                    return null; // User cancelled
+                }
+                selectedType = result.get();
+            }
+
+            final String finalSelectedType = selectedType;
+            Entry<Appointment> entry = new Entry<>("Pending - " + finalSelectedType);
+
+            entry.setInterval(start, end);
+            entry.setMinimumDuration(java.time.Duration.ofMinutes(APPOINTMENT_DURATION_MIN));
+            entry.getStyleClass().add("pending-entry");
+
+            Task<Appointment> task = new Task<>() {
                 @Override
                 protected Appointment call() throws Exception {
-                    int patientId = getLoggedInUserId();               // your logged-in patient
-                    int therapistId = therapistComboBox.getValue();    // selected therapist
-                    Appointment a = new Appointment(date, start, end, 1, 2);
-                    service.create(a);  // insert into DB
+                    Appointment a = new Appointment(
+                            start.toLocalDate(), start.toLocalTime(), end.toLocalTime(),
+                            therapist.getId(), Session.getInstance().getUser().getId());
+                    a.setStatus("pending");
+                    a.setType(finalSelectedType);
+                    appointmentService.create(a);
                     return a;
                 }
 
                 @Override
                 protected void succeeded() {
-                    Appointment a = getValue();
-                    entry.setUserObject(a);           // attach the real appointment
-                    appointmentsCalendar.addEntry(entry);  // update calendar
+                    entry.setUserObject(getValue());
+                    appointmentsCalendar.addEntry(entry);
+                    addEntryListeners(entry);
                 }
 
                 @Override
@@ -119,25 +307,164 @@ public class AppointmentCalendarController {
                     getException().printStackTrace();
                 }
             };
-
             new Thread(task).start();
+            return entry;
+        });
 
-            return entry; // always return entry (CalendarFX requires this)
+        calendarView.setEntryDetailsCallback(param -> {
+            Appointment appointment = (Appointment) param.getEntry().getUserObject();
+            if (appointment != null) {
+                // Prevent patients from viewing details of other patients' appointments
+                if (!isTherapist() && Session.getInstance().getUser() != null &&
+                        appointment.getPatientId() != Session.getInstance().getUser().getId()) {
+                    return false;
+                }
+
+                AppointmentDetailsController controller = AppointmentDetailsController.openDetails(appointment);
+                controller.setCalendarController(this);
+            }
+            return true;
         });
     }
 
-    private boolean isSlotAvailable(LocalDate date, LocalTime start, LocalTime end) {
-        // TODO: implement real conflict checking
-        return true;
-    }
+    private void addEntryListeners(Entry<Appointment> entry) {
+        entry.intervalProperty().addListener((obs, oldInterval, newInterval) -> {
+            Appointment currentAppointment = entry.getUserObject();
+            if (currentAppointment == null)
+                return;
 
-    private int getLoggedInUserId() {
-        // TODO: replace with your login/session system
-        return 1; // example patient ID
+            ZonedDateTime start = newInterval.getStartZonedDateTime();
+            ZonedDateTime end = newInterval.getEndZonedDateTime();
+            LocalDate date = start.toLocalDate();
+            LocalTime startTime = start.toLocalTime();
+            LocalTime endTime = end.toLocalTime();
+
+            try {
+                // Pass current appointment ID to ignore itself
+                boolean available = appointmentService.isSlotAvailable(
+                        currentAppointment.getTherapistId(),
+                        date, startTime, endTime,
+                        currentAppointment.getId() // ignore self
+                );
+                boolean withinHours = appointmentService.isWithinAvailability(
+                        currentAppointment.getTherapistId(),
+                        date, startTime, endTime);
+
+                if (!available || !withinHours) {
+                    // Find and log conflicting appointments
+
+                    // Revert the drag
+                    Platform.runLater(() -> {
+                        entry.setInterval(
+                                currentAppointment.getAppointmentDate()
+                                        .atTime(currentAppointment.getStartTime())
+                                        .atZone(ZoneId.systemDefault()),
+                                currentAppointment.getAppointmentDate()
+                                        .atTime(currentAppointment.getEndTime())
+                                        .atZone(ZoneId.systemDefault()));
+                        showAlert(!available ? "This slot is already booked." : "Outside business hours.");
+                    });
+                } else {
+                    // Everything okay, update the appointment
+                    currentAppointment.setAppointmentDate(date);
+                    currentAppointment.setStartTime(startTime);
+                    currentAppointment.setEndTime(endTime);
+                    appointmentService.update(currentAppointment);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @FXML
-    private void refreshCalendar() {
+    public void refreshCalendar() {
         loadAppointments();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Invalid Appointment");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void startAutoVideoCallChecker() {
+        videoCallTimer = new Timer(true); // daemon thread
+        videoCallTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    List<Appointment> list;
+                    if (isTherapist()) {
+                        Integer therapistId = Session.getInstance().getConnectedTherapistId();
+                        list = appointmentService.listByTherapist(therapistId);
+                    } else {
+                        Therapistis selected = therapistComboBox.getValue();
+                        if (selected == null)
+                            return;
+                        list = appointmentService.listByTherapist(selected.getId());
+                    }
+
+                    for (Appointment a : list) {
+                        LocalDateTime now = LocalDateTime.now();
+                        LocalDateTime start = a.getAppointmentDate().atTime(a.getStartTime());
+                        LocalDateTime end = a.getAppointmentDate().atTime(a.getEndTime());
+
+                        // Start call automatically if now is at start
+                        if ("confirmed".equalsIgnoreCase(a.getStatus()) &&
+                                "Video Call".equalsIgnoreCase(a.getType()) &&
+                                now.isAfter(start.minusSeconds(1)) && now.isBefore(start.plusSeconds(59))) {
+
+                            Platform.runLater(() -> openVideoCall(a));
+                        }
+
+                        // Close call automatically after 90 min
+                        if (now.isAfter(end) && "in-progress".equalsIgnoreCase(a.getStatus())) {
+                            a.setStatus("completed");
+                            appointmentService.update(a);
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, 30_000); // check every 30 seconds
+    }
+
+    private void openVideoCall(Appointment appointment) {
+        try {
+            // generate meeting link
+            String meetingLink = Service.VideoCallService.generateMeetingLink(appointment.getId());
+
+            // open in system browser
+            Service.VideoCallService.openMeetingInBrowser(meetingLink);
+
+            // mark appointment in-progress
+            appointment.setStatus("in-progress");
+            appointmentService.update(appointment);
+
+            // schedule completion
+            Duration duration = Duration.between(
+                    LocalDateTime.now(),
+                    appointment.getAppointmentDate().atTime(appointment.getEndTime()));
+
+            new Timer(true).schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        appointment.setStatus("completed");
+                        appointmentService.update(appointment);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, duration.toMillis());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -7,6 +7,9 @@ public class Registration {
     private int idRegistration;
     private int eventId;
     private String participantName;
+    private String participantEmail;    // NEW
+    private String participantPhone;    // NEW
+    private String participantNotes;    // NEW
     private String status;
     private LocalDateTime registrationDate;
     private String qrCode;
@@ -31,6 +34,15 @@ public class Registration {
 
     public String getParticipantName() { return participantName; }
     public void setParticipantName(String name) { this.participantName = name; }
+
+    public String getParticipantEmail() { return participantEmail; }
+    public void setParticipantEmail(String email) { this.participantEmail = email; }
+
+    public String getParticipantPhone() { return participantPhone; }
+    public void setParticipantPhone(String phone) { this.participantPhone = phone; }
+
+    public String getParticipantNotes() { return participantNotes; }
+    public void setParticipantNotes(String notes) { this.participantNotes = notes; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

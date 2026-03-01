@@ -4,9 +4,11 @@ import Database.dbconnect;
 import Entities.User;
 import interfaces.Iservice;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +17,20 @@ public class UserService implements Iservice<User> {
     @Override
     public void create(User user) throws SQLException {
         String requete = "INSERT INTO users (first_name, last_name, email, password, role) VALUES (?,?,?,?,?)";
-        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(requete);
+        Connection conn = dbconnect.getInstance().getConnection();
+        PreparedStatement statement = conn.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, user.getFirstName());
         statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());
         statement.setString(4, user.getPassword());
         statement.setString(5, user.getRole());
         statement.executeUpdate();
-        System.out.println("User added successfully!");
+
+        ResultSet rs = statement.getGeneratedKeys();
+        if (rs.next()) {
+            user.setId(rs.getInt(1));
+        }
+        System.out.println("User added successfully with ID: " + user.getId());
     }
 
     @Override
