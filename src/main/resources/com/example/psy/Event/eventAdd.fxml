@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -17,7 +18,9 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.image.ImageView?>
 
-<AnchorPane prefHeight="550.0" prefWidth="700.0" styleClass="background-gradient" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Event.EventAddController">
+<AnchorPane prefHeight="550.0" prefWidth="700.0" styleClass="background-gradient" stylesheets="@../style.css"
+    xmlns="http://javafx.com/javafx/25"
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Event.EventAddController">
 
     <children>
         <ScrollPane fitToWidth="true" layoutY="6.0" prefHeight="394.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" style="-fx-background-color: transparent; -fx-background: transparent;">
@@ -44,7 +47,7 @@
                                 <Label text="Event Banner" style="-fx-font-weight: bold;"/>
                                 <HBox spacing="10" alignment="CENTER_LEFT">
                                     <Button text="📂 Browse..." onAction="#handleBrowseImage" styleClass="btn-secondary"/>
-                                    <Label fx:id="imagePathLabel" text="No file selected" style="-fx-text-fill: gray; -fx-font-style: italic;" maxWidth="400" wrapText="true"/>
+                                    <Label fx:id="imagePathLabel" text="No file selected" style="-fx-text-fill: gray; -fx-font-style: italic;" maxWidth="300" wrapText="true"/>
                                 </HBox>
                                 <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="300" preserveRatio="true" visible="false" managed="false"/>
                             </VBox>
@@ -58,7 +61,12 @@
 
                             <!-- Description -->
                             <VBox spacing="5" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                                <Label text="Description" style="-fx-font-weight: bold;"/>
+                                <HBox spacing="10" alignment="BOTTOM_LEFT">
+                                    <Label text="Description" style="-fx-font-weight: bold;"/>
+                                    <Button text="✨ AI Write Description (WOW Effect)" onAction="#handleGenerateAIDescription" styleClass="btn-secondary" style="-fx-background-color: #f0f4ff; -fx-text-fill: #4f46e5; -fx-border-color: #c7d2fe; -fx-font-size: 11px; -fx-padding: 4 10;"/>
+                                    <ProgressIndicator fx:id="aiProgress" visible="false" managed="false" prefWidth="20" prefHeight="20"/>
+                                </HBox>
+                                <Label fx:id="aiStatusLabel" text="" style="-fx-font-size: 11px;" visible="false" managed="false"/>
                                 <TextArea fx:id="descriptionField" prefRowCount="3" promptText="Share the details..." styleClass="form-control" wrapText="true"/>
                                 <Label fx:id="descriptionError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" visible="false" managed="false"/>
                             </VBox>
@@ -116,7 +124,10 @@
                             <!-- Location -->
                             <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
                                 <Label text="Location" style="-fx-font-weight: bold;"/>
-                                <TextField fx:id="locationField" promptText="Event location" styleClass="form-control" />
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <TextField fx:id="locationField" promptText="Event location" styleClass="form-control" HBox.hgrow="ALWAYS"/>
+                                    <Button text="&#128205; Pick" onAction="#handlePickLocation" styleClass="btn-secondary" style="-fx-font-size: 12px; -fx-padding: 6 10;"/>
+                                </HBox>
                                 <Label fx:id="locationError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" visible="false" managed="false"/>
                             </VBox>
 

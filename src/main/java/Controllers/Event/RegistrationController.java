@@ -2,16 +2,31 @@ package Controllers.Event;
 
 import Entities.Registration;
 import Service.RegistrationService;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.application.Platform;
 import javafx.collections.*;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.SceneManager;
 import util.Session;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.UUID;
 
 public class RegistrationController {
@@ -29,6 +44,7 @@ public class RegistrationController {
     @FXML private VBox registrationsListContainer;
     @FXML private ScrollPane mainScrollPane;
     @FXML private Button submitBtn;
+    @FXML private Label emptyListLabel;
 
     private final RegistrationService service = new RegistrationService();
 
@@ -120,11 +136,17 @@ public class RegistrationController {
                 r.setParticipantPhone(phone);
                 r.setParticipantNotes(notesArea.getText().trim());
                 r.setStatus(statusBox.getValue());
-                r.setQrCode(UUID.randomUUID().toString());
+                // Readable QR data encoded into QR image
+                r.setQrCode("EVENT:" + eventId + "|NAME:" + Session.getInstance().getUser().getFirstName() + "|EMAIL:" + email);
 
-                service.create(r);
-                showMessage("✅ Registration successful!", "success");
-
+                int generatedId = service.create(r);
+                
+                // Navigate to Success Page
+                RegistrationSuccessController successCtrl = util.SceneManager.loadPageWithController("/com/example/psy/Event/registration_success.fxml");
+                if (successCtrl != null) {
+                    successCtrl.setData(r, generatedId);
+                }
+                
                 phoneField.clear();
                 notesArea.clear();
             } else {
@@ -155,6 +177,11 @@ public class RegistrationController {
         } catch (Exception e) {
             util.ValidationUtil.showError("System Error", "An unexpected error occurred: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleRefresh() {
+        loadParticipants();
     }
 
     // ================= CARD =================
@@ -241,6 +268,13 @@ public class RegistrationController {
 
     private void renderCards() {
         cardContainer.getChildren().clear();
+        boolean isEmpty = filtered.isEmpty();
+        
+        if (emptyListLabel != null) {
+            emptyListLabel.setVisible(isEmpty);
+            emptyListLabel.setManaged(isEmpty);
+        }
+
         for (Registration r : filtered) {
             cardContainer.getChildren().add(createCard(r));
         }
@@ -265,29 +299,101 @@ public class RegistrationController {
         renderCards();
     }
 
-    // ================= QR POPUP =================
-    private void showQRPopup(String text) {
-
-        Label title = new Label("QR Code");
-        title.setStyle("-fx-font-size:18; -fx-font-weight:bold;");
-
-        TextArea qrText = new TextArea(text);
-        qrText.setEditable(false);
-        qrText.setWrapText(true);
-
-        Button close = new Button("Close");
-        close.getStyleClass().add("btn-primary");
-
-        VBox box = new VBox(15, title, qrText, close);
-        box.setAlignment(javafx.geometry.Pos.CENTER);
-        box.setStyle("-fx-padding:20;");
-
+    // ================= QR POPUP (ZXing — local generation) =================
+    private void showQRPopup(String qrData) {
         Stage stage = new Stage();
         stage.setTitle("QR Code");
 
-        close.setOnAction(e -> stage.close());
+        Label title = new Label("📱 QR Code");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3e2c23;");
 
-        stage.setScene(new Scene(box, 320, 220));
+        Label dataLabel = new Label(qrData != null ? qrData : "");
+        dataLabel.setWrapText(true);
+        dataLabel.setMaxWidth(260);
+        dataLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #718096;");
+
+        ImageView qrView = new ImageView();
+        qrView.setFitWidth(220);
+        qrView.setFitHeight(220);
+        qrView.setPreserveRatio(true);
+
+        Label loadingLabel = new Label("⏳ Generating QR...");
+        loadingLabel.setStyle("-fx-text-fill: #718096; -fx-font-size: 13px;");
+        StackPane imgHolder = new StackPane(loadingLabel, qrView);
+        imgHolder.setPrefSize(220, 220);
+
+        // Generate QR asynchronously using ZXing
+        final String data = (qrData != null && !qrData.isBlank()) ? qrData : "NO_DATA";
+        Task<Image> genTask = new Task<>() {
+            @Override
+            protected Image call() throws Exception {
+                QRCodeWriter writer = new QRCodeWriter();
+                BitMatrix matrix = writer.encode(
+                        data,
+                        BarcodeFormat.QR_CODE,
+                        220, 220,
+                        Map.of(EncodeHintType.MARGIN, 1)
+                );
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                MatrixToImageWriter.writeToStream(matrix, "PNG", baos);
+                return new Image(new ByteArrayInputStream(baos.toByteArray()));
+            }
+        };
+        genTask.setOnSucceeded(ev -> Platform.runLater(() -> {
+            qrView.setImage(genTask.getValue());
+            loadingLabel.setVisible(false);
+        }));
+        genTask.setOnFailed(ev -> Platform.runLater(() ->
+                loadingLabel.setText("❌ QR generation failed")));
+        Thread t = new Thread(genTask, "qr-gen");
+        t.setDaemon(true);
+        t.start();
+
+        // Download button
+        Button downloadBtn = new Button("⬇ Download PNG");
+        downloadBtn.getStyleClass().add("btn-primary");
+        downloadBtn.setOnAction(ev -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Save QR Code");
+            chooser.setInitialFileName("qrcode.png");
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("PNG Image", "*.png"));
+            File dest = chooser.showSaveDialog(stage);
+            if (dest != null) {
+                Task<Void> saveTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        QRCodeWriter w = new QRCodeWriter();
+                        BitMatrix m = w.encode(data, BarcodeFormat.QR_CODE, 400, 400,
+                                Map.of(EncodeHintType.MARGIN, 1));
+                        ByteArrayOutputStream b = new ByteArrayOutputStream();
+                        MatrixToImageWriter.writeToStream(m, "PNG", b);
+                        Files.write(dest.toPath(), b.toByteArray());
+                        return null;
+                    }
+                };
+                saveTask.setOnSucceeded(e2 -> Platform.runLater(() ->
+                        new Alert(Alert.AlertType.INFORMATION,
+                                "✅ Saved to: " + dest.getAbsolutePath()).showAndWait()));
+                saveTask.setOnFailed(e2 -> Platform.runLater(() ->
+                        new Alert(Alert.AlertType.ERROR, "❌ Save failed.").showAndWait()));
+                new Thread(saveTask, "qr-save").start();
+            }
+        });
+
+        Button closeBtn = new Button("Close");
+        closeBtn.getStyleClass().add("btn-secondary");
+        closeBtn.setOnAction(e -> stage.close());
+
+        HBox btnRow = new HBox(10, downloadBtn, closeBtn);
+        btnRow.setAlignment(Pos.CENTER);
+
+        VBox box = new VBox(15, title, imgHolder, dataLabel, btnRow);
+        box.setAlignment(Pos.CENTER);
+        box.setStyle("-fx-padding: 25; -fx-background-color: white;");
+
+        stage.setScene(new Scene(box, 300, 420));
+        stage.setResizable(false);
         stage.show();
     }
 

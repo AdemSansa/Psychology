@@ -5,6 +5,10 @@ module com.example.psy {
     requires java.desktop;
     requires com.calendarfx.view;
     requires mysql.connector.j;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
+    requires javafx.web;
+    requires com.google.gson;
 
 
     opens com.example.psy to javafx.fxml;
