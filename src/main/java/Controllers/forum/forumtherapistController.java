@@ -31,7 +31,7 @@ public class forumtherapistController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        // Background beige clair
+
         reviewContainer.setStyle("-fx-background-color: #F5F5DC;");
         reviewContainer.setSpacing(15);
         reviewContainer.setPadding(new Insets(20));
@@ -121,7 +121,7 @@ public class forumtherapistController implements Initializable {
 
             String text = replyArea.getText().trim();
 
-            // ✅ Contrôle de saisie
+
             if (text.isEmpty()) {
                 showWarning("Empty reply", "Reply cannot be empty.");
                 return;
@@ -167,7 +167,7 @@ public class forumtherapistController implements Initializable {
 
         if (r.getIdTherapist() == currentTherapistId) {
 
-            // HBox pour mettre les boutons côte à côte
+
             HBox buttonBox = new HBox(10);
 
             Button edit = new Button("✏ Edit");
@@ -177,7 +177,7 @@ public class forumtherapistController implements Initializable {
             delete.setStyle("-fx-background-color:#EF9A9A; -fx-text-fill:white; "
                     + "-fx-background-radius:20;");
 
-            // ✅ Confirmation avant EDIT
+
             edit.setOnAction(e -> {
 
                 if (!confirmAction("Edit", "Do you really want to edit this reply?"))
@@ -206,7 +206,7 @@ public class forumtherapistController implements Initializable {
                 });
             });
 
-            // ✅ Confirmation avant DELETE
+
             delete.setOnAction(e -> {
 
                 if (confirmAction("Delete", "Do you really want to delete this reply?")) {

@@ -4,6 +4,9 @@ import Entities.Review;
 import Entities.ReviewReply;
 import Service.ReviewService;
 import Service.Reply_ReviewService;
+import Service.BadWordsApiService;
+import Service.TranslationApiService;
+import Service.SentimentAnalysisService;
 import util.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,15 +29,24 @@ public class ForumController implements Initializable {
     @FXML
     private TextArea contentField;
 
+    @FXML
+    private Button btnTranslateEn;
+
+    @FXML
+    private Button btnTranslateAr;
+
     private final ReviewService reviewService = new ReviewService();
     private final Reply_ReviewService replyService = new Reply_ReviewService();
+
+    private final BadWordsApiService badWordsApiService = new BadWordsApiService();
+    private final TranslationApiService translationApiService = new TranslationApiService();
+    private final SentimentAnalysisService sentimentService = new SentimentAnalysisService();
 
     private int currentUserId;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        // Background principal beige clair
         reviewContainer.setStyle("-fx-background-color:#F5F5DC;");
         reviewContainer.setSpacing(15);
         reviewContainer.setPadding(new Insets(20));
@@ -43,10 +55,45 @@ public class ForumController implements Initializable {
             currentUserId = Session.getInstance().getUser().getId();
         }
 
+        btnTranslateEn.setOnAction(e -> translateToEnglish(e));
+        btnTranslateAr.setOnAction(e -> translateToArabic(e));
+
         loadReviews();
     }
 
-    // ================= ADD REVIEW =================
+    @FXML
+    private void translateToEnglish(ActionEvent event) {
+        translateContent("en");
+    }
+
+    @FXML
+    private void translateToArabic(ActionEvent event) {
+        translateContent("ar");
+    }
+
+    private void translateContent(String lang) {
+        String text = contentField.getText().trim();
+
+        if (text.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Empty Text", "Nothing to translate!");
+            return;
+        }
+
+        if (badWordsApiService.containsBadWords(text)) {
+            showAlert(Alert.AlertType.ERROR, "Forbidden Content",
+                    "Cannot translate inappropriate content ❌");
+            return;
+        }
+
+        String translated = translationApiService.translate(text, lang);
+
+        if (!translated.startsWith("Translation failed")) {
+            contentField.setText(translated);
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Translation Failed", translated);
+        }
+    }
+
     @FXML
     private void addReview(ActionEvent event) {
 
@@ -62,31 +109,34 @@ public class ForumController implements Initializable {
             return;
         }
 
+        if (badWordsApiService.containsBadWords(content)) {
+            showAlert(Alert.AlertType.ERROR, "Forbidden Content",
+                    "Your review contains inappropriate words ❌");
+            return;
+        }
+
         try {
             if (reviewService.isExist(content)) {
                 showAlert(Alert.AlertType.WARNING, "Validation Error", "Review already exists!");
                 return;
+            } else {
+                Review review = new Review();
+                review.setContent(content);
+                review.setIdUser(currentUserId);
+
+                reviewService.create(review);
+
+                contentField.clear();
+                loadReviews();
+
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Review added successfully!");
             }
-            else {
-            Review review = new Review();
-            review.setContent(content);
-            review.setIdUser(currentUserId);
-
-            reviewService.create(review);
-
-            contentField.clear();
-            loadReviews();
-
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Review added successfully!");
-
-        }
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to add review.");
         }
     }
 
-    // ================= LOAD REVIEWS =================
     private void loadReviews() {
 
         reviewContainer.getChildren().clear();
@@ -105,15 +155,13 @@ public class ForumController implements Initializable {
         }
     }
 
-    // ================= REVIEW CARD =================
     private VBox createReviewCard(Review review, List<ReviewReply> replies) {
 
         VBox card = new VBox(10);
         card.setStyle(
                 "-fx-background-color:#FAF3E0;" +
                         "-fx-padding:15;" +
-                        "-fx-background-radius:15;" +
-                        "-fx-border-radius:15;"
+                        "-fx-background-radius:15;"
         );
 
         Label date = new Label(review.getCreatedAt().toString());
@@ -123,27 +171,28 @@ public class ForumController implements Initializable {
         content.setWrapText(true);
         content.setStyle("-fx-font-size:14px; -fx-text-fill:#4E342E;");
 
-        card.getChildren().addAll(date, content);
+        // Add sentiment analysis emoji under the content
+        String sentiment = sentimentService.analyzeSentiment(review.getContent());
+        Label sentimentLabel = new Label(sentiment);
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:12px; -fx-text-fill:#666;");
 
-        // Boutons Edit/Delete avec icônes
+        // 🔹 Boutons traduction Review
+        Button enBtn = new Button("🌍 EN");
+        Button arBtn = new Button("🌍 AR");
+
+        enBtn.setOnAction(e -> translateLabel(content, "en"));
+        arBtn.setOnAction(e -> translateLabel(content, "ar"));
+
+        HBox translateBox = new HBox(5, enBtn, arBtn);
+
+        card.getChildren().addAll(date, content, sentimentLabel, translateBox);
+
         if (review.getIdUser() == currentUserId) {
 
             HBox buttonBox = new HBox(10);
 
             Button editButton = new Button("✏ Edit");
-            editButton.setStyle(
-                    "-fx-background-color:#FFE082;" +
-                            "-fx-background-radius:20;" +
-                            "-fx-padding:5 15 5 15;"
-            );
-
             Button deleteButton = new Button("🗑 Delete");
-            deleteButton.setStyle(
-                    "-fx-background-color:#EF9A9A;" +
-                            "-fx-text-fill:white;" +
-                            "-fx-background-radius:20;" +
-                            "-fx-padding:5 15 5 15;"
-            );
 
             editButton.setOnAction(e -> editReview(review));
             deleteButton.setOnAction(e -> deleteReview(review));
@@ -152,7 +201,6 @@ public class ForumController implements Initializable {
             card.getChildren().add(buttonBox);
         }
 
-        // Ajouter replies
         for (ReviewReply r : replies) {
             if (r.getReviewId().equals(review.getIdReview())) {
                 VBox replyBox = createReplyBox(r);
@@ -163,7 +211,6 @@ public class ForumController implements Initializable {
         return card;
     }
 
-    // ================= REPLY BOX =================
     private VBox createReplyBox(ReviewReply r) {
 
         VBox replyBox = new VBox(5);
@@ -180,12 +227,41 @@ public class ForumController implements Initializable {
         Label replyDate = new Label(r.getCreatedAt().toString());
         replyDate.setStyle("-fx-font-size:10px; -fx-text-fill:gray;");
 
-        replyBox.getChildren().addAll(replyContent, replyDate);
+        // Add sentiment analysis for therapist replies too
+        String sentiment = sentimentService.analyzeSentiment(r.getContent());
+        Label sentimentLabel = new Label(sentiment);
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:11px; -fx-text-fill:#666;");
+
+        // 🔹 Boutons traduction Reply
+        Button enBtn = new Button("🌍 EN");
+        Button arBtn = new Button("🌍 AR");
+
+        enBtn.setOnAction(e -> translateLabel(replyContent, "en"));
+        arBtn.setOnAction(e -> translateLabel(replyContent, "ar"));
+
+        HBox translateBox = new HBox(5, enBtn, arBtn);
+
+        replyBox.getChildren().addAll(replyContent, replyDate, sentimentLabel, translateBox);
 
         return replyBox;
     }
 
-    // ================= EDIT REVIEW =================
+    // ✅ Méthode ajoutée (sans toucher aux autres)
+    private void translateLabel(Label label, String lang) {
+
+        String text = label.getText();
+
+        if (badWordsApiService.containsBadWords(text)) return;
+
+        String translated = translationApiService.translate(text, lang);
+
+        if (!translated.startsWith("Translation failed")) {
+            label.setText(translated);
+        }
+    }
+
+
+
     private void editReview(Review review) {
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -224,7 +300,6 @@ public class ForumController implements Initializable {
         });
     }
 
-    // ================= DELETE REVIEW =================
     private void deleteReview(Review review) {
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);

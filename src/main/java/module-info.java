@@ -3,6 +3,7 @@ module com.example.psy {
     requires jbcrypt;
     requires com.calendarfx.view;
     requires mysql.connector.j;
+    requires org.json;
 
     requires com.google.zxing.javase;
     requires com.google.gson;
