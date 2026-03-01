@@ -19,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -32,6 +33,8 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Properties;
+import java.util.Scanner;
 import java.util.UUID;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
@@ -63,9 +66,28 @@ public class EventAddController {
     @FXML private TextField maxParticipantsField;
     @FXML private ComboBox<String> statusComboBox;
 
-    // Grok (xAI) API Key
-    private static final String GROK_API_KEY = "xai-tR0AKRKfyv9RjTyMMf6odp3CEL0r8YMY2drITRlsBzH6SASYp3RmWY8s72X9kYxevHJ0pHNNWSGc6vdk";
-    private static final String OPENAI_API_KEY = "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";
+    // AI API Keys (Loaded dynamically)
+    private static String GROK_API_KEY = "";
+    private static String OPENAI_API_KEY = "";
+
+    static {
+        loadConfig();
+    }
+
+    private static void loadConfig() {
+        Properties props = new Properties();
+        try (InputStream input = EventAddController.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input == null) {
+                System.err.println("Sorry, unable to find config.properties");
+                return;
+            }
+            props.load(input);
+            GROK_API_KEY = props.getProperty("grok.api.key");
+            OPENAI_API_KEY = props.getProperty("openai.api.key");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     // ===== Service =====
     private final EventService eventService = new EventService();
