@@ -2,35 +2,52 @@
 
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="Controllers.Appointment.AppointmentCalendarController"
             stylesheets="@../style.css"
-            styleClass="root">
+            styleClass="background-gradient">
 
+    <!-- TOP SECTION -->
     <top>
-        <VBox spacing="10" style="-fx-padding: 15;">
-            <Label text="Appointment Management" styleClass="section-title"/>
+        <VBox fx:id="topContainer" spacing="15" style="-fx-padding: 20; -fx-background-color: white; -fx-border-color: #C6CBB9; -fx-border-width: 0 0 1 0;">
+            <padding>
+                <Insets top="15" right="25" bottom="20" left="25"/>
+            </padding>
 
-            <ComboBox fx:id="therapistComboBox"
-                      promptText="Select Therapist"
-                      styleClass="form-control"/>
+            <!-- Header Row -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="APPOINTMENT CALENDAR"
+                           styleClass="section-title"/>
+                    
+                    <Label fx:id="subtitleLabel"
+                           text="Book and manage your therapy sessions"
+                           style="-fx-font-size: 14px; -fx-text-fill: #7F8F69;"/>
+                </VBox>
+            </HBox>
 
-            <Button text="Refresh"
-                    fx:id="refreshBtn"
-                    onAction="#refreshCalendar"
-                    styleClass="btn-secondary"/>
+            <!-- Therapist Controls Row -->
+            <HBox fx:id="therapistControlsRow" spacing="15" alignment="CENTER_LEFT">
+                <Label text="SELECT THERAPIST:" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #4A4A4A;"/>
+                <ComboBox fx:id="therapistComboBox"
+                          promptText="Choose..." styleClass="form-control" prefWidth="250"/>
+            </HBox>
         </VBox>
     </top>
 
+    <!-- CENTER SECTION: Calendar -->
     <center>
         <VBox fx:id="calendarContainer"
-              style="-fx-padding: 10;"
+              style="-fx-padding: 20;"
               VBox.vgrow="ALWAYS">
-            <!-- CalendarView will be added programmatically -->
+            <!-- Calendar View will be injected here via code -->
         </VBox>
     </center>
 

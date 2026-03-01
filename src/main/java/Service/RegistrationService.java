@@ -5,7 +5,12 @@ import Entities.Registration;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class RegistrationService {
@@ -17,13 +22,14 @@ public class RegistrationService {
         // We use the qr_code field to store metadata for email, phone, and notes
         // Format: EMAIL|PHONE|NOTES|ORIGINAL_QR
         return (r.getParticipantEmail() != null ? r.getParticipantEmail() : "") + "|" +
-               (r.getParticipantPhone() != null ? r.getParticipantPhone() : "") + "|" +
-               (r.getParticipantNotes() != null ? r.getParticipantNotes() : "") + "|" +
-               (r.getQrCode() != null ? r.getQrCode() : "");
+                (r.getParticipantPhone() != null ? r.getParticipantPhone() : "") + "|" +
+                (r.getParticipantNotes() != null ? r.getParticipantNotes() : "") + "|" +
+                (r.getQrCode() != null ? r.getQrCode() : "");
     }
 
     private void unpackMetadata(Registration r, String packed) {
-        if (packed == null || !packed.contains("|")) return;
+        if (packed == null || !packed.contains("|"))
+            return;
         String[] parts = packed.split("\\|", -1);
         if (parts.length >= 4) {
             r.setParticipantEmail(parts[0].isEmpty() ? null : parts[0]);
@@ -97,8 +103,11 @@ public class RegistrationService {
             PreparedStatement ps = cnx.prepareStatement(sql);
             ps.setInt(1, eventId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (Exception e) { e.printStackTrace(); }
+            if (rs.next())
+                return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
@@ -110,7 +119,8 @@ public class RegistrationService {
         ps.setInt(1, eventId);
         ResultSet rs = ps.executeQuery();
         int max = 0;
-        if (rs.next()) max = rs.getInt(1);
+        if (rs.next())
+            max = rs.getInt(1);
         return registered >= max;
     }
 
@@ -171,8 +181,11 @@ public class RegistrationService {
     // ================= HELPERS =================
     private Registration mapResultSetToRegistration(ResultSet rs) throws SQLException {
         Timestamp ts = null;
-        try { ts = rs.getTimestamp("registration_date"); } catch (Exception e) {}
-        
+        try {
+            ts = rs.getTimestamp("registration_date");
+        } catch (Exception e) {
+        }
+
         Registration reg = new Registration(
                 rs.getInt("id_registration"),
                 rs.getInt("event_id"),

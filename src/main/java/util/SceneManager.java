@@ -23,7 +23,9 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setFullScreen(true); // ensure every page uses full screen
             stage.show();
 
         } catch (Exception e) {
@@ -36,7 +38,9 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setFullScreen(true); // ensure every page uses full screen
             stage.show();
 
             return loader.getController();

@@ -16,7 +16,7 @@
         <VBox alignment="CENTER_LEFT">
             <children>
                 <Label fx:id="nameLabel" text="Sophie Dubois" styleClass="therapist-list-name" />
-                <Label fx:id="roleLabel" text="Psychologue" styleClass="therapist-list-role" />
+                <Label fx:id="roleLabel" text="Psychologist" styleClass="therapist-list-role" />
             </children>
         </VBox>
     </children>
