@@ -8,7 +8,9 @@ import interfaces.Iservice; // Note: package name is lowercase 'interfaces' as s
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QuizResultService implements Iservice<QuizResult> {
 
@@ -147,6 +149,107 @@ public class QuizResultService implements Iservice<QuizResult> {
         }
 
         return results;
+    }
+
+    /**
+     * Get the total number of quizzes taken.
+     */
+    public int getTotalQuizzesTaken() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM quiz_results";
+        try (Statement st = dbconnect.getInstance().getConnection().createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Get the number of unique users who have taken a quiz.
+     */
+    public int getUniqueUsersCount() throws SQLException {
+        String sql = "SELECT COUNT(DISTINCT user_id) FROM quiz_results";
+        try (Statement st = dbconnect.getInstance().getConnection().createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Get the average score across all quizzes.
+     */
+    public double getAverageScore() throws SQLException {
+        String sql = "SELECT AVG(score) FROM quiz_results";
+        try (Statement st = dbconnect.getInstance().getConnection().createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        }
+        return 0.0;
+    }
+
+    /**
+     * Get the title of the most popular quiz taken.
+     */
+    public String getMostPopularQuizName() throws SQLException {
+        String sql = "SELECT q.title, COUNT(qr.quiz_id) as take_count " +
+                "FROM quiz_results qr " +
+                "JOIN quiz q ON qr.quiz_id = q.id " +
+                "GROUP BY qr.quiz_id, q.title " +
+                "ORDER BY take_count DESC LIMIT 1";
+        try (Statement st = dbconnect.getInstance().getConnection().createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getString("title");
+            }
+        }
+        return "N/A";
+    }
+
+    /**
+     * Get the distribution of moods reported after quizzes.
+     */
+    public Map<String, Integer> getMoodDistribution() throws SQLException {
+        Map<String, Integer> distribution = new HashMap<>();
+        String sql = "SELECT mood, COUNT(*) FROM quiz_results GROUP BY mood";
+        try (Statement st = dbconnect.getInstance().getConnection().createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                String mood = rs.getString(1);
+                int count = rs.getInt(2);
+                if (mood != null && !mood.trim().isEmpty()) {
+                    distribution.put(mood, count);
+                }
+            }
+        }
+        return distribution;
+    }
+
+    /**
+     * Get the popularity of each quiz by name.
+     */
+    public Map<String, Integer> getQuizPopularity() throws SQLException {
+        Map<String, Integer> popularity = new HashMap<>();
+        String sql = "SELECT q.title, COUNT(qr.quiz_id) as take_count " +
+                "FROM quiz_results qr " +
+                "JOIN quiz q ON qr.quiz_id = q.id " +
+                "GROUP BY qr.quiz_id, q.title";
+        try (Statement st = dbconnect.getInstance().getConnection().createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                String title = rs.getString("title");
+                int count = rs.getInt("take_count");
+                if (title != null) {
+                    popularity.put(title, count);
+                }
+            }
+        }
+        return popularity;
     }
 
     // Helper method to map ResultSet to QuizResult
