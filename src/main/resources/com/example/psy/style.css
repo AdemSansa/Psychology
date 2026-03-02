@@ -12,6 +12,30 @@
     -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
     -fx-font-size: 13px;
     -fx-background-color: #F9FAF4;
+    -fx-text-fill: #111114;
+}
+
+/* ===============================
+   NAVIGATION & BACK BUTTON
+   =============================== */
+
+.back-nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7F8F69;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-border-color: #7F8F69;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+
+.back-nav-btn:hover {
+    -fx-background-color: #7F8F69;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.3), 10, 0, 0, 3);
     /* Light background */
     -fx-text-fill: #111114;
     /* Charcoal text */
@@ -175,12 +199,14 @@
 }
 
 .btn-primary:hover {
-    -fx-background-color: #5F6B4E; /* Darker sage */
+    -fx-background-color: #5F6B4E;
+    /* Darker sage */
 }
 
 .btn-secondary {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #7F8F69; /* Sage */
+    -fx-text-fill: #7F8F69;
+    /* Sage */
     -fx-font-weight: bold;
     -fx-border-color: #E8EACC;
     /* Soft cream border */
@@ -208,7 +234,8 @@
 }
 
 .form-control:focused {
-    -fx-border-color: #7F8F69; /* Sage focus */
+    -fx-border-color: #7F8F69;
+    /* Sage focus */
     -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.25), 5, 0, 0, 0);
 }
 
@@ -786,6 +813,96 @@
     -fx-background-color: rgba(217, 70, 239, 0.2);
 }
 
+/* ===============================
+   FLOATING AI BUTTON
+   =============================== */
+
+.floating-ai-button {
+    -fx-background-color: transparent;
+    -fx-background-image: url("media/chat.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-max-width: 70;
+    -fx-max-height: 70;
+    /* Soft blue glow matching the robot eyes */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 191, 255, 0.4), 15, 0, 0, 0);
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-background-radius: 50;
+}
+
+.floating-ai-button:hover {
+    /* Stronger blue glow on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 191, 255, 0.8), 25, 0, 0, 0);
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+/* ===============================
+   AI MATCHMAKING PREMIUM UI
+   =============================== */
+
+.ai-container {
+    -fx-background-color: linear-gradient(to bottom right, #F9FAF4, #E8EACC, #F3F4ED);
+    -fx-padding: 30 50;
+}
+
+.ai-glass-card {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 30;
+    -fx-padding: 35;
+    -fx-effect: dropshadow(three-pass-box, rgba(43, 50, 46, 0.12), 40, 0, 0, 20);
+    -fx-border-color: linear-gradient(to bottom right, rgba(127, 143, 105, 0.3), rgba(232, 234, 204, 0.3));
+    -fx-border-width: 2;
+}
+
+.ai-prompt-area {
+    -fx-background-color: #fcfcfc;
+    -fx-border-color: #DCE3CF;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-font-size: 16px;
+    -fx-prompt-text-fill: #B0B5A5;
+}
+
+.ai-prompt-area:focused {
+    -fx-border-color: #7F8F69;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.1), 15, 0, 0, 0);
+}
+
+.ai-result-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #F9FAF4);
+    -fx-background-radius: 25;
+    -fx-padding: 30;
+    -fx-border-color: #7F8F69;
+    -fx-border-width: 0 0 0 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 20, 0, 0, 10);
+}
+
+.ai-recommendation-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2B322E;
+}
+
+.ai-reasoning-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+    -fx-line-spacing: 5;
+}
+
+.ai-slot-badge {
+    -fx-background-color: #E8EACC;
+    -fx-text-fill: #7F8F69;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 10;
+}
 /* Dark Scroll Pane */
 .dark-scroll-pane {
     -fx-background-color: transparent;

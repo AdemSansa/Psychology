@@ -110,6 +110,11 @@
             <version>3.0.2</version>
         </dependency>
 
+        <!-- JSON processing for Gemini API -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
