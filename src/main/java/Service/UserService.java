@@ -17,7 +17,8 @@ public class UserService implements Iservice<User> {
     @Override
     public void create(User user) throws SQLException {
         String requete = "INSERT INTO users (first_name, last_name, email, password, role, phone, date_naissance, gender, photo_url) VALUES (?,?,?,?,?,?,?,?,?)";
-        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(requete);
+        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(requete,
+                Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, user.getFirstName());
         statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());

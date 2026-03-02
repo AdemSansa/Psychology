@@ -10,6 +10,7 @@ import Service.TranslationApiService;
 import Service.SentimentAnalysisService;
 import Service.UserService;
 import Service.EmailService;
+import jakarta.mail.MessagingException;
 import util.Session;
 
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -149,11 +151,17 @@ public class ForumController implements Initializable {
 
                     // 🔹 envoi asynchrone (ne bloque pas JavaFX)
                     new Thread(() -> {
-                        emailService.sendEmail(
-                                user.getEmail(),
-                                "Merci pour votre avis",
-                                message
-                        );
+                        try {
+                            emailService.sendEmail(
+                                    user.getEmail(),
+                                    "Merci pour votre avis",
+                                    message
+                            );
+                        } catch (MessagingException e) {
+                            throw new RuntimeException(e);
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
                     }).start();
                 }
 

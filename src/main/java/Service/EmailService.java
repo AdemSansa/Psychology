@@ -26,7 +26,7 @@ public class EmailService {
     private final int smtpPort;
     private final String appName;
 
-    private EmailService() {
+    public EmailService() {
         Properties config = loadConfig();
         this.senderEmail = config.getProperty("email.sender");
         this.senderPassword = config.getProperty("email.password");
@@ -179,7 +179,7 @@ public class EmailService {
     /**
      * Envoie un email HTML via SMTP Gmail (TLS/STARTTLS).
      */
-    private void sendEmail(String toEmail, String subject, String htmlBody)
+    public void sendEmail(String toEmail, String subject, String htmlBody)
             throws MessagingException, UnsupportedEncodingException {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

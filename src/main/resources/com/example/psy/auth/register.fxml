@@ -43,11 +43,27 @@
                                 <TextField fx:id="fullNameField" promptText="Enter your full name (e.g. John Doe)" styleClass="form-control" prefHeight="40"/>
                             </VBox>
 
+                            <!-- Patient Specific Fields -->
+                            <VBox fx:id="patientFields" spacing="12">
+                                <VBox spacing="5">
+                                    <Label text="Phone Number" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                                    <TextField fx:id="phoneField" promptText="Enter phone number" styleClass="form-control" prefHeight="40"/>
+                                </VBox>
+                                <VBox spacing="5">
+                                    <Label text="Birth Date" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                                    <DatePicker fx:id="dobPicker" promptText="Select your birth date" styleClass="form-control" prefHeight="40" maxWidth="Infinity"/>
+                                </VBox>
+                                <VBox spacing="5">
+                                    <Label text="Gender" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                                    <ComboBox fx:id="genderBox" promptText="Select gender" styleClass="form-control" prefHeight="40" maxWidth="Infinity"/>
+                                </VBox>
+                            </VBox>
+
                             <!-- Therapist Specific Fields -->
                             <VBox fx:id="therapistFields" spacing="12" managed="false" visible="false">
                                 <VBox spacing="5">
                                     <Label text="Phone Number" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
-                                    <TextField fx:id="phoneField" promptText="Enter phone number" styleClass="form-control" prefHeight="40"/>
+                                    <TextField fx:id="therapistPhoneField" promptText="Enter professional phone number" styleClass="form-control" prefHeight="40"/>
                                 </VBox>
                                 <VBox spacing="5">
                                     <Label text="Specialization" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
@@ -109,6 +125,21 @@
                             <VBox spacing="5">
                                  <Label text="Password" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
                                  <PasswordField fx:id="passwordField" promptText="Create a secure password" styleClass="form-control" prefHeight="40"/>
+                            </VBox>
+
+                            <!-- Face ID Section -->
+                            <VBox spacing="10" alignment="CENTER">
+                                <Label text="Face ID (Optional)" style="-fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                                <StackPane style="-fx-border-color: #ddd; -fx-border-radius: 10; -fx-padding: 5;">
+                                    <ImageView fx:id="facePreview" fitHeight="120" fitWidth="160" preserveRatio="true">
+                                        <image>
+                                            <Image url="@../media/Logo_nobackground.png" />
+                                        </image>
+                                    </ImageView>
+                                </StackPane>
+                                <Button text="📸 Capture Face" onAction="#handleCaptureFace" 
+                                        style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                                <Label fx:id="faceStatusLabel" text="Capture face for login" style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
                             </VBox>
                         </VBox>
                     </content>
