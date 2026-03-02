@@ -96,11 +96,23 @@ public class forumadminController {
         // Add sentiment analysis emoji under the content
         String sentiment = sentimentService.analyzeSentiment(review.getContent());
         Label sentimentLabel = new Label(sentiment);
-        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:12px; -fx-text-fill:#666;");
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:12px; -fx-text-fill:#666; -fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 8px; -fx-padding: 4px 8px;");
 
         HBox translateBox = new HBox(10);
-        Button btnTranslateEn = new Button("🇬🇧 English");
-        Button btnTranslateAr = new Button("🇸🇦 Arabic");
+        Button btnTranslateEn = new Button("� EN");
+        Button btnTranslateAr = new Button("� AR");
+        
+        // Enhanced styling for admin translation buttons
+        String adminTranslateStyle = "-fx-background-color: linear-gradient(45deg, #9C27B0, #BA68C8); " +
+                                  "-fx-text-fill: white; " +
+                                  "-fx-font-weight: bold; " +
+                                  "-fx-background-radius: 20px; " +
+                                  "-fx-padding: 6px 12px; " +
+                                  "-fx-cursor: hand; " +
+                                  "-fx-effect: dropshadow(three-pass-box, rgba(156,39,176,0.3), 3, 0, 0, 1);";
+        
+        btnTranslateEn.setStyle(adminTranslateStyle);
+        btnTranslateAr.setStyle(adminTranslateStyle);
 
         btnTranslateEn.setOnAction(e -> reviewContent.setText(
                 translationApiService.translate(review.getContent(), "en")
@@ -136,11 +148,23 @@ public class forumadminController {
         // Add sentiment analysis for therapist replies too
         String sentiment = sentimentService.analyzeSentiment(r.getContent());
         Label sentimentLabel = new Label(sentiment);
-        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:11px; -fx-text-fill:#666;");
+        sentimentLabel.setStyle("-fx-font-weight:bold; -fx-font-size:11px; -fx-text-fill:#666; -fx-background-color: rgba(255,255,255,0.8); -fx-background-radius: 6px; -fx-padding: 2px 6px;");
 
         HBox translateReplyBox = new HBox(10);
-        Button btnTranslateEnReply = new Button("🇬🇧 English");
-        Button btnTranslateArReply = new Button("🇸🇦 Arabic");
+        Button btnTranslateEnReply = new Button("� EN");
+        Button btnTranslateArReply = new Button("� AR");
+
+        // Enhanced styling for admin reply translation buttons
+        String adminReplyTranslateStyle = "-fx-background-color: linear-gradient(45deg, #673AB7, #9575CD); " +
+                                        "-fx-text-fill: white; " +
+                                        "-fx-font-weight: bold; " +
+                                        "-fx-background-radius: 15px; " +
+                                        "-fx-padding: 4px 8px; " +
+                                        "-fx-cursor: hand; " +
+                                        "-fx-effect: dropshadow(three-pass-box, rgba(103,58,183,0.2), 2, 0, 0, 1);";
+        
+        btnTranslateEnReply.setStyle(adminReplyTranslateStyle);
+        btnTranslateArReply.setStyle(adminReplyTranslateStyle);
 
         btnTranslateEnReply.setOnAction(e -> replyContent.setText(
                 translationApiService.translate(r.getContent(), "en")

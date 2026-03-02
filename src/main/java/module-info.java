@@ -4,6 +4,8 @@ module com.example.psy {
     requires com.calendarfx.view;
     requires mysql.connector.j;
     requires org.json;
+    requires jakarta.mail;
+    requires jdk.httpserver;
 
     requires com.google.zxing.javase;
     requires com.google.gson;
