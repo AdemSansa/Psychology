@@ -18,23 +18,19 @@ module com.example.psy {
     requires java.sql;
     requires java.desktop;
 
+
    
 
-    requires java.net.http;
     requires webcam.capture;
 
-    // Transitive dependencies fix for ical4j
     requires org.apache.commons.lang3;
 
   
 
-    // Logging for ical4j
     requires org.slf4j;
 
-    requires jakarta.mail;
     requires org.eclipse.angus.mail;
     requires org.apache.pdfbox;
-    requires org.json;
 
     opens com.example.psy to javafx.fxml;
 
@@ -72,7 +68,6 @@ module com.example.psy {
     opens Controllers.QuizResults to javafx.fxml;
 
     opens Controllers.Event to javafx.fxml;
-    opens Controllers.dashboards to javafx.fxml;
 
     exports Controllers.dashboards;
     exports Controllers.Therapists;

@@ -37,8 +37,8 @@ public class ReviewService implements Iservice<Review> {
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_usr"));
-            reviews.add(r);
+                    rs.getInt("id_usr")));
+
         }
         return reviews;
     }
@@ -85,7 +85,7 @@ public class ReviewService implements Iservice<Review> {
         if (rs.next()) {
             return true;
         }
-        return 0;
+        return false ;
     }
 
     public int countRepliedReviews() throws SQLException {
