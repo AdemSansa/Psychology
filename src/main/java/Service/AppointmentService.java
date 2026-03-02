@@ -19,19 +19,25 @@ public class AppointmentService {
         cnx = dbconnect.getInstance().getConnection();
     }
 
-
     public void create(Appointment appointment) throws SQLException {
 
         LocalTime start = appointment.getStartTime();
         LocalTime end = start.plusMinutes(90);
         appointment.setEndTime(end);
 
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        if (appointment.getAppointmentDate().isBefore(today) ||
+                (appointment.getAppointmentDate().equals(today) && start.isBefore(now))) {
+            throw new SQLException("Cannot book appointments in the past");
+        }
+
         if (!isWithinAvailability(
                 appointment.getTherapistId(),
                 appointment.getAppointmentDate(),
                 start,
-                end
-        )) {
+                end)) {
             throw new SQLException("Slot outside therapist availability");
         }
 
@@ -47,8 +53,8 @@ public class AppointmentService {
 
         String sql = """
                 INSERT INTO appointment
-                (appointment_date, start_time, end_time, status, therapist_id, patient_id)
-                VALUES (?,?,?,?,?,?)
+                (appointment_date, start_time, end_time, status, type, therapist_id, patient_id)
+                VALUES (?,?,?,?,?,?,?)
                 """;
 
         PreparedStatement ps = cnx.prepareStatement(sql);
@@ -57,8 +63,9 @@ public class AppointmentService {
         ps.setTime(2, Time.valueOf(start));
         ps.setTime(3, Time.valueOf(end));
         ps.setString(4, appointment.getStatus());
-        ps.setInt(5, appointment.getTherapistId());
-        ps.setInt(6, appointment.getPatientId());
+        ps.setString(5, appointment.getType());
+        ps.setInt(6, appointment.getTherapistId());
+        ps.setInt(7, appointment.getPatientId());
 
         ps.executeUpdate();
 
@@ -82,15 +89,15 @@ public class AppointmentService {
     public void update(Appointment appointment) throws SQLException {
 
         String sql = """
-UPDATE appointment
-                SET appointment_date = ?,
-                    start_time = ?,
-                    end_time = ?,
-                    status = ?,
-                    therapist_id = ?,
-                    patient_id = ?
-                WHERE id = ?
-                """;
+                UPDATE appointment
+                                SET appointment_date = ?,
+                                    start_time = ?,
+                                    end_time = ?,
+                                    status = ?,
+                                    therapist_id = ?,
+                                    patient_id = ?
+                                WHERE id = ?
+                                """;
 
         PreparedStatement ps = cnx.prepareStatement(sql);
 
@@ -118,7 +125,6 @@ UPDATE appointment
         System.out.println("✅ Appointment deleted!");
     }
 
-
     public List<Appointment> listByTherapist(int therapistId) throws SQLException {
 
         String sql = "SELECT * FROM appointment WHERE therapist_id=?";
@@ -135,26 +141,65 @@ UPDATE appointment
         return list;
     }
 
+    public List<Appointment> listByPatient(int patientId) throws SQLException {
 
-    public boolean isSlotAvailable(int therapistId, LocalDate date, LocalTime start, LocalTime end, Integer ignoreAppointmentId) throws SQLException {
+        String sql = "SELECT * FROM appointment WHERE patient_id=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setInt(1, patientId);
+
+        ResultSet rs = ps.executeQuery();
+        List<Appointment> list = new ArrayList<>();
+
+        while (rs.next()) {
+            list.add(map(rs));
+        }
+
+        return list;
+    }
+
+    public boolean isSlotAvailable(int therapistId, LocalDate date, LocalTime start, LocalTime end,
+            Integer ignoreAppointmentId) throws SQLException {
         List<Appointment> list = listByTherapist(therapistId);
         for (Appointment a : list) {
             if (ignoreAppointmentId != null && a.getId() == ignoreAppointmentId) {
                 continue; // skip the appointment being moved
             }
             if (a.getAppointmentDate().equals(date) &&
-                    !(end.isBefore(a.getStartTime()) || start.isAfter(a.getEndTime()))) {
+                    (start.isBefore(a.getEndTime()) && end.isAfter(a.getStartTime()))) {
                 return false; // overlap detected
             }
         }
         return true;
     }
 
-
-
     public boolean isWithinAvailability(int therapistId, LocalDate date,
-                                        LocalTime start, LocalTime end) throws SQLException {
+            LocalTime start, LocalTime end) throws SQLException {
 
+        // First, check for specific date exceptions
+        String specificSql = """
+                SELECT * FROM availabilities
+                WHERE therapist_id = ?
+                AND specific_date = ?
+                AND is_available = false
+                """;
+
+        PreparedStatement specificPs = cnx.prepareStatement(specificSql);
+        specificPs.setInt(1, therapistId);
+        specificPs.setDate(2, Date.valueOf(date));
+
+        ResultSet specificRs = specificPs.executeQuery();
+
+        while (specificRs.next()) {
+            LocalTime offStart = specificRs.getTime("start_time").toLocalTime();
+            LocalTime offEnd = specificRs.getTime("end_time").toLocalTime();
+
+            // If the proposed slot overlaps with an unavailability block
+            if (start.isBefore(offEnd) && end.isAfter(offStart)) {
+                return false; // Not available due to specific date exception
+            }
+        }
+
+        // Then check regular weekly availability
         Day day = Day.valueOf(date.getDayOfWeek().name());
 
         String sql = """
@@ -203,9 +248,8 @@ UPDATE appointment
         return "Patient";
     }
 
-
     public boolean isSlotValid(int therapistId, LocalDate date,
-                               LocalTime start, LocalTime end, Integer excludeAppointmentId) throws SQLException {
+            LocalTime start, LocalTime end, Integer excludeAppointmentId) throws SQLException {
 
         String sql = """
                 SELECT * FROM appointment
@@ -230,16 +274,17 @@ UPDATE appointment
 
             // 🚨 Overlap check
             boolean overlap = start.isBefore(existingEnd) && end.isAfter(existingStart);
-            if (overlap) return false;
+            if (overlap)
+                return false;
 
             // 🚨 90-minute gap rule
             long minutesBetween = Math.abs(Duration.between(existingStart, start).toMinutes());
-            if (minutesBetween < 90) return false;
+            if (minutesBetween < 90)
+                return false;
         }
 
         return true;
     }
-
 
     private Appointment map(ResultSet rs) throws SQLException {
 
@@ -250,6 +295,7 @@ UPDATE appointment
         a.setStartTime(rs.getTime("start_time").toLocalTime());
         a.setEndTime(rs.getTime("end_time").toLocalTime());
         a.setStatus(rs.getString("status"));
+        a.setType(rs.getString("type"));
         a.setTherapistId(rs.getInt("therapist_id"));
         a.setPatientId(rs.getInt("patient_id"));
 
@@ -261,12 +307,19 @@ UPDATE appointment
         LocalTime end = start.plusMinutes(90);
         appointment.setEndTime(end);
 
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        if (appointment.getAppointmentDate().isBefore(today) ||
+                (appointment.getAppointmentDate().equals(today) && start.isBefore(now))) {
+            throw new SQLException("Cannot book appointments in the past");
+        }
+
         if (!isWithinAvailability(
                 appointment.getTherapistId(),
                 appointment.getAppointmentDate(),
                 start,
-                end
-        )) {
+                end)) {
             throw new SQLException("Slot outside therapist availability");
         }
 
@@ -275,16 +328,15 @@ UPDATE appointment
                 appointment.getAppointmentDate(),
                 start,
                 end,
-                null
-        )) {
+                null)) {
             throw new SQLException("Overlap or gap violation");
         }
 
         String sql = """
-            INSERT INTO appointment
-            (appointment_date, start_time, end_time, status, therapist_id, patient_id)
-            VALUES (?,?,?,?,?,?)
-            """;
+                INSERT INTO appointment
+                (appointment_date, start_time, end_time, status, type, therapist_id, patient_id)
+                VALUES (?,?,?,?,?,?,?)
+                """;
 
         PreparedStatement ps = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -292,8 +344,9 @@ UPDATE appointment
         ps.setTime(2, Time.valueOf(start));
         ps.setTime(3, Time.valueOf(end));
         ps.setString(4, appointment.getStatus());
-        ps.setInt(5, appointment.getTherapistId());
-        ps.setInt(6, appointment.getPatientId());
+        ps.setString(5, appointment.getType());
+        ps.setInt(6, appointment.getTherapistId());
+        ps.setInt(7, appointment.getPatientId());
 
         ps.executeUpdate();
 

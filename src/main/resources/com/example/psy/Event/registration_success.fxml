@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.Event.RegistrationSuccessController"
+            stylesheets="@../style.css"
+            styleClass="background-gradient">
+
+    <center>
+        <VBox alignment="CENTER" spacing="30" maxWidth="600"
+              style="-fx-background-color: white; -fx-background-radius: 25; -fx-padding: 50; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0, 0, 10);">
+            
+            <StackPane>
+                <Circle radius="40" fill="#f0fff4" />
+                <Label text="✓" style="-fx-font-size: 40; -fx-text-fill: #38a169; -fx-font-weight: bold;"/>
+            </StackPane>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Registration Successful!" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                <Label text="Thank you for your application!" style="-fx-font-size: 16; -fx-text-fill: #718096;"/>
+            </VBox>
+
+            <Separator maxWidth="200" style="-fx-opacity: 0.5;"/>
+
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="YOUR CHAIR NUMBER" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #a0aec0; -fx-letter-spacing: 2px;"/>
+                <Label fx:id="chairNumberLabel" text="#00" style="-fx-font-size: 48; -fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="15" style="-fx-background-color: #f7fafc; -fx-padding: 20; -fx-background-radius: 15;">
+                <Label text="Confirmation QR Code" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                <StackPane fx:id="qrContainer" prefWidth="200" prefHeight="200">
+                    <Label fx:id="qrLoadingLabel" text="Genereting QR..." style="-fx-text-fill: #a0aec0;"/>
+                    <ImageView fx:id="qrImageView" fitWidth="180" fitHeight="180" preserveRatio="true"/>
+                </StackPane>
+            </VBox>
+
+            <Button text="Back to Events" onAction="#handleBack" styleClass="btn-primary" 
+                    prefWidth="250" style="-fx-font-size: 16; -fx-padding: 12; -fx-background-radius: 30;"/>
+            
+        </VBox>
+    </center>
+
+    <padding>
+        <Insets top="50" right="50" bottom="50" left="50"/>
+    </padding>
+
+</BorderPane>

@@ -4,6 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -26,7 +29,18 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            stage.setScene(new Scene(root));
+            StackPane rootContainer = new StackPane();
+            // Load global CSS to ensure programmatically added nodes (like the AI button)
+            // are styled
+            rootContainer.getStylesheets()
+                    .add(SceneManager.class.getResource("/com/example/psy/style.css").toExternalForm());
+
+            rootContainer.getChildren().add(root);
+            addFloatingAIButton(rootContainer);
+
+            Scene scene = new Scene(rootContainer);
+            stage.setScene(scene);
+            stage.setFullScreen(true);
             stage.show();
 
         } catch (Exception e) {
@@ -40,7 +54,18 @@ public class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            stage.setScene(new Scene(root));
+            StackPane rootContainer = new StackPane();
+            // Load global CSS to ensure programmatically added nodes (like the AI button)
+            // are styled
+            rootContainer.getStylesheets()
+                    .add(SceneManager.class.getResource("/com/example/psy/style.css").toExternalForm());
+
+            rootContainer.getChildren().add(root);
+            addFloatingAIButton(rootContainer);
+
+            Scene scene = new Scene(rootContainer);
+            stage.setScene(scene);
+            stage.setFullScreen(true);
             stage.show();
 
             return loader.getController();
@@ -86,5 +111,26 @@ public class SceneManager {
     }
 
     public static void goBack() {
+    }
+
+    private static void addFloatingAIButton(StackPane rootContainer) {
+        // Only show if a user is logged in
+        if (util.Session.getInstance().getUser() == null) {
+            return;
+        }
+
+        Button aiButton = new Button(""); // Empty text, will use CSS background-image
+        aiButton.getStyleClass().add("floating-ai-button");
+
+        // Position at bottom right
+        StackPane.setAlignment(aiButton, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(aiButton, new Insets(0, 30, 30, 0)); // Padding from corner
+
+        // On click, navigate to AI matching view
+        aiButton.setOnAction(e -> {
+            switchScene("/com/example/psy/Therapist/ai_matchmaking.fxml");
+        });
+
+        rootContainer.getChildren().add(aiButton);
     }
 }

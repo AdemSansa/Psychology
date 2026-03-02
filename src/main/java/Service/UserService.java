@@ -4,9 +4,11 @@ import Database.dbconnect;
 import Entities.User;
 import interfaces.Iservice;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,12 @@ public class UserService implements Iservice<User> {
         statement.setString(8, user.getGender());
         statement.setString(9, user.getPhotoUrl());
         statement.executeUpdate();
-        System.out.println("User added successfully!");
+
+        ResultSet rs = statement.getGeneratedKeys();
+        if (rs.next()) {
+            user.setId(rs.getInt(1));
+        }
+        System.out.println("User added successfully with ID: " + user.getId());
     }
 
     @Override
@@ -176,6 +183,11 @@ public class UserService implements Iservice<User> {
             return mapResultSetToUser(rs);
         }
         return null;
+    }
+
+    // ------------------- Lecture par ID (alias pour read) -------------------
+    public User getUserById(int id) throws SQLException {
+        return read(id);
     }
 
     // ------------------- Mapping ResultSet vers User -------------------

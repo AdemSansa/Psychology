@@ -2,6 +2,7 @@ package Service;
 
 import Database.dbconnect;
 import Entities.Review;
+import Entities.User;
 import interfaces.Iservice;
 
 import java.sql.*;
@@ -16,98 +17,84 @@ public class ReviewService implements Iservice<Review> {
         cnx = dbconnect.getInstance().getConnection();
     }
 
-    // ================= CREATE =================
     @Override
     public void create(Review review) throws SQLException {
-
         String sql = "INSERT INTO review (content, id_usr) VALUES (?, ?)";
-
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, review.getContent());
         ps.setInt(2, review.getIdUser());
-
         ps.executeUpdate();
-        System.out.println("Review added successfully!");
     }
 
-    // ================= READ ALL =================
     @Override
     public List<Review> list() throws SQLException {
-
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM review";
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(sql);
-
         while (rs.next()) {
-            Review r = new Review(
+            reviews.add(new Review(
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_usr")
-            );
+                    rs.getInt("id_usr"));
             reviews.add(r);
         }
-
         return reviews;
     }
 
-    // ================= READ BY ID =================
     @Override
     public Review read(int id) throws SQLException {
-
         String sql = "SELECT * FROM review WHERE id_review=?";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
-
         if (rs.next()) {
             return new Review(
                     rs.getInt("id_review"),
                     rs.getString("content"),
                     rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getInt("id_usr")
-            );
+                    rs.getInt("id_usr"));
         }
         return null;
     }
 
-    // ================= UPDATE =================
     @Override
     public void update(Review review) throws SQLException {
-
         String sql = "UPDATE review SET content=?, id_usr=? WHERE id_review=?";
-
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, review.getContent());
         ps.setInt(2, review.getIdUser());
         ps.setInt(3, review.getIdReview());
-
-        int rows = ps.executeUpdate();
-        System.out.println("Rows updated: " + rows);
-        System.out.println("Review updated successfully!");
+        ps.executeUpdate();
     }
 
-    // ================= DELETE =================
     @Override
     public void delete(int id) throws SQLException {
-
         String sql = "DELETE FROM review WHERE id_review=?";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
-
-        System.out.println("Review deleted successfully!");
     }
-    public boolean isExist(String  content ) throws SQLException {
+
+    public boolean isExist(String content) throws SQLException {
         String sql = "SELECT * FROM review WHERE content = ?";
-        PreparedStatement  ps = cnx.prepareStatement(sql);
+        PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, content);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-        return true;
+            return true;
         }
-        return false;
-
+        return 0;
     }
+
+    public int countRepliedReviews() throws SQLException {
+        String sql = "SELECT COUNT(DISTINCT id_review) AS total FROM review_reply";
+        try (Statement st = cnx.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt("total");
+        }
+        return 0;
+    }
+
 }

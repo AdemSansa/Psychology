@@ -1,124 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml"
-      alignment="CENTER"
-      spacing="40"
-      styleClass="dashboard-content"
-      style="-fx-background-color: linear-gradient(to bottom right, #f5efe6, #e8dccb); -fx-padding: 50;">
+<VBox alignment="CENTER" spacing="40" style="-fx-background-color: linear-gradient(to bottom right, #f5efe6, #d7dacc); -fx-padding: 50;" styleClass="dashboard-content" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25">
 
     <!-- Welcome Header -->
     <VBox alignment="CENTER" spacing="15">
-        <Label text="Welcome to Slimenify"
-               style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
-        <Label text="Your Mental Wellness Companion"
-               style="-fx-font-size: 18px; -fx-text-fill: #6f4e37; -fx-font-weight: 500;"/>
-        <Label text="Take control of your mental health journey with personalized assessments and professional support"
-               style="-fx-font-size: 14px; -fx-text-fill: #7a5c4f; -fx-max-width: 600; -fx-text-alignment: center;"
-               wrapText="true"/>
+        <Label style="-fx-font-size: 42px; -fx-font-weight: bold; -fx-text-fill: #2c351c;" text="Welcome to Slimenify" textFill="#166631" />
+        <Label style="-fx-font-size: 18px; -fx-text-fill: #343e23; -fx-font-weight: 500;" text="Your Mental Wellness Companion" />
+        <Label style="-fx-font-size: 14px; -fx-text-fill: #63704f; -fx-max-width: 600; -fx-text-alignment: center;" text="Take control of your mental health journey with personalized assessments and professional support" wrapText="true" />
     </VBox>
 
     <!-- Feature Cards -->
-    <HBox spacing="30" alignment="CENTER">
+    <HBox alignment="CENTER" spacing="30">
         
         <!-- Card 1: Self-Assessment -->
-        <VBox alignment="CENTER" spacing="15" styleClass="stat-card" 
-              style="-fx-min-width: 280; -fx-min-height: 200; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f9f5f0); -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 4);">
+        <VBox alignment="CENTER" spacing="15" style="-fx-min-width: 280; -fx-min-height: 200; -fx-background-color: linear-gradient(to bottom right, #ffffff, #d7dacc); -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 4);" styleClass="stat-card">
             <StackPane>
-                <Region style="-fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c); -fx-background-radius: 50; -fx-min-width: 70; -fx-min-height: 70;"/>
-                <Label text="📋" style="-fx-font-size: 32px;"/>
+                <Region style="-fx-background-color: linear-gradient(to bottom right, #63704f, #929a7a); -fx-background-radius: 50; -fx-min-width: 70; -fx-min-height: 70;" />
+                <Label style="-fx-font-size: 32px;" text="📋" textFill="WHITE" />
             </StackPane>
-            <Label text="Self-Assessment Quizzes"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3e2723; -fx-text-alignment: center;"
-                   wrapText="true"/>
-            <Label text="Evaluate your mental wellness with scientifically-backed assessments"
-                   style="-fx-font-size: 12px; -fx-text-fill: #7a5c4f; -fx-text-alignment: center; -fx-max-width: 240;"
-                   wrapText="true"/>
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c351c; -fx-text-alignment: center;" text="Self-Assessment Quizzes" wrapText="true" />
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #63704f; -fx-text-alignment: center; -fx-max-width: 240;" text="Evaluate your mental wellness with scientifically-backed assessments" wrapText="true" />
         </VBox>
 
         <!-- Card 2: Professional Support -->
-        <VBox alignment="CENTER" spacing="15" styleClass="stat-card"
-              style="-fx-min-width: 280; -fx-min-height: 200; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f9f5f0); -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 4);">
+        <VBox alignment="CENTER" spacing="15" style="-fx-min-width: 280; -fx-min-height: 200; -fx-background-color: linear-gradient(to bottom right, #ffffff, #d7dacc); -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 4);" styleClass="stat-card">
             <StackPane>
-                <Region style="-fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c); -fx-background-radius: 50; -fx-min-width: 70; -fx-min-height: 70;"/>
-                <Label text="👨‍⚕️" style="-fx-font-size: 32px;"/>
+                <Region style="-fx-background-color: linear-gradient(to bottom right, #63704f, #929a7a); -fx-background-radius: 50; -fx-min-width: 70; -fx-min-height: 70;" />
+                <Label style="-fx-font-size: 32px;" text="👨‍⚕️" textFill="WHITE" />
             </StackPane>
-            <Label text="Expert Therapists"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3e2723; -fx-text-alignment: center;"
-                   wrapText="true"/>
-            <Label text="Connect with licensed professionals who care about your wellbeing"
-                   style="-fx-font-size: 12px; -fx-text-fill: #7a5c4f; -fx-text-alignment: center; -fx-max-width: 240;"
-                   wrapText="true"/>
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #343e23; -fx-text-alignment: center;" text="Expert Therapists" wrapText="true" />
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #63704f; -fx-text-alignment: center; -fx-max-width: 240;" text="Connect with licensed professionals who care about your wellbeing" wrapText="true" />
         </VBox>
 
         <!-- Card 3: Track Progress -->
-        <VBox alignment="CENTER" spacing="15" styleClass="stat-card"
-              style="-fx-min-width: 280; -fx-min-height: 200; -fx-background-color: linear-gradient(to bottom right, #ffffff, #f9f5f0); -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 4);">
+        <VBox alignment="CENTER" spacing="15" style="-fx-min-width: 280; -fx-min-height: 200; -fx-background-color: linear-gradient(to bottom right, #ffffff, #d7dacc); -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 12, 0, 0, 4);" styleClass="stat-card">
             <StackPane>
-                <Region style="-fx-background-color: linear-gradient(to bottom right, #6f4e37, #d2b48c); -fx-background-radius: 50; -fx-min-width: 70; -fx-min-height: 70;"/>
-                <Label text="📊" style="-fx-font-size: 32px;"/>
+                <Region style="-fx-background-color: linear-gradient(to bottom right, #63704f, #90957e); -fx-background-radius: 50; -fx-min-width: 70; -fx-min-height: 70;" />
+                <Label style="-fx-font-size: 32px;" text="📊" textFill="WHITE" />
             </StackPane>
-            <Label text="Track Your Progress"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3e2723; -fx-text-alignment: center;"
-                   wrapText="true"/>
-            <Label text="Monitor your mental health journey with detailed insights and history"
-                   style="-fx-font-size: 12px; -fx-text-fill: #7a5c4f; -fx-text-alignment: center; -fx-max-width: 240;"
-                   wrapText="true"/>
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #343e23; -fx-text-alignment: center;" text="Track Your Progress" wrapText="true" />
+            <Label style="-fx-font-size: 12px; -fx-text-fill: #90957e; -fx-text-alignment: center; -fx-max-width: 240;" text="Monitor your mental health journey with detailed insights and history" wrapText="true" />
         </VBox>
 
     </HBox>
 
     <!-- Quick Stats -->
-    <HBox spacing="40" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+    <HBox alignment="CENTER" spacing="40" style="-fx-padding: 20 0 0 0;">
         
         <VBox alignment="CENTER" spacing="8">
-            <Label text="1000+" 
-                   style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
-            <Label text="Active Users"
-                   style="-fx-font-size: 13px; -fx-text-fill: #7a5c4f; -fx-font-weight: 500;"/>
+            <Label style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #969587;" text="1000+" />
+            <Label style="-fx-font-size: 13px; -fx-text-fill: #63704f; -fx-font-weight: 500;" text="Active Users" />
         </VBox>
 
-        <Region style="-fx-min-width: 2; -fx-background-color: #d2b48c; -fx-min-height: 50;"/>
+        <Region style="-fx-min-width: 2; -fx-background-color: #d9ddca; -fx-min-height: 50;" />
 
         <VBox alignment="CENTER" spacing="8">
-            <Label text="50+"
-                   style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
-            <Label text="Licensed Therapists"
-                   style="-fx-font-size: 13px; -fx-text-fill: #7a5c4f; -fx-font-weight: 500;"/>
+            <Label style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #929a7a;" text="50+" />
+            <Label style="-fx-font-size: 13px; -fx-text-fill: #969587; -fx-font-weight: 500;" text="Licensed Therapists" />
         </VBox>
 
-        <Region style="-fx-min-width: 2; -fx-background-color: #d2b48c; -fx-min-height: 50;"/>
+        <Region style="-fx-min-width: 2; -fx-background-color: #d7dacc; -fx-min-height: 50;" />
 
         <VBox alignment="CENTER" spacing="8">
-            <Label text="95%"
-                   style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #6f4e37;"/>
-            <Label text="Satisfaction Rate"
-                   style="-fx-font-size: 13px; -fx-text-fill: #7a5c4f; -fx-font-weight: 500;"/>
+            <Label style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #63704f;" text="95%" />
+            <Label style="-fx-font-size: 13px; -fx-text-fill: #90957e; -fx-font-weight: 500;" text="Satisfaction Rate" />
         </VBox>
 
     </HBox>
 
     <!-- Call to Action -->
     <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20 0 0 0;">
-        <Label text="Ready to start your journey?"
-               style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #3e2723;"/>
-        <HBox spacing="15" alignment="CENTER">
-            <Button text="Take a Quiz"
-                    styleClass="btn-primary"
-                    style="-fx-font-size: 14px; -fx-padding: 12 30; -fx-cursor: hand;"/>
-            <Button text="Find a Therapist"
-                    styleClass="btn-secondary"
-                    style="-fx-font-size: 14px; -fx-padding: 12 30; -fx-cursor: hand;"/>
+        <Label style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #343e23;" text="Ready to start your journey?" />
+        <HBox alignment="CENTER" spacing="15">
+            <Button style="-fx-font-size: 14px; -fx-padding: 12 30; -fx-cursor: hand;" styleClass="btn-primary" text="Take a Quiz" />
+            <Button style="-fx-font-size: 14px; -fx-padding: 12 30; -fx-cursor: hand;" styleClass="btn-secondary" text="Find a Therapist" />
         </HBox>
     </VBox>
 
     <!-- Footer Message -->
-    <Label text="Your mental health matters. We're here to support you every step of the way. 💚"
-           style="-fx-font-size: 13px; -fx-text-fill: #7a5c4f; -fx-font-style: italic; -fx-padding: 20 0 0 0;"/>
+    <Label style="-fx-font-size: 13px; -fx-text-fill: #343e23; -fx-font-style: italic; -fx-padding: 20 0 0 0;" text="Your mental health matters. We're here to support you every step of the way. 💚" />
 
 </VBox>

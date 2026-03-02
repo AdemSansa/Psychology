@@ -106,6 +106,8 @@ public class HomeController {
         setButtonVisible(btnQuizzes, false);
         setButtonVisible(btnQuizAssessment, false);
 
+        setButtonVisible(btnPastAppointments, false);
+
         if (role == null)
             return;
 
@@ -184,7 +186,14 @@ public class HomeController {
     }
 
     @FXML
+    private javafx.scene.control.Button btnPastAppointments;
 
+    @FXML
+    public void gotoPastAppointments() {
+        SceneManager.loadPage("/com/example/psy/Appointment/past_appointments.fxml");
+    }
+
+    @FXML
     public void gotoQuestions() {
         SceneManager.loadPage("/com/example/psy/Question/Question.fxml");
     }
@@ -215,6 +224,8 @@ public class HomeController {
     @FXML
     public void goToProfile() {
         SceneManager.loadPage("/com/example/psy/User/user_profile.fxml");
+    public void gotoTherapistDashboard() {
+        SceneManager.loadPage("/com/example/psy/dashboards/TherapistDashboard.fxml");
     }
 
     public void logout() {

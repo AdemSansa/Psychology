@@ -15,7 +15,7 @@
 
     <!-- LEFT SIDEBAR -->
     <left>
-        <VBox spacing="10" style="-fx-background-color: #3e2723; -fx-padding: 20;" prefWidth="220">
+        <VBox spacing="10" style="-fx-background-color: #7a806a; -fx-padding: 20;" prefWidth="220">
 
             <!-- Logo -->
             <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 30 0;">
@@ -29,18 +29,20 @@
             </HBox>
 
             <!-- Menu Label -->
-            <Label text="MAIN MENU" style="-fx-text-fill: #95a5a6; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+            <Label text="MAIN MENU" style="-fx-text-fill: #343e23; -fx-font-size: 10px; -fx-font-weight: bold;"/>
 
             <!-- Sidebar Buttons -->
             <VBox spacing="5">
                 <Button fx:id="btnDashboard"
                         text="Dashboard"
                         styleClass="sidebar-btn "
+                        onAction="#gotoTherapistDashboard"
                         maxWidth="Infinity"/>
                 <Button fx:id="btnUsers" text="Users" styleClass="sidebar-btn" onAction="#gotoUsers" maxWidth="Infinity"/>
                 <Button fx:id="btnTherapists" text="Therapists" styleClass="sidebar-btn" onAction="#gotoTherapists" maxWidth="Infinity"/>
                 <Button fx:id="btnEvents" text="Events" styleClass="sidebar-btn" onAction="#gotoEvents" maxWidth="Infinity"/>
                 <Button fx:id="btnAppointments" text="Appointments" styleClass="sidebar-btn" onAction="#gotoAppoitnments" maxWidth="Infinity"/>
+                <Button fx:id="btnPastAppointments" text="Past Appointments" styleClass="sidebar-btn" onAction="#gotoPastAppointments" maxWidth="Infinity"/>
                 <Button fx:id="btnForum" onAction="#gotoReviewadmin" styleClass="sidebar-btn"  text="forumadmin" />
                 <Button fx:id="btnForumtherapist" onAction="#gotoReviewtherapist" styleClass="sidebar-btn"  text="forum" />
                 <Button fx:id="btnForumUsr" onAction="#gotoReview" styleClass="sidebar-btn"  text="forum" />
