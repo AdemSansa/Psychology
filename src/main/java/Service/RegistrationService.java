@@ -41,7 +41,7 @@ public class RegistrationService {
     }
 
     // ================= CREATE =================
-    public void create(Registration r) throws SQLException {
+    public int create(Registration r) throws SQLException {
         if (isEventFull(r.getEventId()))
             throw new SQLException("Event FULL");
 
@@ -49,12 +49,18 @@ public class RegistrationService {
             throw new SQLException("Name already used in this event");
 
         String sql = "INSERT INTO registrations (event_id, participant_name, status, qr_code) VALUES (?, ?, ?, ?)";
-        PreparedStatement ps = cnx.prepareStatement(sql);
+        PreparedStatement ps = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setInt(1, r.getEventId());
         ps.setString(2, r.getParticipantName());
         ps.setString(3, r.getStatus());
         ps.setString(4, packMetadata(r));
         ps.executeUpdate();
+
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+        return -1;
     }
 
     // ================= UPDATE =================
@@ -151,6 +157,25 @@ public class RegistrationService {
             list.add(mapResultSetToRegistration(rs));
         }
         return list;
+    }
+
+    // ================= CHAIR NUMBER =================
+    public int getChairNumber(int registrationId, int eventId) {
+        try {
+            // Count all registrations for this event that were created before or at the same time
+            // Based on ID ordering (sequential)
+            String sql = "SELECT COUNT(*) FROM registrations WHERE event_id = ? AND id_registration <= ?";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, registrationId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // ================= HELPERS =================

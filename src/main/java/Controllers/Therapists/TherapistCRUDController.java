@@ -723,6 +723,9 @@ public class TherapistCRUDController implements Initializable {
     // ─── Navigate to appointment page ────────────────────────────────────────
     @FXML
     void goToAppointment(ActionEvent event) {
+        if (selectedProfileTherapist != null) {
+            Session.getInstance().setSelectedTherapistForBooking(selectedProfileTherapist);
+        }
         profileModalOverlay.setVisible(false);
         SceneManager.loadPage("/com/example/psy/Appointment/AppointmentCalendar.fxml");
     }

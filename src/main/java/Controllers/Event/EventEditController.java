@@ -2,11 +2,20 @@ package Controllers.Event;
 
 import Entities.Event;
 import Service.EventService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import util.SceneManager;
 
 import java.io.File;
@@ -48,6 +57,110 @@ public class EventEditController {
         if (event == null) return;
         this.CurrentEvent = event;
         fillFields();
+    }
+
+    // ===== 📍 Map Picker =====
+    @FXML
+    private void handlePickLocation() {
+        openMapPicker(locationField);
+    }
+
+    private void openMapPicker(TextField targetField) {
+        Stage mapStage = new Stage();
+        mapStage.setTitle("📍 Pick Location");
+        mapStage.initModality(Modality.APPLICATION_MODAL);
+
+        WebView webView = new WebView();
+        WebEngine engine = webView.getEngine();
+
+        String currentVal = targetField.getText() != null ? targetField.getText().trim() : "";
+        engine.loadContent(buildMapHtml(currentVal));
+
+        Label hint = new Label("🖱️ Click to select, then confirm.");
+        hint.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
+
+        Button confirmBtn = new Button("Confirm Selection");
+        confirmBtn.getStyleClass().add("btn-primary");
+        confirmBtn.setStyle("-fx-font-size: 13px; -fx-padding: 6 15;");
+        confirmBtn.setOnAction(e -> {
+            try {
+                Object result = engine.executeScript("selectedAddress");
+                if (result instanceof String && !((String) result).isEmpty()) {
+                    targetField.setText((String) result);
+                    mapStage.close();
+                } else {
+                    util.ValidationUtil.showError("Selection Required", "Please click on the map to select a location first.");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.getStyleClass().add("btn-secondary");
+        cancelBtn.setOnAction(e -> mapStage.close());
+
+        HBox bottom = new HBox(15, hint, confirmBtn, cancelBtn);
+        bottom.setAlignment(Pos.CENTER_LEFT);
+        bottom.setStyle("-fx-padding: 10 15; -fx-background-color: #f9f9f9; -fx-border-color: #ddd; -fx-border-width: 1 0 0 0;");
+
+        VBox root = new VBox(webView, bottom);
+        VBox.setVgrow(webView, javafx.scene.layout.Priority.ALWAYS);
+
+        mapStage.setScene(new Scene(root, 850, 600));
+        mapStage.show();
+    }
+
+    private String buildMapHtml(String initialLocation) {
+        return "<!DOCTYPE html><html><head>" +
+               "<meta charset='utf-8'>" +
+               "<link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'/>" +
+               "<script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>" +
+               "<style>html,body,#map{width:100%;height:100%;margin:0;padding:0;}</style>" +
+               "</head><body>" +
+               "<div id='map'></div>" +
+               "<script>" +
+               "var selectedAddress = '" + initialLocation.replace("'", "\\'") + "';" +
+               "var map = L.map('map').setView([36.8, 10.2], 6);" +
+               "L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{" +
+               "  maxZoom:19," +
+               "  attribution:'&copy; OpenStreetMap contributors'" +
+               "}).addTo(map);" +
+               "var marker = null;" +
+               "function updateMarker(lat, lon, addr) {" +
+               "  if(marker) map.removeLayer(marker);" +
+               "  marker = L.marker([lat,lon]).addTo(map);" +
+               "  marker.bindPopup('<b>'+addr+'</b>').openPopup();" +
+               "  selectedAddress = addr;" +
+               "}" +
+               "map.on('click', function(e){" +
+               "  var lat = e.latlng.lat; var lon = e.latlng.lng;" +
+               "  if(marker) map.removeLayer(marker);" +
+               "  marker = L.marker([lat,lon]).addTo(map);" +
+               "  marker.bindPopup('\u23f3 Fetching address...').openPopup();" +
+               "  fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon," +
+               "    {headers:{'User-Agent':'PsychologyApp/1.0'}})" +
+               "  .then(r=>r.json())" +
+               "  .then(data=>{" +
+               "    var addr = data.display_name || (lat.toFixed(5)+', '+lon.toFixed(5));" +
+               "    updateMarker(lat, lon, addr);" +
+               "  }).catch(function(){" +
+               "    var f = lat.toFixed(5)+', '+lon.toFixed(5);" +
+               "    updateMarker(lat, lon, f);" +
+               "  });" +
+               "});" +
+               "if(selectedAddress && selectedAddress.length > 3) {" +
+               "  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(selectedAddress))" +
+               "  .then(r=>r.json())" +
+               "  .then(data=>{" +
+               "    if(data && data.length > 0) {" +
+               "      var lat=data[0].lat; var lon=data[0].lon;" +
+               "      map.setView([lat, lon], 13);" +
+               "      updateMarker(lat, lon, selectedAddress);" +
+               "    }" +
+               "  });" +
+               "}" +
+               "</script></body></html>";
     }
 
     private void fillFields() {

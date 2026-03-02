@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 30;" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.Appointment.PastAppointmentsController"
+      stylesheets="@../style.css"
+      styleClass="dashboard-content">
+
+    <Label text="My Past Appointments" styleClass="section-title"/>
+
+    <Label text="View all your completed appointments here." styleClass="card-subtitle" />
+    
+    <ListView fx:id="pastAppointmentsListView" VBox.vgrow="ALWAYS" />
+
+</VBox>

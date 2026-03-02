@@ -36,6 +36,14 @@ public class dbconnect {
 
     // Get the single connection
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                System.out.println("Re-establishing database connection...");
+                connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to reconnect to database: " + e.getMessage());
+        }
         return connection;
     }
 }

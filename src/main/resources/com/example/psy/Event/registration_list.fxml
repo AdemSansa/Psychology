@@ -69,14 +69,21 @@
 
             <!-- Existing Registrations List (for admins/therapists) -->
             <VBox spacing="15" fx:id="registrationsListContainer" visible="false" managed="false" style="-fx-padding: 0 40 40 40;">
-                <Label text="Registered Participants" styleClass="section-title" style="-fx-font-size: 20;"/>
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="Registered Participants" styleClass="section-title" style="-fx-font-size: 20;"/>
+                    <Button text="🔄 Refresh" onAction="#handleRefresh" styleClass="btn-secondary" style="-fx-font-size: 11px; -fx-padding: 4 10; -fx-background-radius: 12;"/>
+                </HBox>
+                
                 <TextField fx:id="searchField" 
                            promptText="🔍 Search participant..." 
                            styleClass="form-control" 
                            maxWidth="400"/>
                 
                 <ScrollPane fitToWidth="true" prefHeight="450" style="-fx-background: transparent; -fx-background-color: transparent;">
-                    <FlowPane fx:id="cardContainer" hgap="25" vgap="25" style="-fx-padding: 10 0;"/>
+                    <StackPane>
+                        <FlowPane fx:id="cardContainer" hgap="25" vgap="25" style="-fx-padding: 10 0;"/>
+                        <Label fx:id="emptyListLabel" text="No participants registered yet for this event." visible="false" managed="false" style="-fx-text-fill: #aaa; -fx-font-style: italic; -fx-font-size: 14px;"/>
+                    </StackPane>
                 </ScrollPane>
             </VBox>
 

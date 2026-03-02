@@ -6,56 +6,59 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
-
+<?import javafx.scene.layout.Region?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="Controllers.Appointment.AppointmentDetailsController"
-      spacing="18"
+      spacing="20"
       alignment="TOP_CENTER"
       stylesheets="@../style.css"
-      styleClass="root"
-      prefWidth="400"
-      prefHeight="600">
+      style="-fx-padding: 30;"
+      prefWidth="450"
+      prefHeight="650">
 
     <!-- Section Title -->
-    <Label text="Appointment Details" styleClass="section-title"/>
+    <Label text="SESSION DETAILS" style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-font-family: 'Segoe UI', sans-serif;"/>
 
     <!-- Appointment Info -->
-    <VBox spacing="8" alignment="CENTER">
-        <Label fx:id="dateLabel" styleClass="text-soft"/>
-        <Label fx:id="timeLabel" styleClass="text-soft"/>
-        <Label fx:id="statusLabel" styleClass="badge-status"/>
+    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #cccccc; -fx-border-radius: 10;">
+        <Label fx:id="dateLabel" style="-fx-font-size: 14px;"/>
+        <Label fx:id="timeLabel" style="-fx-font-size: 14px;"/>
+        <Label fx:id="statusLabel"/>
     </VBox>
 
     <!-- Action Buttons -->
-    <HBox spacing="10" alignment="CENTER">
+    <HBox spacing="15" alignment="CENTER">
         <Button fx:id="confirmBtn"
                 text="Confirm"
                 onAction="#confirmAppointment"
-                styleClass="btn-success"
                 visible="false"
                 managed="false"/>
         <Button fx:id="cancelBtn"
                 text="Cancel Appointment"
-                onAction="#cancelAppointment"
-                styleClass="btn-danger"/>
+                onAction="#cancelAppointment"/>
     </HBox>
 
     <!-- Notes Section -->
-    <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 10; -fx-border-color: gray; -fx-border-width: 1; -fx-background-color: #ffffff;">
+    <VBox spacing="15" alignment="TOP_CENTER" style="-fx-padding: 20; -fx-border-color: #cccccc; -fx-border-width: 1; -fx-border-radius: 10;">
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Notes" styleClass="section-title"/>
+            <Label text="CLINICAL NOTES" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="addNoteBtn"
                     text="Add Note"
                     onAction="#addNote"
-                    styleClass="btn-success"
+                    visible="false"
+                    managed="false"/>
+            <Button fx:id="aiSummaryBtn"
+                    text="✨ AI Summary"
+                    onAction="#generateAISummary"
                     visible="false"
                     managed="false"/>
         </HBox>
 
-        <ScrollPane fitToWidth="true" prefHeight="200">
-            <VBox fx:id="notesContainer" spacing="8">
+        <ScrollPane fitToWidth="true" prefHeight="220">
+            <VBox fx:id="notesContainer" spacing="10">
                 <padding>
-                    <Insets top="5" right="5" bottom="5" left="5"/>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
             </VBox>
         </ScrollPane>
@@ -63,6 +66,5 @@
 
     <!-- Close Button -->
     <Button text="Close"
-            onAction="#closeWindow"
-            styleClass="btn-secondary"/>
+            onAction="#closeWindow"/>
 </VBox>
