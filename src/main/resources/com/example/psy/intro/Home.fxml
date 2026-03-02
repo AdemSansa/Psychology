@@ -49,6 +49,9 @@
                 <Button fx:id="btnQuestions" text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizzes" text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizAssessment" text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
+                <Button fx:id="btnQuizDash" text="Quiz Dashboard" styleClass="sidebar-btn" onAction="#goToQuizDashboard" maxWidth="Infinity"/>
+
+
             </VBox>
 
             <!-- Spacer pushes logout to bottom -->

@@ -43,6 +43,9 @@ public class HomeController {
     private javafx.scene.control.Button btnRegistrations;
 
     @FXML
+    private javafx.scene.control.Button btnQuizDash;
+
+    @FXML
     private javafx.scene.control.Button btnQuestions;
     @FXML
     private javafx.scene.control.Button btnQuizzes;
@@ -105,6 +108,7 @@ public class HomeController {
         setButtonVisible(btnQuestions, false);
         setButtonVisible(btnQuizzes, false);
         setButtonVisible(btnQuizAssessment, false);
+        setButtonVisible(btnQuizDash, false);
 
         setButtonVisible(btnPastAppointments, false);
 
@@ -121,6 +125,7 @@ public class HomeController {
                 setButtonVisible(btnQuestions, true);
                 setButtonVisible(btnQuizzes, true);
                 setButtonVisible(btnEvents, true);
+                setButtonVisible(btnQuizDash, true);
                 break;
             case "patient":
                 setButtonVisible(btnTherapists, true); // Patient views therapists
@@ -227,6 +232,9 @@ public class HomeController {
     }
     public void gotoTherapistDashboard() {
         SceneManager.loadPage("/com/example/psy/dashboards/TherapistDashboard.fxml");
+    }
+    public void goToQuizDashboard() {
+        SceneManager.loadPage("/com/example/psy/dashboards/QuizDashboard.fxml");
     }
 
     public void logout() {
