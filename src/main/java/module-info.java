@@ -17,9 +17,11 @@ module com.example.psy {
     requires com.fasterxml.jackson.databind;
     requires java.sql;
     requires java.desktop;
+    opens Controllers.dashboards to javafx.fxml;
 
 
-   
+
+
 
     requires webcam.capture;
 
