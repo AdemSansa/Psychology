@@ -136,12 +136,19 @@ UPDATE appointment
     }
 
 
-    public boolean isSlotAvailable(int therapistId, LocalDate date,
-                                   LocalTime start, LocalTime end, Integer excludeAppointmentId) throws SQLException {
-
-        return isSlotValid(therapistId, date, start, end, excludeAppointmentId);
+    public boolean isSlotAvailable(int therapistId, LocalDate date, LocalTime start, LocalTime end, Integer ignoreAppointmentId) throws SQLException {
+        List<Appointment> list = listByTherapist(therapistId);
+        for (Appointment a : list) {
+            if (ignoreAppointmentId != null && a.getId() == ignoreAppointmentId) {
+                continue; // skip the appointment being moved
+            }
+            if (a.getAppointmentDate().equals(date) &&
+                    !(end.isBefore(a.getStartTime()) || start.isAfter(a.getEndTime()))) {
+                return false; // overlap detected
+            }
+        }
+        return true;
     }
-
 
 
 
@@ -297,4 +304,5 @@ UPDATE appointment
 
         throw new SQLException("Failed to retrieve generated ID");
     }
+
 }
