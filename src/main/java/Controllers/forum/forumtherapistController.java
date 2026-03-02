@@ -63,17 +63,19 @@ public class forumtherapistController implements Initializable {
     private VBox createReviewCard(Review review, List<ReviewReply> replies) {
 
         VBox card = new VBox(10);
-        card.setStyle("-fx-background-color: #FAF3E0; -fx-padding:15; "
-                + "-fx-background-radius:15; -fx-border-radius:15;");
+        card.setStyle("-fx-background-color: linear-gradient(135deg, #FAF3E0, #F5F5DC); -fx-padding:15; " +
+                "-fx-background-radius:15; -fx-border-radius:15; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);");
         card.setPadding(new Insets(10));
 
         Label content = new Label(review.getContent());
         content.setWrapText(true);
         content.setStyle("-fx-font-size:14px; -fx-text-fill:#5D4037;");
 
-        Button replyBtn = new Button("💬 Reply");
-        replyBtn.setStyle("-fx-background-color:#A5D6A7; -fx-text-fill:white; "
-                + "-fx-background-radius:20; -fx-padding:5 15 5 15;");
+        Button replyBtn = new Button("💬 reply ");
+        replyBtn.setStyle("-fx-background-color: linear-gradient(45deg, #2196F3, #64B5F6); -fx-text-fill:white; " +
+                "-fx-background-radius:20; -fx-padding:8px 20px; -fx-font-weight: bold; " +
+                "-fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.3), 3, 0, 0, 1);");
 
         replyBtn.setOnAction(e -> {
 
@@ -106,9 +108,10 @@ public class forumtherapistController implements Initializable {
         replyArea.setPromptText("Write your reply...");
         replyArea.setStyle("-fx-background-radius:10;");
 
-        Button send = new Button("📨 Send");
-        send.setStyle("-fx-background-color:#81C784; -fx-text-fill:white; "
-                + "-fx-background-radius:20; -fx-padding:5 15 5 15;");
+        Button send = new Button("📨 send ");
+        send.setStyle("-fx-background-color: linear-gradient(45deg, #4CAF50, #81C784); -fx-text-fill:white; " +
+                "-fx-background-radius:20; -fx-padding:8px 20px; -fx-font-weight: bold; " +
+                "-fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(76,175,80,0.3), 3, 0, 0, 1);");
 
         send.setOnAction(e -> {
 
