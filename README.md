@@ -85,6 +85,11 @@ separation of concerns.
 ## Contributors
 
 -   Adem Sansa\
+-   Rabii khenissi\
+-   Mariem  Habib\
+-   Mariem Chkoundali\
+-   Eya hmad\
+-   Ahmed el Degachi\
 -   Slimenify Development Team
 
 ## Academic Context
