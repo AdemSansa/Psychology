@@ -188,22 +188,19 @@ public class AiMatchmakingController {
     void handleViewProfile(ActionEvent event) {
         if (currentlyRecommendedTherapist != null) {
             System.out.println("Navigating to therapist profile ID: " + currentlyRecommendedTherapist.getId());
-            try {
-                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                        getClass().getResource("/com/example/psy/Therapist/therapist_crud.fxml"));
-                javafx.scene.Parent root = loader.load();
 
-                TherapistCRUDController controller = loader.getController();
-                controller.showTherapistProfile(currentlyRecommendedTherapist);
+            // Switch to the main Home layout with side navigation
+            util.SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
 
-                javafx.scene.Scene scene = new javafx.scene.Scene(root);
-                javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene()
-                        .getWindow();
-                stage.setScene(scene);
-                stage.show();
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-            }
+            // Wait for Home layout to initialize, then load the therapist profile into the
+            // content area
+            javafx.application.Platform.runLater(() -> {
+                Controllers.Therapists.TherapistCRUDController controller = util.SceneManager
+                        .loadPageWithController("/com/example/psy/Therapist/therapist_crud.fxml");
+                if (controller != null) {
+                    controller.showTherapistProfile(currentlyRecommendedTherapist);
+                }
+            });
         }
     }
 
@@ -212,6 +209,18 @@ public class AiMatchmakingController {
         if (currentlyRecommendedTherapist != null) {
             System.out.println(
                     "Navigating to booking with therapist ID: " + currentlyRecommendedTherapist.getId());
+
+            // Set the pre-selected therapist for booking
+            util.Session.getInstance().setSelectedTherapistForBooking(currentlyRecommendedTherapist);
+
+            // Switch to the main Home layout with side navigation
+            util.SceneManager.switchScene("/com/example/psy/intro/Home.fxml");
+
+            // Wait for Home layout to initialize, then load the Appointment Calendar into
+            // the content area
+            javafx.application.Platform.runLater(() -> {
+                util.SceneManager.loadPage("/com/example/psy/Appointment/AppointmentCalendar.fxml");
+            });
         }
     }
 }
