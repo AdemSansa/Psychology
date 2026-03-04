@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import Service.QuizResultService;
 
 public class QuizCardPatientController {
 
@@ -20,13 +21,25 @@ public class QuizCardPatientController {
     @FXML
     private Label questionsLabel;
 
+    @FXML
+    private Label timesTakenLabel;
+
     private Quiz quiz;
+    private final QuizResultService quizResultService = new QuizResultService();
 
     public void setQuizData(Quiz quiz) {
         this.quiz = quiz;
         titleLabel.setText(quiz.getTitle());
         categoryLabel.setText(quiz.getCategory());
         questionsLabel.setText(quiz.getTotalQuestions() + " Questions");
+
+        try {
+            int timesTaken = quizResultService.getTimesTaken(quiz.getId());
+            timesTakenLabel.setText("📈 Taken " + timesTaken + " times");
+        } catch (java.sql.SQLException e) {
+            timesTakenLabel.setText("📈 Taken 0 times");
+            e.printStackTrace();
+        }
     }
 
     @FXML

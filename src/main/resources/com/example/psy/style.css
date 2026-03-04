@@ -12,6 +12,30 @@
     -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
     -fx-font-size: 13px;
     -fx-background-color: #F9FAF4;
+    -fx-text-fill: #111114;
+}
+
+/* ===============================
+   NAVIGATION & BACK BUTTON
+   =============================== */
+
+.back-nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7F8F69;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-border-color: #7F8F69;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+
+.back-nav-btn:hover {
+    -fx-background-color: #7F8F69;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.3), 10, 0, 0, 3);
     /* Light background */
     -fx-text-fill: #111114;
     /* Charcoal text */
@@ -175,12 +199,14 @@
 }
 
 .btn-primary:hover {
-    -fx-background-color: #5F6B4E; /* Darker sage */
+    -fx-background-color: #5F6B4E;
+    /* Darker sage */
 }
 
 .btn-secondary {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #7F8F69; /* Sage */
+    -fx-text-fill: #7F8F69;
+    /* Sage */
     -fx-font-weight: bold;
     -fx-border-color: #E8EACC;
     /* Soft cream border */
@@ -208,7 +234,8 @@
 }
 
 .form-control:focused {
-    -fx-border-color: #7F8F69; /* Sage focus */
+    -fx-border-color: #7F8F69;
+    /* Sage focus */
     -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.25), 5, 0, 0, 0);
 }
 
@@ -402,6 +429,145 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.25), 15, 0, 0, 4);
     -fx-translate-y: -3;
     -fx-border-color: #7F8F69;
+}
+
+/* ===============================
+   DYNAMIC QUIZ CARD (Patient View)
+   =============================== */
+
+/* ===============================
+   QUIZ CINEMATIC (First Login)
+   =============================== */
+
+.cinematic-bg {
+    -fx-background-color: linear-gradient(to bottom right, #F9FAF4, #E8EACC);
+}
+
+.cinematic-card {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-border-color: rgba(127, 143, 105, 0.4);
+    /* Sage border */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 30, 0, 0, 10);
+    -fx-padding: 40;
+}
+
+.cinematic-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #2B322E;
+    /* Deep forest */
+    -fx-alignment: center;
+}
+
+.cinematic-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #4A4A4A;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.cinematic-btn-primary {
+    -fx-background-color: linear-gradient(to right, #7F8F69, #5F6B4E);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 30;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.5), 15, 0, 0, 5);
+}
+
+.cinematic-btn-primary:hover {
+    -fx-background-color: #5F6B4E;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.8), 20, 0, 0, 8);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.cinematic-btn-skip {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7F8F69;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.cinematic-btn-skip:hover {
+    -fx-text-fill: #5F6B4E;
+    -fx-underline: true;
+}
+
+.quiz-card-dynamic {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-width: 1.5;
+    -fx-border-color: rgba(127, 143, 105, 0.2);
+    /* Soft sage border */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 12, 0, 2, 4);
+    -fx-cursor: hand;
+}
+
+.quiz-card-dynamic:hover {
+    -fx-border-color: #7F8F69;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.25), 20, 0, 4, 8);
+    -fx-translate-y: -4;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.card-category-dynamic {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2B322E;
+    /* Deep forest */
+    -fx-background-color: #E8EACC;
+    /* Soft cream */
+    -fx-background-radius: 6;
+    -fx-padding: 5 10;
+}
+
+.card-title-dynamic {
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #111114;
+}
+
+.card-subtitle-dynamic {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #7F8F69;
+    /* Sage green */
+}
+
+.card-stat-dynamic {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2B322E;
+    -fx-background-color: rgba(127, 143, 105, 0.15);
+    -fx-padding: 4 8;
+    -fx-background-radius: 6;
+}
+
+.btn-primary-dynamic {
+    -fx-background-color: linear-gradient(to right, #7F8F69, #5F6B4E);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 8 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.4), 8, 0, 0, 3);
+}
+
+.btn-primary-dynamic:hover {
+    -fx-background-color: #5F6B4E;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.6), 12, 0, 0, 4);
 }
 
 .card-category {
@@ -786,6 +952,97 @@
     -fx-background-color: rgba(217, 70, 239, 0.2);
 }
 
+/* ===============================
+   FLOATING AI BUTTON
+   =============================== */
+
+.floating-ai-button {
+    -fx-background-color: transparent;
+    -fx-background-image: url("media/chat.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-min-width: 70;
+    -fx-min-height: 70;
+    -fx-max-width: 70;
+    -fx-max-height: 70;
+    /* Soft blue glow matching the robot eyes */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 191, 255, 0.4), 15, 0, 0, 0);
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-background-radius: 50;
+}
+
+.floating-ai-button:hover {
+    /* Stronger blue glow on hover */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 191, 255, 0.8), 25, 0, 0, 0);
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+/* ===============================
+   AI MATCHMAKING PREMIUM UI
+   =============================== */
+
+.ai-container {
+    -fx-background-color: linear-gradient(to bottom right, #F9FAF4, #E8EACC, #F3F4ED);
+    -fx-padding: 30 50;
+}
+
+.ai-glass-card {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 30;
+    -fx-padding: 35;
+    -fx-effect: dropshadow(three-pass-box, rgba(43, 50, 46, 0.12), 40, 0, 0, 20);
+    -fx-border-color: linear-gradient(to bottom right, rgba(127, 143, 105, 0.3), rgba(232, 234, 204, 0.3));
+    -fx-border-width: 2;
+}
+
+.ai-prompt-area {
+    -fx-background-color: #fcfcfc;
+    -fx-border-color: #DCE3CF;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-font-size: 16px;
+    -fx-prompt-text-fill: #B0B5A5;
+}
+
+.ai-prompt-area:focused {
+    -fx-border-color: #7F8F69;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.1), 15, 0, 0, 0);
+}
+
+.ai-result-card {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #F9FAF4);
+    -fx-background-radius: 25;
+    -fx-padding: 30;
+    -fx-border-color: #7F8F69;
+    -fx-border-width: 0 0 0 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 20, 0, 0, 10);
+}
+
+.ai-recommendation-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2B322E;
+}
+
+.ai-reasoning-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555555;
+    -fx-line-spacing: 5;
+}
+
+.ai-slot-badge {
+    -fx-background-color: #E8EACC;
+    -fx-text-fill: #7F8F69;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 10;
+}
+
 /* Dark Scroll Pane */
 .dark-scroll-pane {
     -fx-background-color: transparent;
@@ -915,3 +1172,96 @@
 
 
 /* Cleaned up duplicate blocks end */
+
+/* ========================================================================= */
+/* COZY THERAPIST TOP NAVBAR */
+/* ========================================================================= */
+
+.top-header-cozy {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-padding: 15 30;
+    -fx-border-color: #E8EACC;
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 143, 105, 0.15), 15, 0, 0, 5);
+}
+
+.role-text-cozy {
+    -fx-text-fill: #7F8F69;
+    -fx-font-size: 14px;
+    -fx-font-weight: 800;
+    -fx-letter-spacing: 1px;
+}
+
+.subtitle-text-cozy {
+    -fx-text-fill: #8b9280;
+    -fx-font-size: 12px;
+}
+
+.welcome-text-cozy {
+    -fx-text-fill: #2B322E;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.search-bar-cozy {
+    -fx-background-color: #F9FAF4;
+    -fx-background-radius: 20;
+    -fx-border-color: #E8EACC;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-padding: 5 15;
+}
+
+.search-bar-cozy:focused-within {
+    -fx-border-color: #7F8F69;
+    -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.2), 10, 0, 0, 0);
+}
+
+.search-input-cozy {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2B322E;
+    -fx-prompt-text-fill: #A3A899;
+    -fx-pref-width: 250;
+    -fx-border-width: 0;
+    -fx-padding: 5;
+}
+
+.search-input-cozy:focused {
+    -fx-background-color: transparent;
+}
+
+.notification-icon-cozy {
+    -fx-background-color: #F9FAF4;
+    -fx-background-radius: 20;
+    -fx-padding: 8 12;
+    -fx-cursor: hand;
+    -fx-border-color: #E8EACC;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.notification-icon-cozy:hover {
+    -fx-background-color: #E8EACC;
+    -fx-border-color: #7F8F69;
+    -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.2), 10, 0, 0, 0);
+}
+
+.avatar-circle-cozy {
+    -fx-background-color: linear-gradient(to bottom right, #7F8F69, #5c6a49);
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.3), 10, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+.avatar-circle-cozy:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(127, 143, 105, 0.5), 15, 0, 0, 4);
+}
+
+.avatar-text-cozy {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}

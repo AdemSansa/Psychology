@@ -49,6 +49,9 @@
                 <Button fx:id="btnQuestions" text="Questions" styleClass="sidebar-btn" onAction="#gotoQuestions" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizzes" text="Quizzes" styleClass="sidebar-btn" onAction="#gotoQuiz" maxWidth="Infinity"/>
                 <Button fx:id="btnQuizAssessment" text="Quiz Assesment (For patient)" styleClass="sidebar-btn" onAction="#gotoQuizAssesment" maxWidth="Infinity"/>
+                <Button fx:id="btnQuizDash" text="Quiz Dashboard" styleClass="sidebar-btn" onAction="#goToQuizDashboard" maxWidth="Infinity"/>
+
+
             </VBox>
 
             <!-- Spacer pushes logout to bottom -->
@@ -58,7 +61,7 @@
             <Button text="Déconnexion"
 
                     styleClass="logout-btn"
-                    onAction="#logout"
+                    onAction="#handleLogout"
                     maxWidth="Infinity"/>        </VBox>
     </left>
 
@@ -67,35 +70,44 @@
         <VBox spacing="0">
 
             <HBox alignment="CENTER_LEFT"
-                  spacing="20"
-                  prefHeight="70"
-                  styleClass="top-header">
+                  spacing="25"
+                  prefHeight="80"
+                  styleClass="top-header-cozy">
 
                 <!-- LEFT : ROLE -->
                 <VBox alignment="CENTER_LEFT" spacing="2">
                     <Label fx:id="RoleLabel"
                            text="ADMIN"
-                           styleClass="role-text"/>
+                           styleClass="role-text-cozy"/>
                     <Label text="Your access level"
-                           styleClass="subtitle-text"/>
+                           styleClass="subtitle-text-cozy"/>
                 </VBox>
 
                 <!-- SPACER -->
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <!-- RIGHT : WELCOME -->
-                <VBox alignment="CENTER_RIGHT" spacing="2">
+                <!-- DYNAMIC SEARCH BAR -->
+
+                
+                <Region prefWidth="15"/>
+
+
+
+                <!-- RIGHT : WELCOME & PROFIL -->
+                <VBox alignment="CENTER_RIGHT" spacing="2" style="-fx-padding: 0 10 0 10;">
                     <Label fx:id="welcomeLabel"
                            text="Welcome, Adem"
-                           styleClass="welcome-text"/>
+                           styleClass="welcome-text-cozy"/>
                     <Label text="Glad to see you again 👋"
-                           styleClass="subtitle-text"/>
+                           styleClass="subtitle-text-cozy"/>
                 </VBox>
 
-                <!-- AVATAR -->
-                <StackPane>
-                    <Circle radius="22" styleClass="avatar-circle"/>
-                    <Label text="A" styleClass="avatar-text"/>
+                <!-- AVATAR DYNAMIQUE (CLIQUABLE) -->
+                <StackPane fx:id="headerAvatarPane" onMouseClicked="#goToProfile" prefHeight="48.0" prefWidth="48.0"
+                           styleClass="avatar-circle-cozy">
+                    <children>
+                        <Label fx:id="headerAvatarLabel" text="A" styleClass="avatar-text-cozy" />
+                    </children>
                 </StackPane>
 
             </HBox>

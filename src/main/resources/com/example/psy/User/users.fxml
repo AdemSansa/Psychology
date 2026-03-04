@@ -38,13 +38,24 @@
         <VBox spacing="15" VBox.vgrow="ALWAYS"
               style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0);">
 
-            <!-- Recherche + Actions -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="searchField" promptText="Search users..." styleClass="form-control" prefWidth="300"/>
-                <Button text="Search" onAction="#rechercherUser" styleClass="btn-primary"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Edit Selected" onAction="#GoToUserEdit" styleClass="btn-secondary"/>
-                <Button text="Delete Selected" onAction="#deleteUser" styleClass="logout-btn"/>
+            <!-- Filtre de Recherche Unique & Intelligent -->
+            <HBox spacing="15" alignment="BOTTOM_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 10;">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Recherche Globale (Nom, Email...)" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                    <TextField fx:id="globalSearchField" promptText="Saisissez un nom, un prénom ou un email..." styleClass="form-control" prefHeight="38"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Filtrer par Rôle" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                    <ComboBox fx:id="roleFilterBox" prefWidth="160" styleClass="form-control"/>
+                </VBox>
+                <Button text="↺" onAction="#loadUsers" styleClass="btn-secondary" prefHeight="38" style="-fx-font-size: 16px;"/>
+                
+                <Region prefWidth="20"/>
+                
+                <HBox spacing="10" alignment="BOTTOM_RIGHT">
+                     <Button text="Modifier" onAction="#GoToUserEdit" styleClass="btn-secondary" prefHeight="38"/>
+                     <Button text="Supprimer" onAction="#deleteUser" styleClass="logout-btn" prefHeight="38"/>
+                </HBox>
             </HBox>
 
             <!-- TableView -->

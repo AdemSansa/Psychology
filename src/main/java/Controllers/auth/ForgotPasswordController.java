@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import util.SceneManager;
 
 public class ForgotPasswordController {
@@ -21,40 +22,86 @@ public class ForgotPasswordController {
     @FXML
     private Label messageLabel;
 
-    private final AuthService authService = AuthService.getInstance();
+    @FXML
+    private VBox emailStepBox;
 
     @FXML
-    private void handleResetPassword() {
+    private VBox resetStepBox;
+
+    @FXML
+    private TextField codeField;
+
+    private final AuthService authService = AuthService.getInstance();
+    private final Service.NotificationService notificationService = Service.NotificationService.getInstance();
+
+    @FXML
+    private void handleSendCode() {
         String email = emailField.getText();
-        String newPassword = newPasswordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
 
-        if (email.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            showError("Please fill in all fields.");
-            return;
-        }
-
-        if (!newPassword.equals(confirmPassword)) {
-            showError("Passwords do not match.");
-            return;
-        }
-
-        if (newPassword.length() < 6) {
-            showError("Password must be at least 6 characters long.");
+        if (email.isEmpty()) {
+            showError("Veuillez entrer votre adresse email.");
             return;
         }
 
         try {
             if (!authService.verifyEmailExists(email)) {
-                showError("Email not found in our records.");
+                showError("Email introuvable.");
+                return;
+            }
+
+            Entities.User user = (new Service.UserService()).readByEmail(email);
+
+            // Send via NotificationService (Email only)
+            notificationService.sendPasswordReset(user); // Updated method call
+
+            showSuccess("Code envoyé (vérifiez votre email) !"); // Updated success message
+
+            // Masquer l'étape 1, afficher l'étape 2
+            emailStepBox.setVisible(false);
+            emailStepBox.setManaged(false);
+
+            resetStepBox.setVisible(true);
+            resetStepBox.setManaged(true);
+
+        } catch (Exception e) {
+            showError("Erreur d'envoi du code : " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleResetPassword() {
+        String email = emailField.getText();
+        String code = codeField.getText();
+        String newPassword = newPasswordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
+
+        if (code == null || code.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            showError("Veuillez remplir tous les champs.");
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            showError("Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        if (newPassword.length() < 6) {
+            showError("Le mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
+
+        try {
+            // Vérifier le code OTP
+            if (!notificationService.verifyCode(email, code)) {
+                showError("Code invalide ou expiré.");
                 return;
             }
 
             authService.resetPassword(email, newPassword);
-            showSuccess("Password reset successfully! You can now log in.");
+            showSuccess("Mot de passe réinitialisé ! Vous pouvez vous connecter.");
 
         } catch (Exception e) {
-            showError("Error resetting password: " + e.getMessage());
+            showError("Erreur lors de la réinitialisation : " + e.getMessage());
         }
     }
 

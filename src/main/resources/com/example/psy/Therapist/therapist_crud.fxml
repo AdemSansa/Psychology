@@ -131,7 +131,7 @@
                 <VBox maxWidth="720.0" maxHeight="900.0" spacing="0"
                       style="-fx-background-color: #fdfaf5; -fx-background-radius: 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 40, 0, 0, 0);"
                       StackPane.alignment="CENTER">
-                    
+
                     <!-- Fixed Header Section -->
                     <VBox style="-fx-background-color: linear-gradient(to right, #63704f, #9e9f8d); -fx-background-radius: 24 24 0 0; -fx-padding: 30 35 25 35;">
                         <children>
@@ -208,7 +208,7 @@
                                     <VBox spacing="15.0">
                                         <children>
                                             <Label text="📍 Location" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #878874;" />
-                                            <StackPane fx:id="mapContainer" prefHeight="350.0" 
+                                            <StackPane fx:id="mapContainer" prefHeight="350.0"
                                                        style="-fx-background-color: #f0f0f0; -fx-background-radius: 20; -fx-border-color: #d7dacc; -fx-border-radius: 20; -fx-border-width: 2; -fx-overflow: hidden;">
                                                 <children>
                                                     <!-- WebView integrated here -->
@@ -335,7 +335,7 @@
                                             <TextField fx:id="longitudeField" styleClass="form-control" promptText="ex: 10.1" />
                                         </VBox>
                                         <VBox spacing="5.0" alignment="BOTTOM_CENTER">
-                                            <Button onAction="#handleModalLocationLookup" styleClass="btn-secondary" text="📍" 
+                                            <Button onAction="#handleModalLocationLookup" styleClass="btn-secondary" text="📍"
                                                     style="-fx-padding: 8 12; -fx-font-size: 14px;">
                                                 <tooltip>
                                                     <Tooltip text="Localiser à partir de la description" />

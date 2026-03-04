@@ -3,6 +3,13 @@ module com.example.psy {
     requires jbcrypt;
     requires com.calendarfx.view;
     requires mysql.connector.j;
+    requires org.json;
+    requires jakarta.mail;
+    requires jdk.httpserver;
+
+    requires com.google.zxing.javase;
+    requires com.google.gson;
+
     requires javafx.controls;
     requires javafx.web;
     requires jdk.jdi;
@@ -10,7 +17,20 @@ module com.example.psy {
     requires com.fasterxml.jackson.databind;
     requires java.sql;
     requires java.desktop;
-    requires jakarta.mail;
+    opens Controllers.dashboards to javafx.fxml;
+
+
+
+
+
+    requires webcam.capture;
+
+    requires org.apache.commons.lang3;
+
+  
+
+    requires org.slf4j;
+
     requires org.eclipse.angus.mail;
     requires org.apache.pdfbox;
 
@@ -45,12 +65,14 @@ module com.example.psy {
     opens Controllers.Question to javafx.fxml;
     opens Controllers.Quiz to javafx.fxml;
     opens Controllers.Appointment to javafx.fxml;
-    opens Controllers.dashboards to javafx.fxml;
 
     opens Controllers.QuizAssesment to javafx.fxml;
     opens Controllers.QuizResults to javafx.fxml;
 
     opens Controllers.Event to javafx.fxml;
+
+    exports Controllers.dashboards;
+    exports Controllers.Therapists;
 
     // optional but recommended
 }

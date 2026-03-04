@@ -79,6 +79,10 @@
                     <VBox spacing="15" alignment="CENTER">
                         <Button onAction="#handleLogin" styleClass="btn-primary" text="Se connecter" prefWidth="360" prefHeight="50" style="-fx-font-size: 16px;"/>
                         
+                        <Button fx:id="faceIdButton" onAction="#handleFaceLogin" 
+                                style="-fx-background-color: transparent; -fx-border-color: #6f4e37; -fx-border-radius: 5; -fx-text-fill: #6f4e37; -fx-cursor: hand;" 
+                                text="👤 Se connecter avec Face ID" prefWidth="360" prefHeight="40" />
+
                         <Label fx:id="messageLabel" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px;"/>
                     </VBox>
                     

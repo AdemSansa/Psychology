@@ -8,6 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import util.SceneManager;
 import util.Session;
+import util.AvatarUtil;
+import Service.QuizResultService;
 
 import java.text.BreakIterator;
 
@@ -42,11 +44,20 @@ public class HomeController {
     private javafx.scene.control.Button btnRegistrations;
 
     @FXML
+    private javafx.scene.control.Button btnQuizDash;
+
+    @FXML
     private javafx.scene.control.Button btnQuestions;
     @FXML
     private javafx.scene.control.Button btnQuizzes;
     @FXML
     private javafx.scene.control.Button btnQuizAssessment;
+
+    @FXML
+    private StackPane headerAvatarPane;
+
+    @FXML
+    private javafx.scene.control.Label headerAvatarLabel;
 
     @FXML
     public void initialize() {
@@ -68,6 +79,10 @@ public class HomeController {
             if (RoleLabel != null) {
                 RoleLabel.setText(user.getRole());
             }
+            if (headerAvatarPane != null && headerAvatarLabel != null) {
+                AvatarUtil.setAvatar(headerAvatarPane, headerAvatarLabel, user.getFirstName(), user.getLastName(),
+                        user.getPhotoUrl());
+            }
 
         } else {
             System.out.println("No user logged in session.");
@@ -77,7 +92,20 @@ public class HomeController {
 
         // Tell SceneManager where pages should load
         SceneManager.setContentArea(contentArea);
+
         // Default page could also depend on role, but sticking to dashboard for now
+        if (user != null && "patient".equalsIgnoreCase(user.getRole())) {
+            try {
+                QuizResultService quizResultService = new QuizResultService();
+                if (!quizResultService.hasUserTakenAnyQuiz(user.getId())) {
+                    SceneManager.loadPage("/com/example/psy/QuizAssesment/QuizCinematic.fxml");
+                    return; // Exit early so it doesn't load dashboard
+                }
+            } catch (Exception e) {
+                System.err.println("Error checking patient quiz history: " + e.getMessage());
+            }
+        }
+
         SceneManager.loadPage("/com/example/psy/intro/dashboard.fxml");
     }
 
@@ -95,6 +123,7 @@ public class HomeController {
         setButtonVisible(btnQuestions, false);
         setButtonVisible(btnQuizzes, false);
         setButtonVisible(btnQuizAssessment, false);
+        setButtonVisible(btnQuizDash, false);
 
         setButtonVisible(btnPastAppointments, false);
 
@@ -111,6 +140,7 @@ public class HomeController {
                 setButtonVisible(btnQuestions, true);
                 setButtonVisible(btnQuizzes, true);
                 setButtonVisible(btnEvents, true);
+                setButtonVisible(btnQuizDash, true);
                 break;
             case "patient":
                 setButtonVisible(btnTherapists, true); // Patient views therapists
@@ -119,7 +149,6 @@ public class HomeController {
                 setButtonVisible(btnRegistrations, true);
                 setButtonVisible(btnQuizAssessment, true);
                 setButtonVisible(btnEvents, true);
-                setButtonVisible(btnPastAppointments, true);
 
                 break;
             case "therapist":
@@ -212,8 +241,17 @@ public class HomeController {
         SceneManager.loadPage("/com/example/psy/QuizAssesment/quizList.fxml");
     }
 
+    @FXML
+    public void goToProfile() {
+        SceneManager.loadPage("/com/example/psy/User/user_profile.fxml");
+    }
+
     public void gotoTherapistDashboard() {
         SceneManager.loadPage("/com/example/psy/dashboards/TherapistDashboard.fxml");
+    }
+
+    public void goToQuizDashboard() {
+        SceneManager.loadPage("/com/example/psy/dashboards/QuizDashboard.fxml");
     }
 
     public void logout() {

@@ -17,6 +17,24 @@ public class AuthService {
 
     private final UserService userDAO = new UserService();
     private final TherapistService therapistDAO = new TherapistService();
+    private final NotificationService notificationService = NotificationService.getInstance();
+
+    /**
+     * Initiates password reset: génère un code OTP, l'envoie par email.
+     * L'utilisateur devra fournir ce code via l'interface (non implémentée ici).
+     */
+    public void initiatePasswordReset(String email) throws Exception {
+        User user = userDAO.readByEmail(email);
+        if (user == null) {
+            throw new Exception("Utilisateur non trouvé");
+        }
+        // Générer et envoyer le code OTP
+        String otp = notificationService.sendPasswordReset(user);
+        System.out.println("[AuthService] OTP de réinitialisation envoyé : " + otp);
+        // Ici, l'application devrait demander à l'utilisateur de saisir le code et le
+        // nouveau mot de passe.
+        // Cette logique sera implémentée dans le contrôleur UI.
+    }
 
     // Private constructor for singleton pattern
     private AuthService() {
@@ -40,6 +58,14 @@ public class AuthService {
         String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
         user.setPassword(hashedPassword);
         userDAO.create(user);
+
+        // ✉️ Envoyer l'email de confirmation d'inscription
+        try {
+            notificationService.sendRegistrationConfirmation(user);
+        } catch (Exception e) {
+            // Non bloquant : si l'email échoue, l'inscription reste valide
+            System.err.println("[AuthService] Erreur envoi email bienvenue (non bloquant): " + e.getMessage());
+        }
     }
 
     public void registerTherapist(Therapistis therapist) throws Exception {
@@ -84,10 +110,13 @@ public class AuthService {
                 user.setLastName(userRs.getString("last_name"));
                 user.setEmail(userRs.getString("email"));
                 user.setRole(userRs.getString("role"));
+                user.setPhone(userRs.getString("phone"));
+                user.setDateOfBirth(userRs.getDate("date_naissance"));
+                user.setGender(userRs.getString("gender"));
+                user.setPhotoUrl(userRs.getString("photo_url"));
 
                 Session session = Session.getInstance();
                 session.setUser(user);
-
 
                 return user.getRole();
             }
@@ -108,16 +137,18 @@ public class AuthService {
                 t.setLastName(therapistRs.getString("last_name"));
                 t.setEmail(therapistRs.getString("email"));
                 t.setPassword(storedHash);
-                User user  = new User();
+                t.setPhotoUrl(therapistRs.getString("photo_url"));
+
+                User user = new User();
                 user.setId(t.getId());
                 user.setFirstName(t.getFirstName());
                 user.setLastName(t.getLastName());
                 user.setEmail(t.getEmail());
                 user.setRole("therapist");
+                user.setPhotoUrl(t.getPhotoUrl());
+
                 Session session = Session.getInstance();
                 session.setUser(user);
-
-
 
                 return "therapist";
             }
@@ -125,9 +156,6 @@ public class AuthService {
 
         throw new Exception("Invalid email or password.");
     }
-
-
-
 
     public boolean verifyEmailExists(String email) {
         try {
@@ -163,6 +191,7 @@ public class AuthService {
 
     public void logout() {
         Session session = Session.getInstance();
-        session.clear();}
+        session.clear();
+    }
 
 }

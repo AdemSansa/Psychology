@@ -1,5 +1,7 @@
 package Entities;
 
+import java.sql.Date;
+
 public class User {
     private int id;
     private String firstName;
@@ -7,6 +9,10 @@ public class User {
     private String email;
     private String password;
     private String role;
+    private String phone;
+    private Date dateOfBirth;
+    private String gender;
+    private String photoUrl;
 
     public User() {
     }
@@ -19,7 +25,6 @@ public class User {
         this.role = "patient";
     }
 
-    // Getters & Setters
     public int getId() {
         return id;
     }
@@ -66,6 +71,38 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getFullName() {

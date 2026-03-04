@@ -29,11 +29,16 @@ public class TherapistService implements Iservice<Therapistis> {
         user.setPassword(therapist.getPassword());
         user.setRole("therapist");
 
+        user.setPhotoUrl(therapist.getPhotoUrl());
+
+        user.setPhone(therapist.getPhoneNumber());
         UserService userService = new UserService();
+
         userService.create(user); // This now sets the ID in the user object
 
         int sharedId = user.getId();
         therapist.setId(sharedId);
+
 
         // 2. Insert into therapists with same ID
         String query = "INSERT INTO therapists (id, first_name, last_name, email, password, phone_number, specialization, description, consultation_type, status, photo_url, diploma_path, latitude, longitude, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),NOW())";

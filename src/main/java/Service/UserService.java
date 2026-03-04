@@ -16,14 +16,18 @@ public class UserService implements Iservice<User> {
 
     @Override
     public void create(User user) throws SQLException {
-        String requete = "INSERT INTO users (first_name, last_name, email, password, role) VALUES (?,?,?,?,?)";
-        Connection conn = dbconnect.getInstance().getConnection();
-        PreparedStatement statement = conn.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+        String requete = "INSERT INTO users (first_name, last_name, email, password, role, phone, date_naissance, gender, photo_url) VALUES (?,?,?,?,?,?,?,?,?)";
+        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(requete,
+                Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, user.getFirstName());
         statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());
         statement.setString(4, user.getPassword());
         statement.setString(5, user.getRole());
+        statement.setString(6, user.getPhone());
+        statement.setDate(7, user.getDateOfBirth());
+        statement.setString(8, user.getGender());
+        statement.setString(9, user.getPhotoUrl());
         statement.executeUpdate();
 
         ResultSet rs = statement.getGeneratedKeys();
@@ -59,14 +63,27 @@ public class UserService implements Iservice<User> {
 
     @Override
     public void update(User user) throws SQLException {
-        String requete = "UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ?, role = ? WHERE id = ?";
+        // Obtenir l'ancien mot de passe si le nouveau est null
+        String finalPassword = user.getPassword();
+        if (finalPassword == null || finalPassword.isEmpty()) {
+            User existing = read(user.getId());
+            if (existing != null) {
+                finalPassword = existing.getPassword();
+            }
+        }
+
+        String requete = "UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ?, role = ?, phone = ?, date_naissance = ?, gender = ?, photo_url = ? WHERE id = ?";
         PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(requete);
         statement.setString(1, user.getFirstName());
         statement.setString(2, user.getLastName());
         statement.setString(3, user.getEmail());
-        statement.setString(4, user.getPassword());
+        statement.setString(4, finalPassword);
         statement.setString(5, user.getRole());
-        statement.setInt(6, user.getId());
+        statement.setString(6, user.getPhone());
+        statement.setDate(7, user.getDateOfBirth());
+        statement.setString(8, user.getGender());
+        statement.setString(9, user.getPhotoUrl());
+        statement.setInt(10, user.getId());
         statement.executeUpdate();
         System.out.println("User updated successfully!");
     }
@@ -92,11 +109,41 @@ public class UserService implements Iservice<User> {
         List<User> users = new ArrayList<>();
         PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(requete);
         String mot = "%" + motCle + "%";
-        statement.setString(1, mot);
+        statement.setObject(1, mot);
         statement.setString(2, mot);
         statement.setString(3, mot);
         statement.setString(4, mot);
         statement.setString(5, mot);
+
+        ResultSet rs = statement.executeQuery();
+        while (rs.next()) {
+            users.add(mapResultSetToUser(rs));
+        }
+        return users;
+    }
+
+    public List<User> rechercherIntelligente(String keyword, String role) throws SQLException {
+        StringBuilder requete = new StringBuilder("SELECT * FROM users WHERE 1=1");
+        List<String> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            requete.append(" AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?)");
+            String k = "%" + keyword.trim() + "%";
+            params.add(k);
+            params.add(k);
+            params.add(k);
+        }
+
+        if (role != null && !role.trim().isEmpty() && !role.equals("All")) {
+            requete.append(" AND role = ?");
+            params.add(role);
+        }
+
+        List<User> users = new ArrayList<>();
+        PreparedStatement statement = dbconnect.getInstance().getConnection().prepareStatement(requete.toString());
+        for (int i = 0; i < params.size(); i++) {
+            statement.setString(i + 1, params.get(i));
+        }
 
         ResultSet rs = statement.executeQuery();
         while (rs.next()) {
@@ -139,6 +186,11 @@ public class UserService implements Iservice<User> {
         return null;
     }
 
+    // ------------------- Lecture par ID (alias pour read) -------------------
+    public User getUserById(int id) throws SQLException {
+        return read(id);
+    }
+
     // ------------------- Mapping ResultSet vers User -------------------
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User u = new User();
@@ -148,6 +200,10 @@ public class UserService implements Iservice<User> {
         u.setEmail(rs.getString("email"));
         u.setRole(rs.getString("role"));
         u.setPassword(rs.getString("password"));
+        u.setPhone(rs.getString("phone"));
+        u.setDateOfBirth(rs.getDate("date_naissance"));
+        u.setGender(rs.getString("gender"));
+        u.setPhotoUrl(rs.getString("photo_url"));
         return u;
     }
 }

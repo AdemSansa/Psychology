@@ -32,7 +32,10 @@ public class UserListController implements Initializable {
     private TableColumn<User, String> roleColumn;
 
     @FXML
-    private TextField searchField;
+    private TextField globalSearchField;
+
+    @FXML
+    private ComboBox<String> roleFilterBox;
 
     private final ObservableList<User> users = FXCollections.observableArrayList();
 
@@ -50,11 +53,25 @@ public class UserListController implements Initializable {
         // Charger les utilisateurs
         loadUsers();
 
-        // Permet de lancer la recherche en appuyant sur Enter
-        searchField.setOnAction(e -> rechercherUser());
+        // Configurer le filtre de rôle
+        roleFilterBox.setItems(FXCollections.observableArrayList("All", "patient", "therapist", "admin"));
+        roleFilterBox.setValue("All");
+
+        // --- RECHERCHE INTELLIGENTE (Temps réel) ---
+        // Se déclenche à chaque caractère tapé dans le champ global
+        globalSearchField.textProperty().addListener((observable, oldValue, newValue) -> rechercherUser());
+
+        // Se déclenche au changement de sélection du Rôle
+        roleFilterBox.valueProperty().addListener((observable, oldValue, newValue) -> rechercherUser());
     }
 
+    @FXML
     private void loadUsers() {
+        if (globalSearchField != null)
+            globalSearchField.clear();
+        if (roleFilterBox != null)
+            roleFilterBox.setValue("All");
+
         try {
             List<User> list = userService.list();
             users.setAll(list);
@@ -67,17 +84,14 @@ public class UserListController implements Initializable {
     // ----------------------- Méthode de recherche -----------------------
     @FXML
     private void rechercherUser() {
-        String motCle = searchField.getText().trim();
+        String keyword = globalSearchField.getText().trim();
+        String role = roleFilterBox.getValue();
+
         try {
-            List<User> resultats;
-            if (!motCle.isEmpty()) {
-                resultats = userService.rechercher(motCle);
-            } else {
-                resultats = userService.list();
-            }
+            List<User> resultats = userService.rechercherIntelligente(keyword, role);
             users.setAll(resultats);
             userTable.setItems(users);
-            System.out.println("Résultat recherche : " + resultats.size());
+            System.out.println("Résultat recherche globale intelligente : " + resultats.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,10 +114,8 @@ public class UserListController implements Initializable {
             return;
         }
 
-        UserEditController controller =
-                SceneManager.switchSceneWithController(
-                        "/com/example/psy/User/userEdit.fxml"
-                );
+        UserEditController controller = SceneManager.switchSceneWithController(
+                "/com/example/psy/User/userEdit.fxml");
 
         controller.setUser(selected); // envoie des données
     }

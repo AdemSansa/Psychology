@@ -10,28 +10,31 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       stylesheets="@../style.css"
-
       fx:controller="Controllers.QuizAssesment.QuizCardPatientController"
-      styleClass="quiz-card"
-      prefWidth="220" prefHeight="180"
-      minWidth="220" maxWidth="220"
-      spacing="10">
+      styleClass="quiz-card-dynamic"
+      prefWidth="250" prefHeight="210"
+      spacing="12">
     
     <padding>
-        <Insets top="15" right="15" bottom="15" left="15"/>
+        <Insets top="18" right="18" bottom="18" left="18"/>
     </padding>
 
     <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label fx:id="categoryLabel" text="Category" styleClass="card-category"/>
+        <Label fx:id="categoryLabel" text="Category" styleClass="card-category-dynamic"/>
         <Region HBox.hgrow="ALWAYS"/>
     </HBox>
 
-    <Label fx:id="titleLabel" text="Quiz Title" styleClass="card-title" wrapText="true" VBox.vgrow="ALWAYS"/>
+    <Label fx:id="titleLabel" text="Quiz Title" styleClass="card-title-dynamic" wrapText="true" VBox.vgrow="ALWAYS"/>
 
-    <Label fx:id="questionsLabel" text="10 Questions" styleClass="card-subtitle"/>
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label fx:id="questionsLabel" text="10 Questions" styleClass="card-subtitle-dynamic"/>
+        <Label fx:id="timesTakenLabel" text="📈 Taken 0 times" styleClass="card-stat-dynamic"/>
+    </HBox>
+
+    <Region VBox.vgrow="ALWAYS"/>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Start Quiz" onAction="#handleStart" styleClass="btn-primary, btn-sm"/>
+        <Button text="Take Assessment" onAction="#handleStart" styleClass="btn-primary-dynamic"/>
     </HBox>
 
 </VBox>

@@ -119,7 +119,11 @@
                             <!-- Location -->
                             <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="5">
                                 <Label text="Location" style="-fx-font-weight: bold;"/>
-                                <TextField fx:id="locationField" promptText="Event location" styleClass="form-control" />
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <TextField fx:id="locationField" promptText="Event location" styleClass="form-control" HBox.hgrow="ALWAYS"/>
+                                    <Button text="&#128205; Pick" onAction="#handlePickLocation" styleClass="btn-secondary"
+                                            style="-fx-font-size: 12px; -fx-padding: 6 10;"/>
+                                </HBox>
                                 <Label fx:id="locationError" text="" style="-fx-text-fill: red; -fx-font-size: 11px;" visible="false" managed="false"/>
                             </VBox>
 

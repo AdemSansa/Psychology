@@ -8,7 +8,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="Controllers.User.UserEditController"
             stylesheets="@../style.css"
-            prefHeight="450.0" prefWidth="500.0"
+            prefHeight="650.0" prefWidth="500.0"
             styleClass="background-gradient">
 
     <VBox alignment="CENTER"
@@ -17,8 +17,8 @@
           AnchorPane.leftAnchor="0"
           AnchorPane.rightAnchor="0">
 
-        <VBox spacing="20"
-              style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
+        <VBox spacing="15"
+              style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 25; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
               maxWidth="500">
 
             <!-- Title -->
@@ -26,63 +26,72 @@
                    styleClass="section-title"
                    style="-fx-font-size: 20px;" />
 
-            <GridPane hgap="15" vgap="15">
+            <!-- Avatar Display -->
+            <VBox alignment="CENTER" spacing="10">
+                <StackPane fx:id="avatarPane" prefHeight="80.0" prefWidth="80.0" 
+                           style="-fx-max-width: 80; -fx-max-height: 80; -fx-alignment: center;">
+                    <children>
+                        <Label fx:id="initialsLabel" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" text="" />
+                    </children>
+                </StackPane>
+                <Button text="Change Photo" onAction="#handleUploadAvatar" style="-fx-font-size: 11px;"/>
+            </VBox>
 
+            <GridPane hgap="12" vgap="12">
                 <columnConstraints>
-                    <ColumnConstraints minWidth="100" />
+                    <ColumnConstraints minWidth="120" />
                     <ColumnConstraints hgrow="ALWAYS" />
                 </columnConstraints>
 
                 <!-- Full Name -->
-                <Label text="Full Name"
+                <Label text="Full Name *"
                        GridPane.rowIndex="0"
                        GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
-
-                <TextField fx:id="fullNameField"
-                           promptText="Enter full name"
-                           GridPane.rowIndex="0"
-                           GridPane.columnIndex="1"
-                           styleClass="form-control"/>
+                <TextField fx:id="fullNameField" promptText="Enter full name" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control"/>
 
                 <!-- Email -->
-                <Label text="Email"
+                <Label text="Email *"
                        GridPane.rowIndex="1"
                        GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
+                <TextField fx:id="emailField" promptText="Enter email" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="form-control"/>
 
-                <TextField fx:id="emailField"
-                           promptText="Enter email"
-                           GridPane.rowIndex="1"
-                           GridPane.columnIndex="1"
-                           styleClass="form-control"/>
-
-                <!-- Role -->
-                <Label text="Role"
+                <!-- Phone -->
+                <Label text="Phone"
                        GridPane.rowIndex="2"
                        GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
+                <TextField fx:id="phoneField" promptText="Enter phone" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="form-control"/>
 
-                <ComboBox fx:id="roleComboBox"
-                          promptText="Select role"
-                          GridPane.rowIndex="2"
-                          GridPane.columnIndex="1"
-                          styleClass="form-control"
-                          maxWidth="Infinity"/>
+                <!-- DOB -->
+                <Label text="Birth Date"
+                       GridPane.rowIndex="3"
+                       GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <DatePicker fx:id="dobPicker" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="form-control" maxWidth="Infinity"/>
 
+                <!-- Gender -->
+                <Label text="Gender"
+                       GridPane.rowIndex="4"
+                       GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="genderComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="form-control" maxWidth="Infinity"/>
+
+                <!-- Role -->
+                <Label text="Role *"
+                       GridPane.rowIndex="5"
+                       GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="roleComboBox" promptText="Select role" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="form-control" maxWidth="Infinity"/>
             </GridPane>
 
             <Separator />
 
             <!-- Buttons -->
             <HBox spacing="10" alignment="CENTER_RIGHT">
-                <Button text="Cancel"
-                        onAction="#handleCancel"
-                        styleClass="btn-secondary"/>
-
-                <Button text="Save Changes"
-                        onAction="#handleSave"
-                        styleClass="btn-primary"/>
+                <Button text="Cancel" onAction="#handleCancel" styleClass="btn-secondary"/>
+                <Button text="Save Changes" onAction="#handleSave" styleClass="btn-primary"/>
             </HBox>
 
         </VBox>

@@ -1,5 +1,10 @@
 package Controllers.dashboards;
 
+import Entities.User;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import util.AvatarUtil;
+
 import Entities.Appointment;
 import Entities.Note;
 import Service.AppointmentService;

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.dashboards.QuizDashboardController">
+    <children>
+        <VBox spacing="20.0" AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="20.0">
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <Label text="QUIZ DASHBOARD" style="-fx-font-size: 28px; -fx-font-weight: 900; -fx-font-family: 'Segoe UI', sans-serif; " />
+                <Region HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- Stat Cards -->
+            <HBox spacing="30.0" alignment="CENTER_LEFT">
+                <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <Label text="TOTAL QUIZZES TAKEN" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #555555;" />
+                    <Label fx:id="totalQuizzesLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <Label text="UNIQUE USERS" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #555555;" />
+                    <Label fx:id="uniqueUsersLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <Label text="AVERAGE SCORE" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #555555;" />
+                    <Label fx:id="averageScoreLabel" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                    <Label text="MOST POPULAR QUIZ" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #555555;" />
+                    <Label fx:id="mostPopularQuizLabel" text="-" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-wrap-text: true;" minHeight="35"/>
+                </VBox>
+            </HBox>
+
+            <!-- Charts Area -->
+            <HBox spacing="30.0" VBox.vgrow="ALWAYS">
+                <!-- Mood Distribution (Pie Chart) -->
+                <VBox HBox.hgrow="ALWAYS" spacing="10.0" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white;">
+                    <Label text="MOOD DISTRIBUTION" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+                    <PieChart fx:id="moodPieChart" VBox.vgrow="ALWAYS" />
+                </VBox>
+
+                <!-- Quiz Popularity (Bar Chart) -->
+                <VBox HBox.hgrow="ALWAYS" spacing="10.0" style="-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: white;">
+                    <Label text="QUIZ POPULARITY" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+                    <BarChart fx:id="quizPopularityChart" legendVisible="false" VBox.vgrow="ALWAYS">
+                        <xAxis><CategoryAxis label="Quiz Title" /></xAxis>
+                        <yAxis><NumberAxis label="Times Taken" lowerBound="0" tickUnit="1" autoRanging="true" /></yAxis>
+                    </BarChart>
+                </VBox>
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>
