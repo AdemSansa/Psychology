@@ -13,8 +13,8 @@
       alignment="TOP_CENTER"
       stylesheets="@../style.css"
       style="-fx-padding: 30;"
-      prefWidth="450"
-      prefHeight="650">
+      prefWidth="650"
+      prefHeight="800">
 
     <!-- Section Title -->
     <Label text="SESSION DETAILS" style="-fx-font-size: 22px; -fx-font-weight: 900; -fx-font-family: 'Segoe UI', sans-serif;"/>
@@ -55,7 +55,7 @@
                     managed="false"/>
         </HBox>
 
-        <ScrollPane fitToWidth="true" prefHeight="220">
+        <ScrollPane fitToWidth="true" prefHeight="350">
             <VBox fx:id="notesContainer" spacing="10">
                 <padding>
                     <Insets top="10" right="10" bottom="10" left="10"/>

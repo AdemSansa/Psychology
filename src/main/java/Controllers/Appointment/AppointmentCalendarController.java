@@ -48,6 +48,7 @@ public class AppointmentCalendarController {
     private AppointmentService appointmentService = new AppointmentService();
     private TherapistService therapistService = new TherapistService();
     private Timer videoCallTimer;
+    private java.util.Set<Integer> openedCalls = new java.util.HashSet<>();
 
     private static final int APPOINTMENT_DURATION_MIN = 90;
 
@@ -333,6 +334,23 @@ public class AppointmentCalendarController {
             if (currentAppointment == null)
                 return;
 
+            // Prevent patients from modifying details of other patients' appointments
+            if (!isTherapist() && Session.getInstance().getUser() != null &&
+                    currentAppointment.getPatientId() != Session.getInstance().getUser().getId()) {
+
+                Platform.runLater(() -> {
+                    entry.setInterval(
+                            currentAppointment.getAppointmentDate()
+                                    .atTime(currentAppointment.getStartTime())
+                                    .atZone(ZoneId.systemDefault()),
+                            currentAppointment.getAppointmentDate()
+                                    .atTime(currentAppointment.getEndTime())
+                                    .atZone(ZoneId.systemDefault()));
+                    showAlert("You don't have permission to modify this appointment.");
+                });
+                return;
+            }
+
             ZonedDateTime start = newInterval.getStartZonedDateTime();
             ZonedDateTime end = newInterval.getEndZonedDateTime();
             LocalDate date = start.toLocalDate();
@@ -413,10 +431,14 @@ public class AppointmentCalendarController {
                         LocalDateTime end = a.getAppointmentDate().atTime(a.getEndTime());
 
                         // Start call automatically if now is at start
-                        if ("confirmed".equalsIgnoreCase(a.getStatus()) &&
+                        if (!openedCalls.contains(a.getId()) &&
+                                ("confirmed".equalsIgnoreCase(a.getStatus())
+                                        || "in-progress".equalsIgnoreCase(a.getStatus()))
+                                &&
                                 "Video Call".equalsIgnoreCase(a.getType()) &&
                                 now.isAfter(start.minusSeconds(1)) && now.isBefore(start.plusSeconds(59))) {
 
+                            openedCalls.add(a.getId());
                             Platform.runLater(() -> openVideoCall(a));
                         }
 

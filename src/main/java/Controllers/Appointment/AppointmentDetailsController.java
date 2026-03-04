@@ -250,21 +250,32 @@ public class AppointmentDetailsController {
             var notes = noteService.listByAppointment(appointment.getId());
 
             for (Note note : notes) {
-                HBox noteBox = new HBox(10);
+                HBox noteBox = new HBox(15);
+                noteBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
                 Label contentLabel = new Label(note.getContent() + " (Mood: " + note.getMood() + ")");
                 contentLabel.setWrapText(true);
+                contentLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #333333;");
+                // Allow the label to grow and take up space if needed
+                HBox.setHgrow(contentLabel, javafx.scene.layout.Priority.ALWAYS);
+                contentLabel.setMaxWidth(Double.MAX_VALUE);
 
-                noteBox.getChildren().add(contentLabel);
+                javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+                HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+                noteBox.getChildren().addAll(contentLabel, spacer);
 
                 if (isTherapist) {
                     Button editBtn = new Button("Edit");
                     editBtn.setStyle(
-                            "-fx-font-size: 14px; -fx-padding: 8px 15px; -fx-font-weight: bold; -fx-background-color: #0d6efd; -fx-text-fill: white;");
+                            "-fx-font-size: 14px; -fx-padding: 8px 20px; -fx-font-weight: bold; -fx-background-color: #0d6efd; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
                     editBtn.setOnAction(e -> editNoteDialog(note));
+
                     Button deleteBtn = new Button("Delete");
                     deleteBtn.setStyle(
-                            "-fx-font-size: 14px; -fx-padding: 8px 15px; -fx-font-weight: bold; -fx-background-color: #dc3545; -fx-text-fill: white;");
+                            "-fx-font-size: 14px; -fx-padding: 8px 20px; -fx-font-weight: bold; -fx-background-color: #dc3545; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
                     deleteBtn.setOnAction(e -> deleteNoteConfirm(note));
+
                     noteBox.getChildren().addAll(editBtn, deleteBtn);
                 }
 

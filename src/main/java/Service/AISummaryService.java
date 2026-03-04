@@ -4,16 +4,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 public class AISummaryService {
 
     // You will need to set this environment variable or replace this placeholder
-    private static final String API_KEY = "AIzaSyDPGUe2rP9XUd9fN3Gt9Y4Y-nMCL--kJZo";
+    private static final String API_KEY = loadApiKey();
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
 
     public String generateSummary(String patientNote) {
@@ -68,6 +70,25 @@ public class AISummaryService {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return "Error calling Gemini API: " + e.getMessage();
+        }
+    }
+    private static String loadApiKey() {
+        try (InputStream input = AISummaryService.class
+                .getClassLoader()
+                .getResourceAsStream("config.properties")) {
+
+            if (input == null) {
+                System.out.println("config.properties not found");
+                return null;
+            }
+
+            Properties prop = new Properties();
+            prop.load(input);
+            return prop.getProperty("gemini.api.key");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
